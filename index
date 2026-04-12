@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Course Activities</title>
+  <meta name="description" content="Interactive activities for students" />
+
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      max-width: 900px;
+      margin: 2.5rem auto 2rem;
+      padding: 0 1rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--muted);
+      max-width: 700px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto 4rem;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      margin: 0 0 0.4rem;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin: 0 0 0.75rem;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      padding: 2rem 1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Interactive Course Activities</h1>
+    <p>
+      Click an activity below. All exercises run directly in your browser —
+      no downloads or logins required.
+    </p>
+  </header>
+
+  <main>
+    <!-- Activity 1 -->
+    <a class="card" href="activities/activity-1.html">
+      <h2>Activity 1: Introduction</h2>
+      <p>Warm‑up interactive exercise to review key concepts.</p>
+      <span class="tag">Beginner</span>
+    </a>
+
+    <!-- Activity 2 -->
+    <a class="card" href="activities/activity-2.html">
+      <h2>Activity 2: Simulation</h2>
+      <p>Manipulate parameters and observe real‑time changes.</p>
+      <span class="tag">Interactive</span>
+    </a>
+
+    <!-- Activity 3 -->
+    <a class="card" href="activities/activity-3.html">
+      <h2>Activity 3: Quiz</h2>
+      <p>Self‑check quiz with immediate feedback.</p>
+      <span class="tag">Assessment</span>
+    </a>
+  </main>
+
+  <footer>
+    © Your Course Name · Hosted on GitHub Pages
+  </footer>
+
+</body>
+</html>
