@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DCF Interactive Explainer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #fff; color: #1a1a1a; padding: 2rem; max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 20px; font-weight: 500; margin-bottom: 1.5rem; }
+  .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+  .ctrl-card { background: #f5f5f2; border-radius: 8px; padding: 12px 16px; }
+  .ctrl-label { font-size: 12px; color: #6b6b66; margin-bottom: 6px; }
+  .ctrl-row { display: flex; align-items: center; gap: 10px; }
+  .ctrl-val { font-size: 14px; font-weight: 500; min-width: 52px; text-align: right; color: #1a1a1a; }
+  input[type=range] { flex: 1; accent-color: #534AB7; }
+  .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+  .metric { background: #f5f5f2; border-radius: 8px; padding: 12px 16px; }
+  .metric-label { font-size: 12px; color: #6b6b66; margin-bottom: 4px; }
+  .metric-val { font-size: 22px; font-weight: 500; }
+  .metric-val.positive { color: #1D9E75; }
+  .metric-val.neutral { color: #185FA5; }
+  .table-wrap { border: 0.5px solid #e0e0d8; border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: #f5f5f2; }
+  th { padding: 10px 14px; text-align: left; font-weight: 500; font-size: 12px; color: #6b6b66; border-bottom: 0.5px solid #e0e0d8; }
+  td { padding: 9px 14px; border-bottom: 0.5px solid #e0e0d8; color: #1a1a1a; }
+  tr:last-child td { border-bottom: none; }
+  .td-year { color: #6b6b66; }
+  .td-pv { font-weight: 500; color: #185FA5; }
+  .bar-wrap { height: 8px; background: #f5f5f2; border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; background: #378ADD; transition: width 0.3s; }
+  .insight { font-size: 13px; color: #6b6b66; border-left: 2px solid #e0e0d8; padding-left: 12px; line-height: 1.6; margin-top: 0; }
+  .btn-row { display: flex; gap: 8px; margin-top: 1rem; flex-wrap: wrap; }
+  button { font-size: 13px; padding: 7px 14px; border-radius: 8px; border: 0.5px solid #c0c0b8; background: transparent; cursor: pointer; color: #1a1a1a; }
+  button:hover { background: #f5f5f2; }
+</style>
+</head>
+<body>
+<h1>DCF — Discounted Cash Flow explainer</h1>
+
+<div class="controls">
+  <div class="ctrl-card">
+    <div class="ctrl-label">Initial FCFF (Year 1)</div>
+    <div class="ctrl-row">
+      <input type="range" min="50" max="500" step="10" value="100" id="fcff" oninput="update()">
+      <span class="ctrl-val" id="fcff-val">$100M</span>
+    </div>
+  </div>
+  <div class="ctrl-card">
+    <div class="ctrl-label">Growth rate (years 1–5)</div>
+    <div class="ctrl-row">
+      <input type="range" min="0" max="30" step="1" value="10" id="growth" oninput="update()">
+      <span class="ctrl-val" id="growth-val">10%</span>
+    </div>
+  </div>
+  <div class="ctrl-card">
+    <div class="ctrl-label">Discount rate (WACC)</div>
+    <div class="ctrl-row">
+      <input type="range" min="4" max="25" step="1" value="10" id="wacc" oninput="update()">
+      <span class="ctrl-val" id="wacc-val">10%</span>
+    </div>
+  </div>
+  <div class="ctrl-card">
+    <div class="ctrl-label">Terminal growth rate</div>
+    <div class="ctrl-row">
+      <input type="range" min="0" max="5" step="0.5" value="2.5" id="tgr" oninput="update()">
+      <span class="ctrl-val" id="tgr-val">2.5%</span>
+    </div>
+  </div>
+</div>
+
+<div class="summary">
+  <div class="metric">
+    <div class="metric-label">PV of forecast CFs</div>
+    <div class="metric-val neutral" id="pv-fcff">—</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">PV of terminal value</div>
+    <div class="metric-val neutral" id="pv-tv">—</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">Total firm value</div>
+    <div class="metric-val positive" id="total-val">—</div>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>FCFF</th>
+        <th>Discount factor</th>
+        <th>Present value</th>
+        <th style="width:120px">Weight</th>
+      </tr>
+    </thead>
+    <tbody id="cf-rows"></tbody>
+  </table>
+</div>
+
+<p class="insight" id="insight"></p>
+
+<script>
+function fmt(n) {
+  if (Math.abs(n) >= 1000) return '$' + (n/1000).toFixed(1) + 'B';
+  return '$' + Math.round(n) + 'M';
+}
+
+function update() {
+  const fcff0 = +document.getElementById('fcff').value;
+  const g = +document.getElementById('growth').value / 100;
+  const wacc = +document.getElementById('wacc').value / 100;
+  const tgr = +document.getElementById('tgr').value / 100;
+
+  document.getElementById('fcff-val').textContent = '$' + document.getElementById('fcff').value + 'M';
+  document.getElementById('growth-val').textContent = document.getElementById('growth').value + '%';
+  document.getElementById('wacc-val').textContent = document.getElementById('wacc').value + '%';
+  document.getElementById('tgr-val').textContent = document.getElementById('tgr').value + '%';
+
+  const years = 5;
+  const pvs = [];
+  let totalPV = 0;
+
+  for (let t = 1; t <= years; t++) {
+    const cf = fcff0 * Math.pow(1 + g, t);
+    const df = Math.pow(1 + wacc, t);
+    const pv = cf / df;
+    pvs.push({ t, cf, df, pv });
+    totalPV += pv;
+  }
+
+  const terminalFCFF = pvs[years-1].cf * (1 + tgr);
+  const terminalValue = (wacc > tgr) ? terminalFCFF / (wacc - tgr) : 0;
+  const pvTV = terminalValue / Math.pow(1 + wacc, years);
+  const total = totalPV + pvTV;
+
+  const maxPV = Math.max(...pvs.map(r => r.pv), pvTV);
+
+  document.getElementById('pv-fcff').textContent = fmt(totalPV);
+  document.getElementById('pv-tv').textContent = fmt(pvTV);
+  document.getElementById('total-val').textContent = fmt(total);
+
+  const tbody = document.getElementById('cf-rows');
+  tbody.innerHTML = pvs.map(r => `
+    <tr>
+      <td class="td-year">Year ${r.t}</td>
+      <td>${fmt(r.cf)}</td>
+      <td>÷ ${r.df.toFixed(2)}</td>
+      <td class="td-pv">${fmt(r.pv)}</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(r.pv/maxPV*100)}%"></div></div></td>
+    </tr>
+  `).join('') + `
+    <tr style="background:#f5f5f2">
+      <td class="td-year">Terminal</td>
+      <td colspan="2" style="color:#6b6b66;font-size:12px">All future CFs beyond year 5</td>
+      <td class="td-pv">${fmt(pvTV)}</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(pvTV/maxPV*100)}%;background:#534AB7"></div></div></td>
+    </tr>
+  `;
+
+  const tvPct = total > 0 ? Math.round(pvTV / total * 100) : 0;
+  document.getElementById('insight').textContent =
+    `The terminal value makes up ${tvPct}% of the firm's total value — a reminder that most of a company's worth comes from cash flows far into the future, not just the next 5 years. Try raising the growth rate or lowering the discount rate to see how sensitive the valuation is.`;
+}
+
+update();
+</script>
+</body>
+</html>

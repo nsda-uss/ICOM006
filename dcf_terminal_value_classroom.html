@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DCF — Valor Terminal (Clase Interactiva)</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; background: #fff; color: #1a1a1a; padding: 2rem; max-width: 820px; margin: 0 auto; }
+h1 { font-size: 20px; font-weight: 500; margin-bottom: 1.5rem; color: #1a1a1a; }
+.case-tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.tab { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #c0c0b8; background: transparent; cursor: pointer; color: #6b6b66; }
+.tab.active { background: #534AB7; color: #EEEDFE; border-color: #534AB7; }
+.tab:hover:not(.active) { background: #f5f5f2; }
+.section-label { font-size: 12px; color: #6b6b66; margin-bottom: 10px; letter-spacing: 0.04em; text-transform: uppercase; }
+.controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+.ctrl-card { background: #f5f5f2; border-radius: 8px; padding: 12px 14px; }
+.ctrl-name { font-size: 12px; color: #6b6b66; margin-bottom: 6px; }
+.ctrl-row { display: flex; align-items: center; gap: 10px; }
+.ctrl-row input[type=range] { flex: 1; accent-color: #534AB7; }
+.ctrl-val { font-size: 14px; font-weight: 500; min-width: 48px; text-align: right; color: #1a1a1a; }
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+.metric { background: #f5f5f2; border-radius: 8px; padding: 12px 14px; }
+.metric-label { font-size: 12px; color: #6b6b66; margin-bottom: 4px; }
+.metric-val { font-size: 22px; font-weight: 500; color: #1a1a1a; }
+.metric-val.tv { color: #534AB7; }
+.cf-table { border: 0.5px solid #e0e0d8; border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead tr { background: #f5f5f2; }
+th { padding: 9px 12px; text-align: left; font-weight: 500; font-size: 12px; color: #6b6b66; border-bottom: 0.5px solid #e0e0d8; }
+td { padding: 8px 12px; border-bottom: 0.5px solid #e0e0d8; color: #1a1a1a; }
+tr:last-child td { border-bottom: none; }
+.td-pv { font-weight: 500; color: #185FA5; }
+.td-tv { font-weight: 500; color: #534AB7; }
+.bar-wrap { height: 7px; background: #f0f0ec; border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+.insight { font-size: 13px; color: #6b6b66; border-left: 2px solid #e0e0d8; padding-left: 12px; line-height: 1.6; margin-bottom: 1.5rem; }
+.divider { border: none; border-top: 0.5px solid #e0e0d8; margin: 1.5rem 0; }
+.heat-grid { overflow-x: auto; }
+.heat-table { min-width: 480px; }
+.heat-table th { text-align: center; }
+.heat-table td { text-align: center; }
+.cell-base { background: #534AB7 !important; color: #EEEDFE !important; font-weight: 500; }
+.cell-hi1 { background: #E1F5EE; color: #085041; }
+.cell-hi2 { background: #9FE1CB; color: #04342C; }
+.cell-lo1 { background: #FAECE7; color: #712B13; }
+.cell-lo2 { background: #F5C4B3; color: #4A1B0C; }
+.cell-mid { background: #EEEDFE; color: #26215C; }
+.legend { display: flex; gap: 16px; font-size: 12px; color: #6b6b66; flex-wrap: wrap; margin-top: 10px; }
+.leg { display: flex; align-items: center; gap: 5px; }
+.leg-sq { width: 10px; height: 10px; border-radius: 2px; }
+.note { font-size: 12px; color: #6b6b66; margin-top: 10px; border-left: 2px solid #e0e0d8; padding-left: 10px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<h1>DCF — Valor Terminal (Clase Interactiva)</h1>
+
+<div class="case-tabs">
+  <button class="tab active" onclick="setCase('uber', this)">Uber</button>
+  <button class="tab" onclick="setCase('sbux', this)">Starbucks</button>
+  <button class="tab" onclick="setCase('amzn', this)">Amazon '01</button>
+  <button class="tab" onclick="setCase('custom', this)">Personalizado</button>
+</div>
+
+<p class="section-label">Parámetros del modelo</p>
+<div class="controls-grid">
+  <div class="ctrl-card">
+    <div class="ctrl-name">FCF inicial (Año 1)</div>
+    <div class="ctrl-row">
+      <input type="range" min="50" max="5000" step="50" value="1000" id="fcff" oninput="onSlide()">
+      <span class="ctrl-val" id="fcff-val">$1.000M</span>
+    </div>
+  </div>
+  <div class="ctrl-card">
+    <div class="ctrl-name">Crecimiento años 1–5</div>
+    <div class="ctrl-row">
+      <input type="range" min="0" max="40" step="1" value="18" id="growth" oninput="onSlide()">
+      <span class="ctrl-val" id="growth-val">18%</span>
+    </div>
+  </div>
+  <div class="ctrl-card">
+    <div class="ctrl-name">WACC (tasa de descuento)</div>
+    <div class="ctrl-row">
+      <input type="range" min="4" max="25" step="0.5" value="10" id="wacc" oninput="onSlide()">
+      <span class="ctrl-val" id="wacc-val">10.0%</span>
+    </div>
+  </div>
+  <div class="ctrl-card">
+    <div class="ctrl-name">Tasa de crecimiento perpetuo (g)</div>
+    <div class="ctrl-row">
+      <input type="range" min="0" max="5" step="0.5" value="3" id="tgr" oninput="onSlide()">
+      <span class="ctrl-val" id="tgr-val">3.0%</span>
+    </div>
+  </div>
+</div>
+
+<div class="metrics">
+  <div class="metric">
+    <div class="metric-label">VP flujos explícitos</div>
+    <div class="metric-val" id="pv-cf">—</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">VP valor terminal</div>
+    <div class="metric-val tv" id="pv-tv">—</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">Valor total empresa</div>
+    <div class="metric-val" id="total">—</div>
+  </div>
+</div>
+
+<div class="cf-table">
+  <table>
+    <thead>
+      <tr>
+        <th>Año</th>
+        <th>FCF</th>
+        <th>Factor descuento</th>
+        <th>Valor presente</th>
+        <th style="width:100px">Peso relativo</th>
+      </tr>
+    </thead>
+    <tbody id="cf-rows"></tbody>
+  </table>
+</div>
+
+<p class="insight" id="insight"></p>
+
+<hr class="divider">
+
+<p class="section-label">Tabla de sensibilidad — WACC vs g</p>
+<div class="heat-grid">
+  <div class="cf-table" style="margin-bottom:10px;">
+    <table class="heat-table" id="heat-table"></table>
+  </div>
+</div>
+<div class="legend">
+  <div class="leg"><div class="leg-sq" style="background:#1D9E75"></div> Valor alto</div>
+  <div class="leg"><div class="leg-sq" style="background:#534AB7"></div> Caso base</div>
+  <div class="leg"><div class="leg-sq" style="background:#D85A30"></div> Valor bajo</div>
+</div>
+<p class="note">Filas = WACC. Columnas = tasa de crecimiento perpetuo g. La celda morada es el caso base según los sliders. Ajusta los parámetros arriba para ver cómo cambia el heatmap.</p>
+
+<script>
+const cases = {
+  uber:   { fcff: 1000, growth: 18, wacc: 10,  tgr: 3,   label: 'Uber (2025)' },
+  sbux:   { fcff: 600,  growth: 5,  wacc: 8,   tgr: 2,   label: 'Starbucks (2026)' },
+  amzn:   { fcff: 50,   growth: 30, wacc: 12,  tgr: 3.5, label: 'Amazon (2001)' },
+  custom: { fcff: 100,  growth: 10, wacc: 10,  tgr: 2.5, label: 'Personalizado' }
+};
+
+function setCase(key, btn) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const c = cases[key];
+  document.getElementById('fcff').value   = c.fcff;
+  document.getElementById('growth').value = c.growth;
+  document.getElementById('wacc').value   = c.wacc;
+  document.getElementById('tgr').value    = c.tgr;
+  update();
+}
+
+function fmt(n) {
+  if (n === null) return '—';
+  const abs = Math.abs(n);
+  const sign = n < 0 ? '-' : '';
+  if (abs >= 1000000) return sign + '$' + (abs/1000000).toFixed(1) + 'T';
+  if (abs >= 1000)    return sign + '$' + (abs/1000).toFixed(1) + 'B';
+  return sign + '$' + Math.round(abs) + 'M';
+}
+
+function calcFirm(fcff1, g, wacc, tgr) {
+  const w = wacc/100, gr = g/100, t = tgr/100;
+  if (w <= t) return null;
+  let pvCF = 0, cf = fcff1;
+  const rows = [];
+  for (let i = 1; i <= 5; i++) {
+    cf *= (1 + gr);
+    const df = Math.pow(1 + w, i);
+    const pv = cf / df;
+    pvCF += pv;
+    rows.push({ t: i, cf, df, pv });
+  }
+  const termFCF = rows[4].cf * (1 + t);
+  const tv = termFCF / (w - t);
+  const pvTV = tv / Math.pow(1 + w, 5);
+  return { pvCF, pvTV, total: pvCF + pvTV, rows };
+}
+
+function onSlide() { update(); }
+
+function update() {
+  const fcff   = +document.getElementById('fcff').value;
+  const growth = +document.getElementById('growth').value;
+  const wacc   = +document.getElementById('wacc').value;
+  const tgr    = +document.getElementById('tgr').value;
+
+  document.getElementById('fcff-val').textContent   = '$' + fcff.toLocaleString('es-CL') + 'M';
+  document.getElementById('growth-val').textContent = growth + '%';
+  document.getElementById('wacc-val').textContent   = wacc.toFixed(1) + '%';
+  document.getElementById('tgr-val').textContent    = tgr.toFixed(1) + '%';
+
+  const res = calcFirm(fcff, growth, wacc, tgr);
+  if (!res) {
+    document.getElementById('pv-cf').textContent = '—';
+    document.getElementById('pv-tv').textContent = 'g ≥ WACC';
+    document.getElementById('total').textContent = '—';
+    document.getElementById('cf-rows').innerHTML = '';
+    document.getElementById('insight').textContent = 'La tasa g no puede ser igual o mayor al WACC — el modelo de Gordon no está definido.';
+    renderHeat(fcff, growth, wacc, tgr, null);
+    return;
+  }
+
+  document.getElementById('pv-cf').textContent = fmt(res.pvCF);
+  document.getElementById('pv-tv').textContent = fmt(res.pvTV);
+  document.getElementById('total').textContent = fmt(res.total);
+
+  const maxPV = Math.max(...res.rows.map(r => r.pv), res.pvTV);
+  const tvPct = Math.round(res.pvTV / res.total * 100);
+
+  const tbody = document.getElementById('cf-rows');
+  tbody.innerHTML = res.rows.map(r => `
+    <tr>
+      <td style="color:#6b6b66">Año ${r.t}</td>
+      <td>${fmt(r.cf)}</td>
+      <td style="color:#6b6b66">÷ ${r.df.toFixed(2)}</td>
+      <td class="td-pv">${fmt(r.pv)}</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(r.pv/maxPV*100)}%;background:#378ADD"></div></div></td>
+    </tr>
+  `).join('') + `
+    <tr style="background:#f5f5f2">
+      <td style="color:#6b6b66">Terminal</td>
+      <td colspan="2" style="color:#6b6b66;font-size:12px">Todos los FCF más allá del año 5</td>
+      <td class="td-tv">${fmt(res.pvTV)}</td>
+      <td><div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(res.pvTV/maxPV*100)}%;background:#534AB7"></div></div></td>
+    </tr>
+  `;
+
+  document.getElementById('insight').textContent =
+    `El valor terminal representa el ${tvPct}% del valor total de la empresa. ` +
+    (tvPct >= 75
+      ? `Esto significa que casi todo el valor depende de supuestos sobre el largo plazo — pequeñas variaciones en g o WACC tienen un impacto enorme.`
+      : tvPct >= 50
+      ? `El período explícito ya aporta un peso relevante, lo que hace la valorización menos sensible a los supuestos del valor terminal.`
+      : `El período explícito domina la valorización — típico de negocios maduros con FCF predecibles o con vida útil finita.`);
+
+  renderHeat(fcff, growth, wacc, tgr, res.total);
+}
+
+function renderHeat(fcff, growth, wacc, tgr, baseVal) {
+  const waccRows = [7, 8, 9, 10, 11, 12, 13];
+  const tgrCols  = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0];
+  const baseW    = Math.round(wacc * 2) / 2;
+  const baseT    = Math.round(tgr  * 2) / 2;
+
+  let html = '<thead><tr><th style="text-align:left;background:#f5f5f2;color:#6b6b66;font-size:12px">WACC \\ g</th>';
+  tgrCols.forEach(t => { html += `<th style="background:#f5f5f2;color:#6b6b66;font-size:12px">${t.toFixed(1)}%</th>`; });
+  html += '</tr></thead><tbody>';
+
+  waccRows.forEach(w => {
+    html += `<tr><td style="background:#f5f5f2;color:#6b6b66;font-weight:500;font-size:13px;text-align:left;padding:8px 12px">${w}%</td>`;
+    tgrCols.forEach(t => {
+      const v = calcFirm(fcff, growth, w, t);
+      const val = v ? v.total : null;
+      const isBase = w === baseW && t === baseT;
+      let cls = '';
+      if (isBase) {
+        cls = 'cell-base';
+      } else if (val !== null && baseVal !== null) {
+        const ratio = val / baseVal;
+        if (ratio >= 1.5)       cls = 'cell-hi2';
+        else if (ratio >= 1.15) cls = 'cell-hi1';
+        else if (ratio <= 0.6)  cls = 'cell-lo2';
+        else if (ratio <= 0.85) cls = 'cell-lo1';
+        else                    cls = 'cell-mid';
+      }
+      html += `<td class="${cls}" style="font-size:12px">${val ? fmt(val) : '—'}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  document.getElementById('heat-table').innerHTML = html;
+}
+
+update();
+</script>
+</body>
+</html>
