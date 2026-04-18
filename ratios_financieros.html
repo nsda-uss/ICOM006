@@ -1,0 +1,220 @@
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Calculadora de ratios financieros para estudiantes</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary);background:var(--color-background-tertiary)}
+
+.hero{padding:2rem 1.5rem 1.5rem;text-align:center}
+.hero-badge{display:inline-block;background:#E1F5EE;color:#085041;font-size:11px;font-weight:500;padding:3px 12px;border-radius:20px;margin-bottom:10px;letter-spacing:.04em;text-transform:uppercase}
+.hero h1{font-size:22px;font-weight:500;margin-bottom:6px}
+.hero p{font-size:13px;color:var(--color-text-secondary);max-width:480px;margin:0 auto}
+
+.ex-bar{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:.75rem 1.5rem 1.25rem}
+.ex-label{font-size:12px;color:var(--color-text-secondary)}
+.pill{padding:6px 14px;border:0.5px solid var(--color-border-secondary);border-radius:20px;background:var(--color-background-primary);color:var(--color-text-secondary);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.pill:hover{border-color:#1D9E75;color:#085041}
+.pill.active{background:#1D9E75;color:#fff;border-color:#1D9E75}
+
+.main{display:grid;grid-template-columns:280px 1fr;gap:1rem;padding:0 1.5rem 2rem;align-items:start}
+@media(max-width:700px){.main{grid-template-columns:1fr}}
+
+.form-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg)}
+.form-block{padding:.875rem 1rem}
+.form-block+.form-block{border-top:0.5px solid var(--color-border-tertiary)}
+.fb-head{display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.fb-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fb-title{font-size:12px;font-weight:500}
+.fb-sub{font-size:11px;color:var(--color-text-secondary);margin-left:auto}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.row:last-child{border-bottom:none}
+.row label{font-size:12px;color:var(--color-text-secondary);flex:1}
+.row input{width:100px;height:28px;padding:0 8px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary);font-size:12px;text-align:right;outline:none}
+.row input:focus{border-color:#1D9E75;background:var(--color-background-primary);box-shadow:0 0 0 3px #E1F5EE}
+
+.results{display:flex;flex-direction:column;gap:.875rem}
+
+.rcard{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.rcard-head{display:flex;align-items:center;gap:10px;padding:.75rem 1rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.rcard-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px}
+.rcard-title{font-size:14px;font-weight:500}
+.rcard-desc{font-size:11px;color:var(--color-text-secondary);margin-top:1px}
+
+.rtable{width:100%;border-collapse:collapse}
+.rtable tr{border-bottom:0.5px solid var(--color-border-tertiary)}
+.rtable tr:last-child{border-bottom:none}
+.rtable td{padding:9px 1rem;vertical-align:middle}
+.rt-name{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.rt-formula{font-size:11px;color:var(--color-text-secondary);margin-top:2px;font-family:var(--font-mono)}
+.rt-val{font-size:15px;font-weight:500;text-align:right;white-space:nowrap;min-width:70px}
+.rt-badge{text-align:right;padding-left:8px;width:80px}
+
+.badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap;display:inline-block}
+.good{background:#E1F5EE;color:#085041}
+.warn{background:#FAEEDA;color:#633806}
+.bad{background:#FCEBEB;color:#501313}
+.neu{background:var(--color-background-secondary);color:var(--color-text-tertiary)}
+
+.tip-bar{display:flex;gap:8px;padding:.5rem 1rem;background:var(--color-background-secondary);border-top:0.5px solid var(--color-border-tertiary);font-size:11px;color:var(--color-text-secondary);align-items:center}
+.tip-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+</style>
+
+<div class="hero">
+  <div class="hero-badge">Herramienta educativa</div>
+  <h1>Calculadora de ratios financieros</h1>
+  <p>Ingresa los datos del balance general y estado de resultados. Los ratios se calculan automáticamente.</p>
+</div>
+
+<div class="ex-bar">
+  <span class="ex-label">Cargar ejemplo:</span>
+  <button class="pill" id="btn0">Retail S.A.</button>
+  <button class="pill" id="btn1">Constructora del Sur</button>
+  <button class="pill" id="btn2">TechFlow SpA</button>
+</div>
+
+<div class="main">
+  <div class="form-card">
+    <div class="form-block">
+      <div class="fb-head">
+        <div class="fb-icon" style="background:#E1F5EE">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#1D9E75" stroke-width="1.5"/><path d="M4 8h8M4 5h8M4 11h5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <span class="fb-title" style="color:#085041">Activos</span>
+        <span class="fb-sub">Balance general</span>
+      </div>
+      <div class="row"><label>Efectivo y equivalentes</label><input type="number" id="efectivo" placeholder="0"></div>
+      <div class="row"><label>Cuentas por cobrar</label><input type="number" id="cxc" placeholder="0"></div>
+      <div class="row"><label>Inventarios</label><input type="number" id="inventarios" placeholder="0"></div>
+      <div class="row"><label>Otros activos corrientes</label><input type="number" id="otros_ac" placeholder="0"></div>
+      <div class="row"><label>Activos no corrientes</label><input type="number" id="anc" placeholder="0"></div>
+    </div>
+
+    <div class="form-block">
+      <div class="fb-head">
+        <div class="fb-icon" style="background:#E6F1FB">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#378ADD" stroke-width="1.5"/><path d="M8 4v8M5 7l3-3 3 3" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="fb-title" style="color:#0C447C">Pasivos y patrimonio</span>
+        <span class="fb-sub">Balance general</span>
+      </div>
+      <div class="row"><label>Pasivo corriente</label><input type="number" id="pc" placeholder="0"></div>
+      <div class="row"><label>Pasivo no corriente</label><input type="number" id="pnc" placeholder="0"></div>
+      <div class="row"><label>Patrimonio neto</label><input type="number" id="patrimonio" placeholder="0"></div>
+    </div>
+
+    <div class="form-block">
+      <div class="fb-head">
+        <div class="fb-icon" style="background:#EEEDFE">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#7F77DD" stroke-width="1.5"/><path d="M8 5v3l2 2" stroke="#7F77DD" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <span class="fb-title" style="color:#3C3489">Resultados</span>
+        <span class="fb-sub">Estado de resultados</span>
+      </div>
+      <div class="row"><label>Ventas / Ingresos</label><input type="number" id="ventas" placeholder="0"></div>
+      <div class="row"><label>Costo de ventas</label><input type="number" id="costo" placeholder="0"></div>
+      <div class="row"><label>Utilidad neta</label><input type="number" id="utilidad_neta" placeholder="0"></div>
+    </div>
+
+    <div class="tip-bar">
+      <span class="tip-dot" style="background:#1D9E75"></span><span class="good badge">Adecuado</span>
+      <span class="tip-dot" style="background:#BA7517"></span><span class="warn badge">Moderado</span>
+      <span class="tip-dot" style="background:#E24B4A"></span><span class="bad badge">Riesgo</span>
+    </div>
+  </div>
+
+  <div class="results">
+    <div class="rcard">
+      <div class="rcard-head" style="background:#E1F5EE20">
+        <div class="rcard-icon" style="background:#E1F5EE">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 12h3V8H2v4zM6 12h3V4H6v8zM10 12h3V6h-3v6z" fill="#1D9E75"/></svg>
+        </div>
+        <div>
+          <div class="rcard-title" style="color:#085041">Ratios de liquidez</div>
+          <div class="rcard-desc">Capacidad para cubrir obligaciones a corto plazo</div>
+        </div>
+      </div>
+      <table class="rtable">
+        <tr><td><div class="rt-name">Capital de trabajo neto</div><div class="rt-formula">AC − PC</div></td><td class="rt-val" id="v-ctn" style="color:#085041">—</td><td class="rt-badge" id="b-ctn"><span class="badge neu">—</span></td></tr>
+        <tr><td><div class="rt-name">Razón corriente</div><div class="rt-formula">AC ÷ PC</div></td><td class="rt-val" id="v-rc" style="color:#085041">—</td><td class="rt-badge" id="b-rc"><span class="badge neu">—</span></td></tr>
+        <tr><td><div class="rt-name">Prueba ácida</div><div class="rt-formula">(AC − Inv) ÷ PC</div></td><td class="rt-val" id="v-pa" style="color:#085041">—</td><td class="rt-badge" id="b-pa"><span class="badge neu">—</span></td></tr>
+        <tr><td><div class="rt-name">Prueba defensiva</div><div class="rt-formula">Efectivo ÷ PC</div></td><td class="rt-val" id="v-pd" style="color:#085041">—</td><td class="rt-badge" id="b-pd"><span class="badge neu">—</span></td></tr>
+      </table>
+    </div>
+
+    <div class="rcard">
+      <div class="rcard-head" style="background:#E6F1FB20">
+        <div class="rcard-icon" style="background:#E6F1FB">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L2 6v8h4v-4h4v4h4V6L8 2z" fill="#378ADD"/></svg>
+        </div>
+        <div>
+          <div class="rcard-title" style="color:#0C447C">Ratios de endeudamiento</div>
+          <div class="rcard-desc">Estructura y nivel de financiamiento externo</div>
+        </div>
+      </div>
+      <table class="rtable">
+        <tr><td><div class="rt-name">Endeudamiento total</div><div class="rt-formula">PT ÷ AT</div></td><td class="rt-val" id="v-et" style="color:#0C447C">—</td><td class="rt-badge" id="b-et"><span class="badge neu">—</span></td></tr>
+        <tr><td><div class="rt-name">Endeudamiento corto plazo</div><div class="rt-formula">PC ÷ AT</div></td><td class="rt-val" id="v-ecp" style="color:#0C447C">—</td><td class="rt-badge" id="b-ecp"><span class="badge neu">—</span></td></tr>
+        <tr><td><div class="rt-name">Endeudamiento largo plazo</div><div class="rt-formula">PNC ÷ AT</div></td><td class="rt-val" id="v-elp" style="color:#0C447C">—</td><td class="rt-badge" id="b-elp"><span class="badge neu">—</span></td></tr>
+        <tr><td><div class="rt-name">Leverage (D/P)</div><div class="rt-formula">PT ÷ Patrimonio</div></td><td class="rt-val" id="v-lev" style="color:#0C447C">—</td><td class="rt-badge" id="b-lev"><span class="badge neu">—</span></td></tr>
+      </table>
+    </div>
+
+    <div class="rcard">
+      <div class="rcard-head" style="background:#EEEDFE20">
+        <div class="rcard-icon" style="background:#EEEDFE">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 2v4l3 2" stroke="#7F77DD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="rcard-title" style="color:#3C3489">Ratios de rentabilidad</div>
+          <div class="rcard-desc">Eficiencia en la generación de utilidades</div>
+        </div>
+      </div>
+      <table class="rtable">
+        <tr><td><div class="rt-name">Margen bruto</div><div class="rt-formula">(Ventas − CV) ÷ Ventas</div></td><td class="rt-val" id="v-mb" style="color:#3C3489">—</td><td class="rt-badge" id="b-mb"><span class="badge neu">—</span></td></tr>
+        <tr><td><div class="rt-name">Margen neto</div><div class="rt-formula">UN ÷ Ventas</div></td><td class="rt-val" id="v-mn" style="color:#3C3489">—</td><td class="rt-badge" id="b-mn"><span class="badge neu">—</span></td></tr>
+        <tr><td><div class="rt-name">ROA</div><div class="rt-formula">UN ÷ AT</div></td><td class="rt-val" id="v-roa" style="color:#3C3489">—</td><td class="rt-badge" id="b-roa"><span class="badge neu">—</span></td></tr>
+        <tr><td><div class="rt-name">ROE</div><div class="rt-formula">UN ÷ Patrimonio</div></td><td class="rt-val" id="v-roe" style="color:#3C3489">—</td><td class="rt-badge" id="b-roe"><span class="badge neu">—</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+var ejemplos=[
+  {efectivo:120,cxc:380,inventarios:950,otros_ac:80,anc:2200,pc:820,pnc:1100,patrimonio:1810,ventas:8500,costo:5950,utilidad_neta:425},
+  {efectivo:95,cxc:1200,inventarios:2800,otros_ac:300,anc:5400,pc:1800,pnc:3500,patrimonio:4495,ventas:12000,costo:9200,utilidad_neta:360},
+  {efectivo:850,cxc:620,inventarios:90,otros_ac:140,anc:1800,pc:480,pnc:600,patrimonio:2420,ventas:5200,costo:1560,utilidad_neta:936}
+];
+var campos=['efectivo','cxc','inventarios','otros_ac','anc','pc','pnc','patrimonio','ventas','costo','utilidad_neta'];
+
+function cargarEjemplo(i){
+  document.querySelectorAll('.pill').forEach(function(p,j){p.classList.toggle('active',j===i);});
+  var e=ejemplos[i];
+  campos.forEach(function(k){document.getElementById(k).value=e[k];});
+  calcular();
+}
+[0,1,2].forEach(function(i){document.getElementById('btn'+i).addEventListener('click',function(){cargarEjemplo(i);});});
+campos.forEach(function(k){document.getElementById(k).addEventListener('input',function(){document.querySelectorAll('.pill').forEach(function(p){p.classList.remove('active');});calcular();});});
+
+function g(id){return parseFloat(document.getElementById(id).value)||0;}
+function setVal(id,val,pct){document.getElementById('v-'+id).textContent=isFinite(val)?(pct?(val*100).toFixed(1)+'%':val.toFixed(2)):'—';}
+function setBadge(id,cls,txt){document.getElementById('b-'+id).innerHTML='<span class="badge '+cls+'">'+txt+'</span>';}
+
+function calcular(){
+  var ef=g('efectivo'),cxc=g('cxc'),inv=g('inventarios'),oac=g('otros_ac');
+  var ac=ef+cxc+inv+oac,anc=g('anc'),at=ac+anc;
+  var pc=g('pc'),pnc=g('pnc'),pt=pc+pnc,pat=g('patrimonio');
+  var ventas=g('ventas'),costo=g('costo'),un=g('utilidad_neta');
+
+  var ctn=ac-pc; setVal('ctn',ctn,false); setBadge('ctn',ctn>=0?'good':'bad',ctn>=0?'Positivo':'Negativo');
+  var rc=pc?ac/pc:NaN; setVal('rc',rc,false); if(isFinite(rc))setBadge('rc',rc>=1.5?'good':rc>=1?'warn':'bad',rc>=1.5?'Adecuado':rc>=1?'Ajustado':'Riesgo');
+  var pa=pc?(ac-inv)/pc:NaN; setVal('pa',pa,false); if(isFinite(pa))setBadge('pa',pa>=1?'good':pa>=0.5?'warn':'bad',pa>=1?'Adecuado':pa>=0.5?'Ajustado':'Riesgo');
+  var pd=pc?ef/pc:NaN; setVal('pd',pd,false); if(isFinite(pd))setBadge('pd',pd>=0.2?'good':pd>=0.1?'warn':'bad',pd>=0.2?'Adecuado':pd>=0.1?'Ajustado':'Bajo');
+  var et=at?pt/at:NaN; setVal('et',et,true); if(isFinite(et))setBadge('et',et<0.4?'good':et<0.6?'warn':'bad',et<0.4?'Bajo':et<0.6?'Moderado':'Alto');
+  var ecp=at?pc/at:NaN; setVal('ecp',ecp,true); if(isFinite(ecp))setBadge('ecp',ecp<0.3?'good':ecp<0.5?'warn':'bad',ecp<0.3?'Bajo':ecp<0.5?'Moderado':'Alto');
+  var elp=at?pnc/at:NaN; setVal('elp',elp,true); if(isFinite(elp))setBadge('elp',elp<0.3?'good':elp<0.5?'warn':'bad',elp<0.3?'Bajo':elp<0.5?'Moderado':'Alto');
+  var lev=pat?pt/pat:NaN; setVal('lev',lev,false); if(isFinite(lev))setBadge('lev',lev<1?'good':lev<2?'warn':'bad',lev<1?'Bajo':lev<2?'Moderado':'Alto');
+  var mb=ventas?(ventas-costo)/ventas:NaN; setVal('mb',mb,true); if(isFinite(mb))setBadge('mb',mb>=0.3?'good':mb>=0.1?'warn':'bad',mb>=0.3?'Alto':mb>=0.1?'Moderado':'Bajo');
+  var mn=ventas?un/ventas:NaN; setVal('mn',mn,true); if(isFinite(mn))setBadge('mn',mn>=0.1?'good':mn>=0.03?'warn':'bad',mn>=0.1?'Alto':mn>=0.03?'Moderado':'Bajo');
+  var roa=at?un/at:NaN; setVal('roa',roa,true); if(isFinite(roa))setBadge('roa',roa>=0.05?'good':roa>=0.02?'warn':'bad',roa>=0.05?'Bueno':roa>=0.02?'Moderado':'Bajo');
+  var roe=pat?un/pat:NaN; setVal('roe',roe,true); if(isFinite(roe))setBadge('roe',roe>=0.1?'good':roe>=0.05?'warn':'bad',roe>=0.1?'Bueno':roe>=0.05?'Moderado':'Bajo');
+}
+</script>
