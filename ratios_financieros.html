@@ -1,0 +1,215 @@
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Calculadora de ratios financieros para estudiantes</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary);background:var(--color-background-tertiary)}
+
+.hero{padding:1.75rem 1.5rem 1rem;text-align:center}
+.hero-badge{display:inline-block;background:#E1F5EE;color:#085041;font-size:11px;font-weight:500;padding:3px 12px;border-radius:20px;margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase}
+.hero h1{font-size:20px;font-weight:500;margin-bottom:4px}
+.hero p{font-size:13px;color:var(--color-text-secondary)}
+
+.ex-bar{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;padding:.5rem 1.5rem 1rem}
+.ex-label{font-size:12px;color:var(--color-text-secondary)}
+.pill{padding:5px 13px;border:0.5px solid var(--color-border-secondary);border-radius:20px;background:var(--color-background-primary);color:var(--color-text-secondary);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.pill:hover{border-color:#1D9E75;color:#085041}
+.pill.active{background:#1D9E75;color:#fff;border-color:#1D9E75}
+
+.main{display:grid;grid-template-columns:260px 1fr;gap:1rem;padding:0 1.25rem 2rem}
+@media(max-width:680px){.main{grid-template-columns:1fr}}
+
+.form-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);position:sticky;top:12px}
+.form-block{padding:.75rem .875rem}
+.form-block+.form-block{border-top:0.5px solid var(--color-border-tertiary)}
+.fb-head{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.fb-icon{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fb-title{font-size:12px;font-weight:500}
+.fb-sub{font-size:11px;color:var(--color-text-secondary);margin-left:auto}
+.row{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.row:last-child{border-bottom:none}
+.row label{font-size:11px;color:var(--color-text-secondary);flex:1;min-width:0}
+.row input{width:90px;height:26px;padding:0 7px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary);font-size:12px;text-align:right;outline:none;flex-shrink:0}
+.row input:focus{border-color:#1D9E75;background:var(--color-background-primary);box-shadow:0 0 0 2px #E1F5EE}
+
+.tip-bar{display:flex;gap:6px;align-items:center;padding:.5rem .875rem;background:var(--color-background-secondary);border-top:0.5px solid var(--color-border-tertiary);border-radius:0 0 var(--border-radius-lg) var(--border-radius-lg)}
+.badge{font-size:11px;font-weight:500;padding:2px 9px;border-radius:20px;white-space:nowrap}
+.good{background:#E1F5EE;color:#085041}
+.warn{background:#FAEEDA;color:#633806}
+.bad{background:#FCEBEB;color:#501313}
+.neu{background:var(--color-background-secondary);color:var(--color-text-tertiary);border:0.5px solid var(--color-border-tertiary)}
+
+.results{display:flex;flex-direction:column;gap:.875rem}
+
+.rcard{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.rcard-head{display:flex;align-items:center;gap:10px;padding:.75rem 1rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.rcard-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rcard-title{font-size:13px;font-weight:500}
+.rcard-desc{font-size:11px;color:var(--color-text-secondary);margin-top:1px}
+
+.ratio-item{display:flex;flex-direction:column;gap:3px;padding:7px .875rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.ratio-item:last-child{border-bottom:none}
+.ri-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.ri-right{display:flex;align-items:center;gap:6px}
+.ri-val{font-size:12px;font-weight:500;white-space:nowrap}
+.ri-formula{font-size:10px;color:var(--color-text-secondary);font-family:var(--font-mono);white-space:nowrap}
+</style>
+
+<div class="hero">
+  <div class="hero-badge">Herramienta educativa</div>
+  <h1>Calculadora de ratios financieros</h1>
+  <p>Ingresa los datos del balance y estado de resultados. Los ratios se calculan al instante.</p>
+</div>
+
+<div class="ex-bar">
+  <span class="ex-label">Cargar ejemplo:</span>
+  <button class="pill" id="btn0">Retail S.A.</button>
+  <button class="pill" id="btn1">Constructora del Sur</button>
+  <button class="pill" id="btn2">TechFlow SpA</button>
+  <button class="pill" id="btnReset" style="border-color:#E24B4A;color:#A32D2D">Limpiar</button>
+</div>
+
+<div class="main">
+  <div class="form-card">
+    <div class="form-block">
+      <div class="fb-head">
+        <div class="fb-icon" style="background:#E1F5EE">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="#1D9E75" stroke-width="1.4"/><path d="M3 7h8M3 4.5h8M3 9.5h5" stroke="#1D9E75" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <span class="fb-title" style="color:#085041">Activos</span>
+        <span class="fb-sub">Balance general</span>
+      </div>
+      <div class="row"><label>Efectivo y equivalentes</label><input type="number" id="efectivo" placeholder="0"></div>
+      <div class="row"><label>Cuentas por cobrar</label><input type="number" id="cxc" placeholder="0"></div>
+      <div class="row"><label>Inventarios</label><input type="number" id="inventarios" placeholder="0"></div>
+      <div class="row"><label>Otros activos corrientes</label><input type="number" id="otros_ac" placeholder="0"></div>
+      <div class="row"><label>Activos no corrientes</label><input type="number" id="anc" placeholder="0"></div>
+    </div>
+    <div class="form-block">
+      <div class="fb-head">
+        <div class="fb-icon" style="background:#E6F1FB">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="#378ADD" stroke-width="1.4"/><path d="M7 3.5v7M4.5 6L7 3.5 9.5 6" stroke="#378ADD" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="fb-title" style="color:#0C447C">Pasivos y patrimonio</span>
+        <span class="fb-sub">Balance general</span>
+      </div>
+      <div class="row"><label>Pasivo corriente</label><input type="number" id="pc" placeholder="0"></div>
+      <div class="row"><label>Pasivo no corriente</label><input type="number" id="pnc" placeholder="0"></div>
+      <div class="row"><label>Patrimonio neto</label><input type="number" id="patrimonio" placeholder="0"></div>
+    </div>
+    <div class="form-block">
+      <div class="fb-head">
+        <div class="fb-icon" style="background:#EEEDFE">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#7F77DD" stroke-width="1.4"/><path d="M7 4.5V7l1.5 1.5" stroke="#7F77DD" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <span class="fb-title" style="color:#3C3489">Resultados</span>
+        <span class="fb-sub">Estado de resultados</span>
+      </div>
+      <div class="row"><label>Ventas / Ingresos</label><input type="number" id="ventas" placeholder="0"></div>
+      <div class="row"><label>Costo de ventas</label><input type="number" id="costo" placeholder="0"></div>
+      <div class="row"><label>Utilidad neta</label><input type="number" id="utilidad_neta" placeholder="0"></div>
+    </div>
+    <div class="tip-bar">
+      <span class="badge good">Adecuado</span>
+      <span class="badge warn">Moderado</span>
+      <span class="badge bad">Riesgo</span>
+    </div>
+  </div>
+
+  <div class="results">
+    <div class="rcard">
+      <div class="rcard-head">
+        <div class="rcard-icon" style="background:#E1F5EE">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="9" width="3" height="6" rx="1" fill="#1D9E75"/><rect x="6" y="5" width="3" height="10" rx="1" fill="#1D9E75"/><rect x="11" y="2" width="3" height="13" rx="1" fill="#1D9E75"/></svg>
+        </div>
+        <div>
+          <div class="rcard-title" style="color:#085041">Liquidez</div>
+          <div class="rcard-desc">Capacidad para cubrir obligaciones a corto plazo</div>
+        </div>
+      </div>
+      <div>
+        <div class="ratio-item"><span class="ri-name">Capital de trabajo neto</span><div class="ri-right"><span class="ri-formula">AC − PC</span><span class="ri-val" id="v-ctn" style="color:#1D9E75">—</span><div id="b-ctn"><span class="badge neu">—</span></div></div></div>
+        <div class="ratio-item"><span class="ri-name">Razón corriente</span><div class="ri-right"><span class="ri-formula">AC ÷ PC</span><span class="ri-val" id="v-rc" style="color:#1D9E75">—</span><div id="b-rc"><span class="badge neu">—</span></div></div></div>
+        <div class="ratio-item"><span class="ri-name">Prueba ácida</span><div class="ri-right"><span class="ri-formula">(AC − Inv) ÷ PC</span><span class="ri-val" id="v-pa" style="color:#1D9E75">—</span><div id="b-pa"><span class="badge neu">—</span></div></div></div>
+        <div class="ratio-item"><span class="ri-name">Prueba defensiva</span><div class="ri-right"><span class="ri-formula">Efectivo ÷ PC</span><span class="ri-val" id="v-pd" style="color:#1D9E75">—</span><div id="b-pd"><span class="badge neu">—</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="rcard">
+      <div class="rcard-head">
+        <div class="rcard-icon" style="background:#E6F1FB">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L1.5 6v9h4.5V11h4v4h4.5V6L8 1.5z" fill="#378ADD"/></svg>
+        </div>
+        <div>
+          <div class="rcard-title" style="color:#0C447C">Endeudamiento</div>
+          <div class="rcard-desc">Estructura y nivel de financiamiento externo</div>
+        </div>
+      </div>
+      <div>
+        <div class="ratio-item"><span class="ri-name">Endeudamiento total</span><div class="ri-right"><span class="ri-formula">PT ÷ AT</span><span class="ri-val" id="v-et" style="color:#378ADD">—</span><div id="b-et"><span class="badge neu">—</span></div></div></div>
+        <div class="ratio-item"><span class="ri-name">Endeudamiento corto plazo</span><div class="ri-right"><span class="ri-formula">PC ÷ AT</span><span class="ri-val" id="v-ecp" style="color:#378ADD">—</span><div id="b-ecp"><span class="badge neu">—</span></div></div></div>
+        <div class="ratio-item"><span class="ri-name">Endeudamiento largo plazo</span><div class="ri-right"><span class="ri-formula">PNC ÷ AT</span><span class="ri-val" id="v-elp" style="color:#378ADD">—</span><div id="b-elp"><span class="badge neu">—</span></div></div></div>
+        <div class="ratio-item"><span class="ri-name">Leverage (D/P)</span><div class="ri-right"><span class="ri-formula">PT ÷ Patrimonio</span><span class="ri-val" id="v-lev" style="color:#378ADD">—</span><div id="b-lev"><span class="badge neu">—</span></div></div></div>
+      </div>
+    </div>
+
+    <div class="rcard">
+      <div class="rcard-head">
+        <div class="rcard-icon" style="background:#EEEDFE">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#7F77DD" stroke-width="1.5"/><path d="M8 5v3.5l2.5 1.5" stroke="#7F77DD" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="rcard-title" style="color:#3C3489">Rentabilidad</div>
+          <div class="rcard-desc">Eficiencia en la generación de utilidades</div>
+        </div>
+      </div>
+      <div>
+        <div class="ratio-item"><span class="ri-name">Margen bruto</span><div class="ri-right"><span class="ri-formula">(V − CV) ÷ V</span><span class="ri-val" id="v-mb" style="color:#7F77DD">—</span><div id="b-mb"><span class="badge neu">—</span></div></div></div>
+        <div class="ratio-item"><span class="ri-name">Margen neto</span><div class="ri-right"><span class="ri-formula">UN ÷ Ventas</span><span class="ri-val" id="v-mn" style="color:#7F77DD">—</span><div id="b-mn"><span class="badge neu">—</span></div></div></div>
+        <div class="ratio-item"><span class="ri-name">ROA</span><div class="ri-right"><span class="ri-formula">UN ÷ AT</span><span class="ri-val" id="v-roa" style="color:#7F77DD">—</span><div id="b-roa"><span class="badge neu">—</span></div></div></div>
+        <div class="ratio-item"><span class="ri-name">ROE</span><div class="ri-right"><span class="ri-formula">UN ÷ Patrimonio</span><span class="ri-val" id="v-roe" style="color:#7F77DD">—</span><div id="b-roe"><span class="badge neu">—</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var ejemplos=[
+  {efectivo:120,cxc:380,inventarios:950,otros_ac:80,anc:2200,pc:820,pnc:1100,patrimonio:1810,ventas:8500,costo:5950,utilidad_neta:425},
+  {efectivo:95,cxc:1200,inventarios:2800,otros_ac:300,anc:5400,pc:1800,pnc:3500,patrimonio:4495,ventas:12000,costo:9200,utilidad_neta:360},
+  {efectivo:850,cxc:620,inventarios:90,otros_ac:140,anc:1800,pc:480,pnc:600,patrimonio:2420,ventas:5200,costo:1560,utilidad_neta:936}
+];
+var campos=['efectivo','cxc','inventarios','otros_ac','anc','pc','pnc','patrimonio','ventas','costo','utilidad_neta'];
+function cargarEjemplo(i){
+  document.querySelectorAll('.pill').forEach(function(p,j){p.classList.toggle('active',j===i);});
+  campos.forEach(function(k){document.getElementById(k).value=ejemplos[i][k];});
+  calcular();
+}
+[0,1,2].forEach(function(i){document.getElementById('btn'+i).addEventListener('click',function(){cargarEjemplo(i);});});
+document.getElementById('btnReset').addEventListener('click',function(){
+  document.querySelectorAll('.pill').forEach(function(p){p.classList.remove('active');});
+  campos.forEach(function(k){document.getElementById(k).value='';});
+  var ids=['ctn','rc','pa','pd','et','ecp','elp','lev','mb','mn','roa','roe'];
+  ids.forEach(function(id){document.getElementById('v-'+id).textContent='—';document.getElementById('b-'+id).innerHTML='<span class="badge neu">—</span>';});
+});
+campos.forEach(function(k){document.getElementById(k).addEventListener('input',function(){document.querySelectorAll('.pill').forEach(function(p){p.classList.remove('active');});calcular();});});
+function g(id){return parseFloat(document.getElementById(id).value)||0;}
+function sv(id,val,pct){document.getElementById('v-'+id).textContent=isFinite(val)?(pct?(val*100).toFixed(1)+'%':val.toFixed(2)):'—';}
+function sb(id,cls,txt){document.getElementById('b-'+id).innerHTML='<span class="badge '+cls+'">'+txt+'</span>';}
+function calcular(){
+  var ef=g('efectivo'),cxc=g('cxc'),inv=g('inventarios'),oac=g('otros_ac');
+  var ac=ef+cxc+inv+oac,anc=g('anc'),at=ac+anc;
+  var pc=g('pc'),pnc=g('pnc'),pt=pc+pnc,pat=g('patrimonio');
+  var ventas=g('ventas'),costo=g('costo'),un=g('utilidad_neta');
+  var ctn=ac-pc; sv('ctn',ctn,false); sb('ctn',ctn>=0?'good':'bad',ctn>=0?'Positivo':'Negativo');
+  var rc=pc?ac/pc:NaN; sv('rc',rc,false); if(isFinite(rc))sb('rc',rc>=1.5?'good':rc>=1?'warn':'bad',rc>=1.5?'Adecuado':rc>=1?'Ajustado':'Riesgo');
+  var pa=pc?(ac-inv)/pc:NaN; sv('pa',pa,false); if(isFinite(pa))sb('pa',pa>=1?'good':pa>=0.5?'warn':'bad',pa>=1?'Adecuado':pa>=0.5?'Ajustado':'Riesgo');
+  var pd=pc?ef/pc:NaN; sv('pd',pd,false); if(isFinite(pd))sb('pd',pd>=0.2?'good':pd>=0.1?'warn':'bad',pd>=0.2?'Adecuado':pd>=0.1?'Ajustado':'Bajo');
+  var et=at?pt/at:NaN; sv('et',et,true); if(isFinite(et))sb('et',et<0.4?'good':et<0.6?'warn':'bad',et<0.4?'Bajo':et<0.6?'Moderado':'Alto');
+  var ecp=at?pc/at:NaN; sv('ecp',ecp,true); if(isFinite(ecp))sb('ecp',ecp<0.3?'good':ecp<0.5?'warn':'bad',ecp<0.3?'Bajo':ecp<0.5?'Moderado':'Alto');
+  var elp=at?pnc/at:NaN; sv('elp',elp,true); if(isFinite(elp))sb('elp',elp<0.3?'good':elp<0.5?'warn':'bad',elp<0.3?'Bajo':elp<0.5?'Moderado':'Alto');
+  var lev=pat?pt/pat:NaN; sv('lev',lev,false); if(isFinite(lev))sb('lev',lev<1?'good':lev<2?'warn':'bad',lev<1?'Bajo':lev<2?'Moderado':'Alto');
+  var mb=ventas?(ventas-costo)/ventas:NaN; sv('mb',mb,true); if(isFinite(mb))sb('mb',mb>=0.3?'good':mb>=0.1?'warn':'bad',mb>=0.3?'Alto':mb>=0.1?'Moderado':'Bajo');
+  var mn=ventas?un/ventas:NaN; sv('mn',mn,true); if(isFinite(mn))sb('mn',mn>=0.1?'good':mn>=0.03?'warn':'bad',mn>=0.1?'Alto':mn>=0.03?'Moderado':'Bajo');
+  var roa=at?un/at:NaN; sv('roa',roa,true); if(isFinite(roa))sb('roa',roa>=0.05?'good':roa>=0.02?'warn':'bad',roa>=0.05?'Bueno':roa>=0.02?'Moderado':'Bajo');
+  var roe=pat?un/pat:NaN; sv('roe',roe,true); if(isFinite(roe))sb('roe',roe>=0.1?'good':roe>=0.05?'warn':'bad',roe>=0.1?'Bueno':roe>=0.05?'Moderado':'Bajo');
+}
+</script>
