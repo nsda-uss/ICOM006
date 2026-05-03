@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Costo de Deuda After-Tax · Guía para estudiantes</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1f3d;
+    --navy-mid: #1a3260;
+    --teal: #0a7f6f;
+    --teal-light: #d4f0eb;
+    --gold: #c8922a;
+    --gold-light: #fdf3e0;
+    --red-soft: #c0392b;
+    --red-light: #fdecea;
+    --bg: #f5f3ee;
+    --surface: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e0ddd6;
+    --step-done: #0a7f6f;
+    --step-active: #0f1f3d;
+    --step-inactive: #c8c4bc;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  .hero {
+    background: var(--navy);
+    color: white;
+    padding: 3.5rem 2.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: 'Kd(1−t)';
+    font-family: 'Fraunces', serif;
+    font-size: 9rem;
+    color: rgba(255,255,255,0.04);
+    position: absolute;
+    right: -1rem;
+    top: -1rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .hero-tag {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7ec8c0;
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 2.6rem;
+    line-height: 1.15;
+    color: white;
+    max-width: 520px;
+    margin-bottom: 1rem;
+  }
+  .hero p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    max-width: 480px;
+    line-height: 1.7;
+  }
+  .formula-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 1.5rem;
+    background: rgba(255,255,255,0.08);
+    border: 0.5px solid rgba(255,255,255,0.18);
+    border-radius: 40px;
+    padding: 8px 18px;
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    color: #a8e6df;
+  }
+
+  /* PROGRESS */
+  .progress-bar {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+    padding: 1rem 2.5rem;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .pb-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  .pb-step:hover { background: var(--bg); }
+  .pb-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500;
+    transition: all 0.2s;
+  }
+  .pb-num.done { background: var(--teal); color: white; }
+  .pb-num.active { background: var(--navy); color: white; }
+  .pb-num.inactive { background: var(--border); color: var(--muted); }
+  .pb-label { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .pb-label.active { color: var(--navy); font-weight: 500; }
+  .pb-connector {
+    width: 20px; height: 1px;
+    background: var(--border);
+    flex-shrink: 0;
+    margin: 0 2px;
+  }
+
+  /* MAIN */
+  .main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* STEPS */
+  .step-panel {
+    display: none;
+    animation: fadeIn 0.25s ease;
+  }
+  .step-panel.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .step-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 1.5rem;
+  }
+  .step-badge {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .step-title-block h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 1.6rem;
+    color: var(--navy);
+    line-height: 1.2;
+  }
+  .step-title-block p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1rem;
+  }
+  .card h3 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card p, .card li {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.75;
+  }
+  .card ul, .card ol {
+    padding-left: 1.3rem;
+    margin-top: 6px;
+  }
+  .card li { margin-bottom: 6px; }
+
+  .card.teal {
+    background: var(--teal-light);
+    border-color: #a0d9d2;
+  }
+  .card.gold {
+    background: var(--gold-light);
+    border-color: #f0c97a;
+  }
+  .card.red {
+    background: var(--red-light);
+    border-color: #f5b8b3;
+  }
+  .card.navy {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: white;
+  }
+  .card.navy p, .card.navy li, .card.navy h3 { color: rgba(255,255,255,0.9); }
+
+  .icon { font-size: 15px; }
+
+  /* METHODS GRID */
+  .method-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1rem;
+  }
+  .method-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.1rem 1.2rem;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .method-card:hover { border-color: var(--navy); }
+  .method-card.selected { border-color: var(--teal); border-width: 1.5px; background: var(--teal-light); }
+  .method-card h4 { font-size: 13px; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
+  .method-card p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .method-badge { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .method-badge.preferred { color: var(--teal); }
+  .method-badge.alt { color: var(--gold); }
+
+  /* CALCULATOR */
+  .calc-box {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1rem;
+  }
+  .calc-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .calc-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .calc-field input, .calc-field select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 0.5px solid var(--border);
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .calc-field input:focus, .calc-field select:focus {
+    border-color: var(--navy);
+    background: white;
+  }
+  .calc-result {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 1.2rem 1.4rem;
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .calc-result-label { font-size: 12px; color: rgba(255,255,255,0.6); }
+  .calc-result-value {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    color: #7ec8c0;
+  }
+  .calc-breakdown { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+  /* LINKS REFERENCE */
+  .link-list { list-style: none; padding: 0; }
+  .link-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 13px;
+  }
+  .link-list li:last-child { border-bottom: none; }
+  .link-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .link-list a { color: var(--navy); font-weight: 500; text-decoration: none; }
+  .link-list a:hover { text-decoration: underline; }
+  .link-desc { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--navy);
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  th:first-child { border-radius: 8px 0 0 0; }
+  th:last-child { border-radius: 0 8px 0 0; }
+  td {
+    padding: 9px 12px;
+    border-bottom: 0.5px solid var(--border);
+    color: var(--text);
+  }
+  tr:nth-child(even) td { background: var(--bg); }
+  .td-teal { color: var(--teal); font-weight: 500; }
+  .td-red { color: var(--red-soft); font-weight: 500; }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 7px;
+    margin-bottom: 6px;
+    background: var(--bg);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.1s;
+    user-select: none;
+  }
+  .checklist li.checked { background: var(--teal-light); }
+  .check-box {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    transition: all 0.15s;
+  }
+  .checked .check-box { background: var(--teal); border-color: var(--teal); color: white; }
+
+  /* NAV BUTTONS */
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 0.5px solid var(--border);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 0.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .btn:hover { border-color: var(--navy); }
+  .btn.primary { background: var(--navy); color: white; border-color: var(--navy); }
+  .btn.primary:hover { background: var(--navy-mid); }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .step-counter { font-size: 13px; color: var(--muted); }
+
+  /* FINAL */
+  .final-formula {
+    text-align: center;
+    padding: 2.5rem;
+    background: var(--navy);
+    border-radius: 14px;
+    margin-bottom: 1rem;
+  }
+  .final-formula .label { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
+  .final-formula .formula { font-family: 'Fraunces', serif; font-size: 2.4rem; color: #a8e6df; }
+  .final-formula .sub { font-size: 13px; color: rgba(255,255,255,0.45); margin-top: 10px; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.9rem; }
+    .method-grid { grid-template-columns: 1fr; }
+    .calc-row { grid-template-columns: 1fr; }
+    .progress-bar { padding: 1rem; }
+    .pb-label { display: none; }
+    .main { padding: 1.5rem 1rem 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">ICOM I006 · Valorización de Empresas</div>
+  <h1>Costo de deuda after-tax: guía paso a paso</h1>
+  <p>Aprende a estimar el Kd(1−t) de tu empresa chilena usando fuentes reales del mercado financiero local.</p>
+  <div class="formula-pill">Kd_at = YTM × (1 − t)</div>
+</div>
+
+<div class="progress-bar" id="progressBar">
+  <!-- filled by JS -->
+</div>
+
+<div class="main">
+
+  <!-- PASO 1 -->
+  <div class="step-panel active" id="step-1">
+    <div class="step-header">
+      <div class="step-badge">1</div>
+      <div class="step-title-block">
+        <h2>Entiende qué estás calculando</h2>
+        <p>Conceptos clave antes de buscar datos</p>
+      </div>
+    </div>
+
+    <div class="final-formula" style="margin-bottom:1rem;">
+      <div class="label">La fórmula central</div>
+      <div class="formula">Kd(1−t) = YTM × (1 − 0,27)</div>
+      <div class="sub">YTM = rendimiento que el mercado exige hoy · t = tasa impositiva corporativa chilena</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon">📌</span> ¿Por qué el YTM y no la tasa cupón?</h3>
+      <p>La tasa cupón refleja el costo de la deuda <strong>cuando fue emitida</strong>. El mercado cambia todos los días. Lo que importa para tu modelo de valorización es cuánto le costaría a la empresa financiarse <em>hoy</em>, y eso lo captura el YTM.</p>
+    </div>
+
+    <div class="card teal">
+      <h3><span class="icon">🇨🇱</span> Contexto chileno: tasa de impuestos</h3>
+      <p>En Chile, la tasa de impuesto de primera categoría es <strong>27%</strong> para grandes empresas desde 2018 (Ley 20.780). Los intereses de la deuda son deducibles de impuestos, lo que genera el <em>escudo fiscal</em>. Por eso el costo efectivo de la deuda es menor que el YTM bruto.</p>
+    </div>
+
+    <div class="card gold">
+      <h3><span class="icon">⚠️</span> Cuidado con estos errores frecuentes</h3>
+      <ul>
+        <li>Usar la tasa cupón del bono en vez del YTM actual</li>
+        <li>No aplicar el escudo fiscal (olvidar el ×(1−t))</li>
+        <li>Usar una tasa de impuesto incorrecta (PYME vs gran empresa)</li>
+        <li>Mezclar deuda en UF con deuda en pesos sin ajustar</li>
+      </ul>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" disabled>← Anterior</button>
+      <span class="step-counter">Paso 1 de 5</span>
+      <button class="btn primary" onclick="goTo(2)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PASO 2 -->
+  <div class="step-panel" id="step-2">
+    <div class="step-header">
+      <div class="step-badge">2</div>
+      <div class="step-title-block">
+        <h2>Identifica el tipo de deuda</h2>
+        <p>No todas las empresas tienen bonos transables</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>¿Cómo financia su deuda tu empresa?</h3>
+      <p style="margin-bottom:12px;">Elige el método según lo que encuentres:</p>
+    </div>
+
+    <div class="method-grid">
+      <div class="method-card" id="m1" onclick="selectMethod('m1')">
+        <div class="method-badge preferred">✦ Método preferido</div>
+        <h4>Tiene bonos en el mercado</h4>
+        <p>La empresa emitió bonos corporativos. Puedes observar directamente el YTM en el mercado secundario.</p>
+      </div>
+      <div class="method-card" id="m2" onclick="selectMethod('m2')">
+        <div class="method-badge alt">≈ Alternativa</div>
+        <h4>Solo deuda bancaria</h4>
+        <p>Sin bonos transables. Usas la clasificación de riesgo para estimar el spread sobre la tasa libre de riesgo.</p>
+      </div>
+      <div class="method-card" id="m3" onclick="selectMethod('m3')">
+        <div class="method-badge alt">≈ Alternativa</div>
+        <h4>Empresa sin clasificación</h4>
+        <p>Sin rating ni bonos. Usas el ratio de cobertura de intereses (EBIT/Gastos financieros) para inferir el spread.</p>
+      </div>
+      <div class="method-card" id="m4" onclick="selectMethod('m4')">
+        <div class="method-badge alt">≈ Último recurso</div>
+        <h4>Comparable de industria</h4>
+        <p>Usas el Kd promedio de empresas similares en Chile o Latinoamérica como proxy.</p>
+      </div>
+    </div>
+
+    <div class="card teal" id="method-detail" style="display:none;"></div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(1)">← Anterior</button>
+      <span class="step-counter">Paso 2 de 5</span>
+      <button class="btn primary" onclick="goTo(3)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PASO 3 -->
+  <div class="step-panel" id="step-3">
+    <div class="step-header">
+      <div class="step-badge">3</div>
+      <div class="step-title-block">
+        <h2>Busca los datos en fuentes reales</h2>
+        <p>Dónde encontrar el YTM y la deuda financiera</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📂 Fuentes oficiales chilenas</h3>
+      <ul class="link-list">
+        <li>
+          <div class="link-dot"></div>
+          <div>
+            <div><a href="https://www.cmfchile.cl" target="_blank">CMF Chile — cmfchile.cl</a></div>
+            <div class="link-desc">Contratos de emisión, serie de bonos, montos, plazos y clasificación. Busca por RUT o nombre de empresa → Documentos → Emisión de Valores.</div>
+          </div>
+        </li>
+        <li>
+          <div class="link-dot"></div>
+          <div>
+            <div><a href="https://www.bolsadesantiago.com" target="_blank">Bolsa de Santiago — bolsadesantiago.com</a></div>
+            <div class="link-desc">Cotización y YTM en tiempo real de bonos corporativos. Busca por serie (ej. BAGUA J). Muestra precio, tasa y spread.</div>
+          </div>
+        </li>
+        <li>
+          <div class="link-dot"></div>
+          <div>
+            <div><a href="https://www.hacienda.cl/politica-financiera/deuda-publica/tasas-de-interes-de-referencia" target="_blank">Hacienda Chile — Tasas de referencia</a></div>
+            <div class="link-desc">Tasa libre de riesgo en pesos (BCP) y UF (BCU). Úsala como base para calcular el spread de crédito.</div>
+          </div>
+        </li>
+        <li>
+          <div class="link-dot"></div>
+          <div>
+            <div><a href="https://www.bcentral.cl" target="_blank">Banco Central de Chile — bcentral.cl</a></div>
+            <div class="link-desc">Base de datos estadísticos (BDE). Tasas de crédito bancario, costo de fondos y curva soberana.</div>
+          </div>
+        </li>
+        <li>
+          <div class="link-dot"></div>
+          <div>
+            <div>Estados Financieros IFRS (CMF o la propia empresa)</div>
+            <div class="link-desc">Nota de Pasivos Financieros: muestra tasa pactada, saldo y vencimiento de cada deuda bancaria. Fuente directa si no hay bonos.</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card gold">
+      <h3>🔍 ¿Qué exactamente debes anotar?</h3>
+      <ul>
+        <li><strong>Tasa cupón del bono</strong> (referencial — no la uses como Kd final)</li>
+        <li><strong>YTM actual</strong> desde Bolsa de Santiago o Bloomberg</li>
+        <li><strong>Clasificación de riesgo</strong>: Feller Rate, Fitch Chile, ICR, Humphreys</li>
+        <li><strong>Saldo de deuda financiera total</strong>: nota de pasivos financieros del balance</li>
+        <li><strong>Moneda</strong>: UF, pesos o USD (esto afecta qué tasa libre de riesgo usar)</li>
+      </ul>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(2)">← Anterior</button>
+      <span class="step-counter">Paso 3 de 5</span>
+      <button class="btn primary" onclick="goTo(4)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PASO 4 -->
+  <div class="step-panel" id="step-4">
+    <div class="step-header">
+      <div class="step-badge">4</div>
+      <div class="step-title-block">
+        <h2>Calcula el Kd(1−t)</h2>
+        <p>Ingresa los datos y obtén el costo de deuda after-tax</p>
+      </div>
+    </div>
+
+    <div class="calc-box">
+      <div class="calc-row">
+        <div class="calc-field">
+          <label>YTM o tasa de deuda (%)</label>
+          <input type="number" id="ytm" placeholder="Ej: 5.8" step="0.01" oninput="calcular()">
+        </div>
+        <div class="calc-field">
+          <label>Tasa de impuesto (%)</label>
+          <select id="tax" onchange="calcular()">
+            <option value="27">27% — Gran empresa (post 2018)</option>
+            <option value="25">25% — Régimen Pro-PYME</option>
+            <option value="10">10% — PYME transparente</option>
+            <option value="0">0% — Empresa con pérdidas</option>
+          </select>
+        </div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-field">
+          <label>Moneda de la deuda</label>
+          <select id="currency" onchange="calcular()">
+            <option value="uf">UF (Unidad de Fomento)</option>
+            <option value="clp">Pesos chilenos (CLP)</option>
+            <option value="usd">Dólares (USD)</option>
+          </select>
+        </div>
+        <div class="calc-field">
+          <label>Nombre de la empresa</label>
+          <input type="text" id="empresa" placeholder="Ej: Aguas Andinas S.A." oninput="calcular()">
+        </div>
+      </div>
+
+      <div class="calc-result" id="calcResult">
+        <div>
+          <div class="calc-result-label">Kd after-tax</div>
+          <div class="calc-result-value" id="resultVal">—</div>
+          <div class="calc-breakdown" id="resultBreak"></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="calc-result-label">Escudo fiscal ahorrado</div>
+          <div style="font-family:'Fraunces',serif; font-size:1.4rem; color:#fac775;" id="shieldVal">—</div>
+          <div class="calc-breakdown" id="shieldBreak"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📋 Tabla de referencia: spreads por clasificación</h3>
+      <table>
+        <thead>
+          <tr><th>Clasificación</th><th>Equivalente S&P</th><th>Spread típico en Chile</th><th>YTM aprox. (UF + X%)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>AAA</td><td>AAA</td><td class="td-teal">+0,5% a +0,8%</td><td class="td-teal">UF + 0,5–0,8%</td></tr>
+          <tr><td>AA+ / AA</td><td>AA</td><td>+0,8% a +1,2%</td><td>UF + 1–1,5%</td></tr>
+          <tr><td>AA− / A+</td><td>A</td><td>+1,2% a +2,0%</td><td>UF + 1,5–2,5%</td></tr>
+          <tr><td>A / A−</td><td>BBB+</td><td>+2,0% a +2,8%</td><td>UF + 2,5–3,5%</td></tr>
+          <tr><td>BBB+</td><td>BBB</td><td>+2,8% a +3,5%</td><td>UF + 3–4%</td></tr>
+          <tr><td>BBB / BBB−</td><td>BB</td><td class="td-red">+3,5% a +5%</td><td class="td-red">UF + 4–6%</td></tr>
+          <tr><td>BB o inferior</td><td>B o menor</td><td class="td-red">>+5%</td><td class="td-red">UF + 6%+</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(3)">← Anterior</button>
+      <span class="step-counter">Paso 4 de 5</span>
+      <button class="btn primary" onclick="goTo(5)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PASO 5 -->
+  <div class="step-panel" id="step-5">
+    <div class="step-header">
+      <div class="step-badge">5</div>
+      <div class="step-title-block">
+        <h2>Documenta y usa en tu modelo</h2>
+        <p>Cómo integrar el Kd(1−t) en el WACC</p>
+      </div>
+    </div>
+
+    <div class="card navy">
+      <h3>Fórmula del WACC con tu Kd(1−t)</h3>
+      <p style="font-family:'Fraunces',serif; font-size:1.3rem; margin: 10px 0 4px; color:#a8e6df;">WACC = Ke × (E/V) + Kd(1−t) × (D/V)</p>
+      <p>Donde E/V y D/V son los pesos de patrimonio y deuda a <em>valores de mercado</em>, no contables.</p>
+    </div>
+
+    <div class="card">
+      <h3>✅ Checklist final de tu estimación</h3>
+      <ul class="checklist" id="checklist">
+        <li onclick="toggleCheck(this)"><div class="check-box"></div>Identifiqué si la empresa tiene bonos o solo deuda bancaria</li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div>Usé el YTM actual (no la tasa cupón) como base del Kd bruto</li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div>Apliqué la tasa de impuesto correcta (27% gran empresa)</li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div>Documenté la fuente del YTM (CMF, Bolsa de Santiago, estados financieros)</li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div>Verifiqué la moneda de la deuda (UF, pesos o USD)</li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div>Calculé E/V y D/V a valor de mercado para el WACC</li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div>Comparé mi Kd(1−t) con el spread de la clasificación de riesgo</li>
+      </ul>
+    </div>
+
+    <div class="card teal">
+      <h3>📝 Cómo citar la fuente en tu informe</h3>
+      <p>Ejemplo de pie de página aceptable para tu proyecto:</p>
+      <br>
+      <p style="font-style:italic; font-size:13px;">"El costo de la deuda bruta (YTM = 4,8% en UF) fue obtenido de la cotización del bono Serie J de Aguas Andinas S.A. en la Bolsa de Santiago al 30 de abril de 2026. Se aplicó la tasa de impuesto de primera categoría de 27% (Ley 20.780), resultando en un Kd(1−t) = 3,5% en UF."</p>
+    </div>
+
+    <div class="card gold">
+      <h3>💡 Si tu empresa no tiene bonos transables</h3>
+      <ul>
+        <li>Busca la <strong>tasa de interés pactada</strong> en las notas de los estados financieros IFRS (nota de pasivos financieros)</li>
+        <li>O usa la <strong>clasificación de riesgo</strong> de la empresa + tabla de spreads del paso anterior</li>
+        <li>Como último recurso, Damodaran publica spreads por ratio de cobertura en <a href="https://pages.stern.nyu.edu/~adamodar/" target="_blank" style="color:var(--navy);">pages.stern.nyu.edu/~adamodar</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(4)">← Anterior</button>
+      <span class="step-counter">Paso 5 de 5</span>
+      <button class="btn primary" onclick="goTo(1)">Reiniciar guía ↺</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const steps = [
+    { n: 1, label: 'Conceptos' },
+    { n: 2, label: 'Tipo de deuda' },
+    { n: 3, label: 'Datos' },
+    { n: 4, label: 'Cálculo' },
+    { n: 5, label: 'Documenta' },
+  ];
+  let currentStep = 1;
+
+  function buildProgress() {
+    const bar = document.getElementById('progressBar');
+    bar.innerHTML = '';
+    steps.forEach((s, i) => {
+      const div = document.createElement('div');
+      div.className = 'pb-step';
+      div.onclick = () => goTo(s.n);
+      const numClass = s.n < currentStep ? 'done' : s.n === currentStep ? 'active' : 'inactive';
+      const labelClass = s.n === currentStep ? 'active' : '';
+      div.innerHTML = `<div class="pb-num ${numClass}">${s.n < currentStep ? '✓' : s.n}</div><span class="pb-label ${labelClass}">${s.label}</span>`;
+      bar.appendChild(div);
+      if (i < steps.length - 1) {
+        const conn = document.createElement('div');
+        conn.className = 'pb-connector';
+        bar.appendChild(conn);
+      }
+    });
+  }
+
+  function goTo(n) {
+    document.getElementById('step-' + currentStep).classList.remove('active');
+    currentStep = n;
+    document.getElementById('step-' + currentStep).classList.add('active');
+    buildProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  const methodDetails = {
+    m1: '<h3>✦ Método 1: YTM de bonos transables</h3><p>Busca en la Bolsa de Santiago el YTM actual del bono de tu empresa. Ese número ES tu Kd bruto. Multiplica por (1−0,27) y listo. Es el método más directo y confiable.</p>',
+    m2: '<h3>≈ Método 2: Spread sobre libre de riesgo</h3><p>Busca la clasificación de riesgo de la empresa (Feller Rate, ICR, etc.) y usa la tabla de spreads del paso 4. Kd bruto = BCU (tasa libre de riesgo UF) + spread según clasificación.</p>',
+    m3: '<h3>≈ Método 3: Ratio de cobertura (Damodaran)</h3><p>Calcula EBIT / Gastos financieros desde los estados financieros. Ese ratio tiene un spread implícito según tablas de Damodaran. Suma ese spread a la tasa libre de riesgo de Chile.</p>',
+    m4: '<h3>≈ Método 4: Comparable de industria</h3><p>Busca empresas comparables con clasificación similar y deuda transable. Promedia sus YTM como proxy para tu empresa. Documenta bien qué empresas usaste y por qué son comparables.</p>',
+  };
+
+  function selectMethod(id) {
+    ['m1','m2','m3','m4'].forEach(m => document.getElementById(m).classList.remove('selected'));
+    document.getElementById(id).classList.add('selected');
+    const det = document.getElementById('method-detail');
+    det.innerHTML = methodDetails[id];
+    det.style.display = 'block';
+  }
+
+  function calcular() {
+    const ytm = parseFloat(document.getElementById('ytm').value);
+    const tax = parseFloat(document.getElementById('tax').value) / 100;
+    const empresa = document.getElementById('empresa').value || 'la empresa';
+
+    if (isNaN(ytm) || ytm <= 0) {
+      document.getElementById('resultVal').textContent = '—';
+      document.getElementById('resultBreak').textContent = '';
+      document.getElementById('shieldVal').textContent = '—';
+      document.getElementById('shieldBreak').textContent = '';
+      return;
+    }
+
+    const kdAt = ytm * (1 - tax);
+    const shield = ytm - kdAt;
+
+    document.getElementById('resultVal').textContent = kdAt.toFixed(2) + '%';
+    document.getElementById('resultBreak').textContent = `${ytm.toFixed(2)}% × (1 − ${(tax*100).toFixed(0)}%) para ${empresa}`;
+    document.getElementById('shieldVal').textContent = shield.toFixed(2) + '%';
+    document.getElementById('shieldBreak').textContent = `Por cada 100 UF de interés, ${empresa} ahorra ${shield.toFixed(2)} UF en impuestos`;
+  }
+
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    const box = el.querySelector('.check-box');
+    box.textContent = el.classList.contains('checked') ? '✓' : '';
+  }
+
+  buildProgress();
+</script>
+</body>
+</html>
