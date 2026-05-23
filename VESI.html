@@ -3,115 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Herramienta de Valorización de Empresas Privadas</title>
+<title>Valorización de Empresas Privadas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
-  :root {
-    --bg: #ffffff;
-    --bg2: #f7f7f7;
-    --border: #e0e0e0;
-    --border2: #cccccc;
-    --text: #1a1a1a;
-    --text2: #555555;
-    --text3: #888888;
-    --radius: 8px;
-    --radius-lg: 12px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f0f0; min-height: 100vh; padding: 2rem 1rem; }
-  .container { max-width: 820px; margin: 0 auto; background: var(--bg); border-radius: 16px; padding: 2rem; box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
-  h1 { font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .subtitle { font-size: 13px; color: var(--text3); margin-bottom: 1.75rem; }
-  .top-toggle { display: flex; border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
-  .top-btn { flex: 1; padding: 11px 8px; font-size: 13px; font-weight: 500; background: transparent; border: none; border-right: 0.5px solid var(--border); cursor: pointer; color: var(--text2); text-align: center; transition: background 0.15s; }
-  .top-btn:last-child { border-right: none; }
-  .top-btn.active { background: var(--bg2); color: var(--text); }
-  .mode-panel { display: none; }
-  .mode-panel.active { display: block; }
-  .ex-bar { display: flex; align-items: center; gap: 8px; background: var(--bg2); border-radius: var(--radius); padding: 10px 13px; margin-bottom: 1.25rem; flex-wrap: wrap; }
-  .ex-label { font-size: 12px; color: var(--text2); margin-right: 4px; }
-  .ex-btn { font-size: 12px; font-weight: 500; padding: 5px 12px; border: 0.5px solid var(--border); border-radius: var(--radius); background: transparent; cursor: pointer; color: var(--text2); transition: all 0.15s; }
-  .ex-btn:hover { border-color: var(--border2); color: var(--text); }
-  .ex-btn.active { background: var(--bg); color: var(--text); border-color: var(--border2); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-  .ex-card { border-radius: var(--radius); padding: 11px 13px; margin-bottom: 1.1rem; border: 0.5px solid var(--border); background: var(--bg2); }
-  .ex-card-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-  .ex-card-sub { font-size: 12px; color: var(--text2); line-height: 1.5; }
-  .step-nav { display: flex; border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
-  .step-btn { flex: 1; padding: 8px 3px; font-size: 11px; font-weight: 500; background: transparent; border: none; border-right: 0.5px solid var(--border); cursor: pointer; color: var(--text2); text-align: center; line-height: 1.3; transition: background 0.15s; }
-  .step-btn:last-child { border-right: none; }
-  .step-btn .num { display: block; font-size: 9px; color: var(--text3); margin-bottom: 2px; }
-  .step-btn.active { background: var(--bg2); color: var(--text); }
-  .step-btn.active .num { color: var(--text2); }
-  .sp { display: none; }
-  .sp.active { display: block; }
-  .tab-row { display: flex; border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
-  .tab-btn { flex: 1; padding: 8px 3px; font-size: 11px; font-weight: 500; background: transparent; border: none; border-right: 0.5px solid var(--border); cursor: pointer; color: var(--text2); text-align: center; line-height: 1.3; transition: background 0.15s; }
-  .tab-btn:last-child { border-right: none; }
-  .tab-btn .num { display: block; font-size: 9px; color: var(--text3); margin-bottom: 2px; }
-  .tab-btn.active { background: var(--bg2); color: var(--text); }
-  .tab-btn.active .num { color: var(--text2); }
-  .pr { display: none; }
-  .pr.active { display: block; }
-  .stit { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: .75rem; }
-  .div { border: none; border-top: 0.5px solid var(--border); margin: 1.1rem 0; }
-  .tip { background: var(--bg2); border-radius: var(--radius); padding: 11px 13px; font-size: 12px; color: var(--text2); margin: .75rem 0; line-height: 1.6; }
-  .tip b { color: var(--text); font-weight: 500; }
-  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: .9rem 0; }
-  .mc { background: var(--bg2); border-radius: var(--radius); padding: 11px; }
-  .mc-l { font-size: 11px; color: var(--text2); margin-bottom: 3px; }
-  .mc-v { font-size: 17px; font-weight: 500; color: var(--text); }
-  .mc-s { font-size: 11px; color: var(--text3); margin-top: 2px; }
-  .frow { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-  .fl { font-size: 12px; color: var(--text2); min-width: 155px; line-height: 1.4; }
-  .fi { width: 95px; text-align: right; font-size: 12px; padding: 4px 7px; border: 0.5px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); }
-  .fi:focus { outline: none; border-color: #999; }
-  .fslider { flex: 1; }
-  .fval { font-size: 12px; font-weight: 500; color: var(--text); min-width: 90px; text-align: right; }
-  .rcards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin: .75rem 0; }
-  .rc { border-radius: var(--radius); padding: 11px; }
-  .rc-t { font-size: 11px; font-weight: 500; margin-bottom: 5px; }
-  .rc-v { font-size: 14px; font-weight: 500; }
-  .rc-s { font-size: 11px; margin-top: 3px; }
-  .hero { background: var(--bg2); border-radius: var(--radius-lg); padding: 1.1rem; margin: .75rem 0; }
-  .hero-l { font-size: 12px; color: var(--text2); margin-bottom: 3px; }
-  .hero-v { font-size: 22px; font-weight: 500; color: var(--text); }
-  .hero-s { font-size: 12px; color: var(--text2); margin-top: 3px; }
-  .rl { list-style: none; }
-  .ri { display: flex; align-items: flex-start; gap: 7px; font-size: 12px; color: var(--text2); margin-bottom: 7px; line-height: 1.4; }
-  .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
-  .ddg { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: .6rem; }
-  .ddi { background: var(--bg2); border-radius: var(--radius); padding: 9px 11px; font-size: 11px; color: var(--text2); display: flex; align-items: flex-start; gap: 7px; line-height: 1.4; }
-  .nav { display: flex; justify-content: space-between; margin-top: 1.25rem; }
-  button { padding: 7px 14px; border: 0.5px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); font-size: 12px; cursor: pointer; transition: background 0.15s; }
-  button:hover { background: var(--bg2); }
-  .brow { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-  .bl { font-size: 12px; color: var(--text2); min-width: 185px; line-height: 1.4; }
-  .bc { display: flex; gap: 7px; }
-  .bc label { font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 3px; cursor: pointer; white-space: nowrap; }
-  .bv { font-size: 12px; font-weight: 500; color: var(--text); min-width: 85px; text-align: right; }
-  .srow { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-  .sl2 { font-size: 12px; color: var(--text2); min-width: 170px; line-height: 1.4; }
-  .sw { font-size: 10px; color: var(--text3); min-width: 25px; }
-  .sv { font-size: 12px; font-weight: 500; color: var(--text); min-width: 38px; text-align: right; }
-  select { font-size: 13px; padding: 6px 8px; border: 0.5px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); }
-  @media (max-width: 600px) {
-    .container { padding: 1rem; }
-    .fl { min-width: 110px; }
-    .fi { width: 75px; font-size: 11px; }
-    .fval { min-width: 70px; font-size: 11px; }
-    .ddg { grid-template-columns: 1fr; }
-    .bl { min-width: 140px; }
-  }
+:root {
+  --navy:      #0F2044;
+  --navy-mid:  #1A3666;
+  --navy-soft: #EEF2F9;
+  --navy-line: #C8D4EA;
+  --gold:      #B8960C;
+  --gold-light:#FBF5DC;
+  --gold-mid:  #E8CC6A;
+  --cream:     #FAF8F4;
+  --cream2:    #F2EEE6;
+  --ink:       #1A1A2E;
+  --ink2:      #4A4A6A;
+  --ink3:      #8A8AAA;
+  --white:     #FFFFFF;
+  --line:      #E2DDD4;
+  --line2:     #CCC8BE;
+  --green:     #166534; --green-bg:#F0FDF4;
+  --amber:     #92400E; --amber-bg:#FFFBEB;
+  --red:       #991B1B; --red-bg:#FEF2F2;
+  --r:8px; --r-lg:14px;
+  --sh: 0 1px 3px rgba(15,32,68,.07), 0 6px 20px rgba(15,32,68,.06);
+  --sh-lg: 0 2px 8px rgba(15,32,68,.10), 0 12px 32px rgba(15,32,68,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',-apple-system,sans-serif;background:linear-gradient(135deg,#0F2044 0%,#1A3666 60%,#2A4A80 100%);min-height:100vh;padding:2rem 1rem 3rem;}
+
+/* PAGE HEADER */
+.page-header{max-width:820px;margin:0 auto 1.25rem;display:flex;align-items:center;gap:12px;}
+.page-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--gold) 0%,#D4A40E 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(184,150,12,.4);}
+.page-logo i{font-size:20px;color:var(--navy);}
+.page-header-text h1{font-size:17px;font-weight:600;color:#fff;letter-spacing:-.01em;}
+.page-header-text p{font-size:12px;color:rgba(255,255,255,.5);margin-top:2px;}
+
+/* CONTAINER */
+.container{max-width:820px;margin:0 auto;background:var(--cream);border-radius:20px;box-shadow:var(--sh-lg);overflow:hidden;}
+.top-banner{background:linear-gradient(90deg,var(--navy) 0%,var(--navy-mid) 100%);padding:1.25rem 2rem 1rem;border-bottom:3px solid var(--gold);}
+.top-banner h2{font-size:15px;font-weight:600;color:#fff;letter-spacing:-.01em;}
+.top-banner p{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;font-family:'DM Mono',monospace;}
+.inner{padding:1.75rem 2rem;}
+.container-footer{background:linear-gradient(90deg,var(--navy) 0%,var(--navy-mid) 100%);padding:.75rem 2rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);}
+.container-footer p{font-size:11px;color:rgba(255,255,255,.4);font-family:'DM Mono',monospace;}
+.footer-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+
+/* MODE TOGGLE */
+.top-toggle{display:flex;border:1px solid var(--navy-line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:1.5rem;box-shadow:var(--sh);}
+.top-btn{flex:1;padding:12px 8px;font-size:13px;font-weight:500;background:var(--white);border:none;border-right:1px solid var(--navy-line);cursor:pointer;color:var(--ink2);text-align:center;transition:all .2s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;}
+.top-btn:last-child{border-right:none;}
+.top-btn:hover{background:var(--navy-soft);color:var(--navy);}
+.top-btn.active{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);color:#fff;}
+.top-btn.active i{color:var(--gold-mid);}
+.mode-panel{display:none;}.mode-panel.active{display:block;}
+
+/* EXAMPLE BAR */
+.ex-bar{display:flex;align-items:center;gap:8px;background:linear-gradient(90deg,var(--navy-soft) 0%,var(--cream2) 100%);border:1px solid var(--navy-line);border-radius:var(--r);padding:10px 14px;margin-bottom:1.25rem;flex-wrap:wrap;}
+.ex-label{font-size:11px;color:var(--navy);font-weight:600;margin-right:4px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em;}
+.ex-btn{font-size:12px;font-weight:500;padding:5px 13px;border:1px solid var(--navy-line);border-radius:20px;background:var(--white);cursor:pointer;color:var(--ink2);transition:all .2s;font-family:'DM Sans',sans-serif;}
+.ex-btn:hover{border-color:var(--navy);color:var(--navy);}
+.ex-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:0 2px 8px rgba(15,32,68,.25);}
+.ex-card{border-radius:var(--r);padding:12px 15px;margin-bottom:1.1rem;border-left:3px solid var(--gold);background:var(--gold-light);}
+.ex-card-title{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:4px;}
+.ex-card-sub{font-size:12px;color:var(--ink2);line-height:1.5;}
+
+/* STEP NAV */
+.step-nav{display:flex;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:1.5rem;box-shadow:var(--sh);}
+.step-btn{flex:1;padding:16px 3px;font-size:11px;font-weight:500;background:var(--white);border:none;border-right:1px solid var(--line);cursor:pointer;color:var(--ink3);text-align:center;line-height:1.3;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.step-btn:last-child{border-right:none;}
+.step-btn .num{display:block;font-size:9px;color:var(--ink3);margin-bottom:2px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
+.step-btn:hover{background:var(--navy-soft);color:var(--navy);}
+.step-btn.active{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);color:#fff;}
+.step-btn.active .num{color:var(--gold-mid);}
+.sp{display:none;}.sp.active{display:block;animation:fadeUp .22s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+/* TAB ROW */
+.tab-row{display:flex;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:1.5rem;box-shadow:var(--sh);}
+.tab-btn{flex:1;padding:16px 3px;font-size:11px;font-weight:500;background:var(--white);border:none;border-right:1px solid var(--line);cursor:pointer;color:var(--ink3);text-align:center;line-height:1.3;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.tab-btn:last-child{border-right:none;}
+.tab-btn .num{display:block;font-size:9px;color:var(--ink3);margin-bottom:2px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
+.tab-btn:hover{background:var(--navy-soft);color:var(--navy);}
+.tab-btn.active{background:linear-gradient(135deg,var(--gold) 0%,#D4A40E 100%);color:var(--navy);}
+.tab-btn.active .num{color:var(--navy);opacity:.7;}
+.pr{display:none;}.pr.active{display:block;animation:fadeUp .22s ease;}
+
+/* TYPOGRAPHY */
+.stit{font-size:11px;font-weight:600;color:var(--navy);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.07em;font-family:'DM Mono',monospace;display:flex;align-items:center;gap:6px;}
+.stit::before{content:'';display:inline-block;width:18px;height:2px;background:var(--gold);border-radius:2px;flex-shrink:0;}
+.div{border:none;border-top:1px solid var(--line);margin:1.25rem 0;}
+.tip{background:var(--navy-soft);border:1px solid var(--navy-line);border-left:3px solid var(--navy);border-radius:var(--r);padding:11px 14px;font-size:12px;color:var(--ink2);margin:.75rem 0;line-height:1.6;}
+.tip b{color:var(--navy);font-weight:600;}
+
+/* METRICS */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:.9rem 0;}
+.mc{background:var(--white);border-radius:var(--r);padding:13px 14px;border:1px solid var(--line);box-shadow:var(--sh);}
+.mc-l{font-size:10px;color:var(--ink3);margin-bottom:4px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
+.mc-v{font-size:18px;font-weight:600;color:var(--navy);font-family:'DM Mono',monospace;}
+.mc-s{font-size:11px;color:var(--ink3);margin-top:3px;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);border-radius:var(--r-lg);padding:1.25rem 1.5rem;margin:.75rem 0;position:relative;overflow:hidden;box-shadow:var(--sh-lg);}
+.hero::after{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(184,150,12,.15);}
+.hero-l{font-size:10px;color:rgba(255,255,255,.55);margin-bottom:4px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.08em;}
+.hero-v{font-size:26px;font-weight:600;color:#fff;font-family:'DM Mono',monospace;position:relative;}
+.hero-s{font-size:12px;color:var(--gold-mid);margin-top:4px;}
+
+/* INPUTS */
+.frow{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.fl{font-size:12px;color:var(--ink2);min-width:155px;line-height:1.4;}
+.fi{width:95px;text-align:right;font-size:12px;padding:5px 8px;border:1px solid var(--line2);border-radius:var(--r);background:var(--white);color:var(--navy);font-family:'DM Mono',monospace;font-weight:500;}
+.fi:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 2px var(--navy-soft);}
+.fslider{flex:1;}
+.fval{font-size:12px;font-weight:500;color:var(--navy);min-width:95px;text-align:right;font-family:'DM Mono',monospace;}
+input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--navy-line);outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--navy);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(15,32,68,.3);}
+
+/* RESULT CARDS */
+.rcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:.75rem 0;}
+.rc{border-radius:var(--r);padding:13px;}
+.rc-t{font-size:10px;font-weight:600;margin-bottom:6px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
+.rc-v{font-size:15px;font-weight:600;font-family:'DM Mono',monospace;}
+.rc-s{font-size:11px;margin-top:3px;}
+
+/* BUTTONS */
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--line);}
+button{padding:9px 18px;border:1px solid var(--line2);border-radius:var(--r);background:var(--white);color:var(--ink2);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:6px;letter-spacing:.01em;line-height:1;}
+button i{font-size:14px;}
+button:hover{border-color:var(--navy);color:var(--navy);background:var(--navy-soft);}
+button.primary{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);color:#fff;border-color:var(--navy);box-shadow:0 2px 8px rgba(15,32,68,.25);}
+button.primary:hover{background:linear-gradient(135deg,#1A3666 0%,#2A4A80 100%);box-shadow:0 4px 12px rgba(15,32,68,.35);}
+button.primary i{color:var(--gold-mid);}
+
+/* BERKUS */
+.brow{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;}
+.bl{font-size:12px;color:var(--ink2);min-width:185px;line-height:1.4;}
+.bc{display:flex;gap:6px;flex-wrap:wrap;}
+.bc input[type=radio]{display:none;}
+.bc label{font-size:11px;color:var(--ink2);display:inline-flex;align-items:center;cursor:pointer;white-space:nowrap;padding:5px 13px;border:1px solid var(--line);border-radius:20px;transition:all .18s;background:var(--cream);user-select:none;}
+.bc label:hover{border-color:var(--navy-line);color:var(--navy);}
+.bc input[type=radio]:checked + label{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:0 2px 6px rgba(15,32,68,.2);}
+.bv{font-size:12px;font-weight:600;color:var(--navy);min-width:85px;text-align:right;font-family:'DM Mono',monospace;}
+
+/* SCORECARD */
+.srow{display:flex;align-items:center;gap:8px;margin-bottom:10px;background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:9px 12px;}
+.sl2{font-size:12px;color:var(--ink2);min-width:170px;line-height:1.4;}
+.sw{font-size:10px;color:var(--gold);min-width:25px;font-weight:700;font-family:'DM Mono',monospace;}
+.sv{font-size:12px;font-weight:600;color:var(--navy);min-width:38px;text-align:right;font-family:'DM Mono',monospace;}
+
+/* LISTS */
+.rl{list-style:none;}
+.ri{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--ink2);margin-bottom:8px;line-height:1.4;}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+
+/* DUE DILIGENCE */
+.ddg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:.6rem;}
+.ddi{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;font-size:11px;color:var(--ink2);display:flex;align-items:flex-start;gap:8px;line-height:1.4;}
+.ddi i{color:var(--navy);flex-shrink:0;font-size:14px;margin-top:1px;}
+
+/* SELECT */
+select{font-size:13px;padding:8px 10px;border:1px solid var(--line2);border-radius:var(--r);background:var(--white);color:var(--navy);font-family:'DM Sans',sans-serif;cursor:pointer;}
+select:focus{outline:none;border-color:var(--navy);}
+
+@media(max-width:600px){
+  .inner{padding:1.25rem 1rem;}
+  .top-banner{padding:1rem 1.25rem .75rem;}
+  .fl{min-width:110px;}.fi{width:75px;font-size:11px;}
+  .fval{min-width:70px;font-size:11px;}
+  .ddg{grid-template-columns:1fr;}
+  .bl{min-width:140px;}
+}
 </style>
 </head>
 <body>
+
+<div class="page-header">
+  <div class="page-logo"><i class="ti ti-chart-candle"></i></div>
+  <div class="page-header-text">
+    <h1>Valorización de Empresas Privadas</h1>
+    <p>ICOM I006 · Unidad 3 · Herramienta pedagógica interactiva · CLP</p>
+  </div>
+</div>
+
 <div class="container">
-  <h1>Valorización de Empresas Privadas</h1>
-  <p class="subtitle">Herramienta pedagógica · Todos los valores en pesos chilenos (CLP)</p>
+<div class="top-banner">
+  <h2>Modelo de Valorización · Pesos Chilenos (CLP)</h2>
+  <p>Selecciona el modo · Ajusta supuestos con sliders o ingresando valores directamente</p>
+</div>
+<div class="inner">
 
   <div class="top-toggle">
-    <button class="top-btn active" onclick="setMode('rev')"><i class="ti ti-chart-bar" style="font-size:14px;vertical-align:-2px;margin-right:5px;"></i>empresa con ingresos</button>
-    <button class="top-btn" onclick="setMode('pre')"><i class="ti ti-seedling" style="font-size:14px;vertical-align:-2px;margin-right:5px;"></i>empresa pre-revenue</button>
+    <button class="top-btn active" onclick="setMode('rev')"><i class="ti ti-chart-bar"></i>empresa con ingresos</button>
+    <button class="top-btn" onclick="setMode('pre')"><i class="ti ti-seedling"></i>empresa pre-revenue</button>
   </div>
 
   <!-- MODO CON INGRESOS -->
@@ -143,7 +229,7 @@
         </select>
       </div>
       <div class="tip" id="typeTip"></div>
-      <div class="nav"><span></span><button onclick="gS(1)">siguiente <i class="ti ti-arrow-right"></i></button></div>
+      <div class="nav"><span></span><button class="primary" onclick="gS(1)">siguiente <i class="ti ti-arrow-right"></i></button></div>
     </div>
     <div class="sp" id="s1">
       <p class="stit">reconstruir los ingresos desde cero</p>
@@ -151,7 +237,7 @@
       <div id="revInputs"></div>
       <div class="div"></div>
       <div class="grid2" id="revMetrics"></div>
-      <div class="nav"><button onclick="gS(0)"><i class="ti ti-arrow-left"></i> anterior</button><button onclick="gS(2)">siguiente <i class="ti ti-arrow-right"></i></button></div>
+      <div class="nav"><button onclick="gS(0)"><i class="ti ti-arrow-left"></i> anterior</button><button class="primary" onclick="gS(2)">siguiente <i class="ti ti-arrow-right"></i></button></div>
     </div>
     <div class="sp" id="s2">
       <p class="stit">estimar márgenes con benchmarks de industria</p>
@@ -159,7 +245,7 @@
       <div class="div"></div>
       <div class="grid2" id="marMetrics"></div>
       <div class="tip" id="marTip"></div>
-      <div class="nav"><button onclick="gS(1)"><i class="ti ti-arrow-left"></i> anterior</button><button onclick="gS(3)">siguiente <i class="ti ti-arrow-right"></i></button></div>
+      <div class="nav"><button onclick="gS(1)"><i class="ti ti-arrow-left"></i> anterior</button><button class="primary" onclick="gS(3)">siguiente <i class="ti ti-arrow-right"></i></button></div>
     </div>
     <div class="sp" id="s3">
       <p class="stit">aplicar múltiplos de valorización</p>
@@ -167,7 +253,7 @@
       <div class="div"></div>
       <div class="grid2" id="mulMetrics"></div>
       <div class="tip" id="mulTip"></div>
-      <div class="nav"><button onclick="gS(2)"><i class="ti ti-arrow-left"></i> anterior</button><button onclick="gS(4)">ver resultado <i class="ti ti-arrow-right"></i></button></div>
+      <div class="nav"><button onclick="gS(2)"><i class="ti ti-arrow-left"></i> anterior</button><button class="primary" onclick="gS(4)">ver resultado <i class="ti ti-arrow-right"></i></button></div>
     </div>
     <div class="sp" id="s4">
       <p class="stit">rango de valorización final</p>
@@ -179,18 +265,18 @@
       <div class="div"></div>
       <p class="stit">valorización por método</p>
       <div class="rcards">
-        <div class="rc" style="background:#EAF3DE;"><p class="rc-t" style="color:#3B6D11;">por EBITDA</p><p class="rc-v" style="color:#27500A;" id="r-ve">—</p><p class="rc-s" style="color:#639922;" id="r-ve2">—</p></div>
-        <div class="rc" style="background:#E6F1FB;"><p class="rc-t" style="color:#185FA5;">por revenue</p><p class="rc-v" style="color:#0C447C;" id="r-vr">—</p><p class="rc-s" style="color:#378ADD;" id="r-vr2">—</p></div>
-        <div class="rc" style="background:#EEEDFE;"><p class="rc-t" style="color:#534AB7;">promedio ajustado</p><p class="rc-v" style="color:#3C3489;" id="r-va">—</p><p class="rc-s" style="color:#7F77DD;" id="r-va2">—</p></div>
+        <div class="rc" style="background:#EEF2F9;border:1px solid #C8D4EA;"><p class="rc-t" style="color:#0F2044;">por EBITDA</p><p class="rc-v" style="color:#0F2044;" id="r-ve">—</p><p class="rc-s" style="color:#1A3666;" id="r-ve2">—</p></div>
+        <div class="rc" style="background:#FBF5DC;border:1px solid #E8CC6A;"><p class="rc-t" style="color:#92400E;">por revenue</p><p class="rc-v" style="color:#92400E;" id="r-vr">—</p><p class="rc-s" style="color:#B8960C;" id="r-vr2">—</p></div>
+        <div class="rc" style="background:#0F2044;"><p class="rc-t" style="color:#E8CC6A;">promedio ajustado</p><p class="rc-v" style="color:#fff;" id="r-va">—</p><p class="rc-s" style="color:rgba(255,255,255,.6);" id="r-va2">—</p></div>
       </div>
       <div class="div"></div>
       <p class="stit">factores cualitativos</p>
       <ul class="rl" id="qualList"></ul>
-      <div class="nav"><button onclick="gS(3)"><i class="ti ti-arrow-left"></i> anterior</button><button onclick="gS(5)">due diligence <i class="ti ti-arrow-right"></i></button></div>
+      <div class="nav"><button onclick="gS(3)"><i class="ti ti-arrow-left"></i> anterior</button><button class="primary" onclick="gS(5)">due diligence <i class="ti ti-arrow-right"></i></button></div>
     </div>
     <div class="sp" id="s5">
       <p class="stit">checklist de due diligence</p>
-      <p style="font-size:12px;color:var(--text2);margin-bottom:.75rem;line-height:1.5;">Cada ítem que no puedes verificar justifica bajar el precio ofrecido.</p>
+      <p style="font-size:12px;color:var(--ink2);margin-bottom:.75rem;line-height:1.5;">Cada ítem que no puedes verificar justifica bajar el precio ofrecido.</p>
       <div class="ddg" id="ddList"></div>
       <div class="div"></div>
       <p class="stit">preguntas clave para la reunión con el dueño</p>
@@ -269,117 +355,40 @@
       <ul class="rl" id="prInterp"></ul>
     </div>
   </div>
+
+</div><!-- .inner -->
+<div class="container-footer">
+  <p>ICOM I006 · Valorización de Empresas Privadas</p>
+  <div class="footer-dot"></div>
+  <p>Herramienta pedagógica interactiva · CLP</p>
 </div>
+</div><!-- .container -->
 
 <script>
 const EXAMPLES={
-  ghali:{
-    preset:'product',
-    title:'Ghali Kombucha — empresa de producto',
-    desc:'Pioneros de la kombucha en Chile. 10 años operando, sin inversionistas externos, distribución en Cencosud. Datos basados en el podcast "Más que un Pitch" con Martín Carrasco (fundador). ~47.500 botellas/mes a $3.000 CLP promedio.',
-    fields:{units:47500,punit:3000,cogp:38,logp:10,stfp:15,mktp:7,othp:5,em:7,rm:1.8,ba:10},
-  },
-  '236':{
-    preset:'restaurant',
-    title:'236 Burgers — restaurante / hamburguesería',
-    desc:'Hamburguesería independiente en Santiago. Sin información financiera pública. Supuestos reconstruidos desde afuera: aforo estimado 40 personas, ticket promedio $12.000, rotación 1.5x, 26 días operativos.',
-    fields:{seats:40,rotation:1.5,ticket:12000,opdays:26,fc:32,stfr:28,rent:10,del:5,oth:5,em:4,rm:0.5,ba:0},
-  },
-  blank:{preset:'product',title:null,fields:null},
+  ghali:{preset:'product',title:'Ghali Kombucha — empresa de producto',desc:'Pioneros de la kombucha en Chile. 10 años operando, sin inversionistas externos, distribución en Cencosud. Datos basados en el podcast "Más que un Pitch". ~47.500 botellas/mes a $3.000 CLP promedio.',fields:{units:47500,punit:3000,cogp:38,logp:10,stfp:15,mktp:7,othp:5,em:7,rm:1.8,ba:10}},
+  '236':{preset:'restaurant',title:'236 Burgers — restaurante / hamburguesería',desc:'Hamburguesería independiente en Santiago. Sin información financiera pública. Supuestos reconstruidos desde afuera: aforo estimado 40 personas, ticket promedio $12.000, rotación 1.5x, 26 días operativos.',fields:{seats:40,rotation:1.5,ticket:12000,opdays:26,fc:32,stfr:28,rent:10,del:5,oth:5,em:4,rm:0.5,ba:0}},
+  blank:{preset:'product',title:null,fields:null}
 };
-
 const EXAMPLES_PR={
-  agro:{
-    title:'AgroSense — startup agritech pre-revenue',
-    desc:'Startup chilena con 18 meses de desarrollo. Sensor IoT para monitoreo de suelo en tiempo real. Tiene prototipo funcionando y 3 cartas de intención de cooperativas agrícolas. Equipo de 4 personas con experiencia en agronomía e ingeniería. Sin ventas aún.',
-    berkus:{b1:1,b2:1,b3:0.5,b4:0.5,b5:0},
-    maxHito:350000000,baseVal:700000000,
-    scorecard:{s1:1.3,s2:1.4,s3:1.2,s4:0.9,s5:0.7,s6:0.8,s7:1.0},
-    vc:{exitRev:8000000000,exitMult:3,vcRet:10,survP:20,exitYrs:6},
-    dup:{devM:18,team:4,sal:1800000,infra:25000000,res:15000000,lPrem:35},
-  },
-  blank:{title:null},
+  agro:{title:'AgroSense — startup agritech pre-revenue',desc:'Startup chilena con 18 meses de desarrollo. Sensor IoT para monitoreo de suelo en tiempo real. Tiene prototipo funcionando y 3 cartas de intención de cooperativas agrícolas. Equipo de 4 personas. Sin ventas aún.',berkus:{b1:1,b2:1,b3:0.5,b4:0.5,b5:0},maxHito:350000000,baseVal:700000000,scorecard:{s1:1.3,s2:1.4,s3:1.2,s4:0.9,s5:0.7,s6:0.8,s7:1.0},vc:{exitRev:8000000000,exitMult:3,vcRet:10,survP:20,exitYrs:6},dup:{devM:18,team:4,sal:1800000,infra:25000000,res:15000000,lPrem:35}},
+  blank:{title:null}
 };
-
 const PRESETS={
-  restaurant:{
-    tip:'<b>Restaurante:</b> márgenes ajustados (10–20% EBITDA), múltiplos bajos (3–5x EBITDA, 0.3–0.7x revenue). Revenue = cubiertos × ticket × días. Riesgo principal: dependencia del operador y arriendo.',
-    rf:[{id:'seats',l:'personas sentadas (capacidad)',min:10,max:150,step:5,val:40,fmt:v=>Math.round(v)+' personas'},{id:'rotation',l:'rotación diaria promedio',min:0.5,max:4,step:0.5,val:1.5,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ticket',l:'ticket promedio por persona ($)',min:3000,max:30000,step:500,val:11000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')},{id:'opdays',l:'días operativos al mes',min:15,max:30,step:1,val:26,fmt:v=>Math.round(v)+' días'}],
-    mf:[{id:'fc',l:'food cost (%)',min:20,max:45,step:1,val:32,fmt:v=>Math.round(v)+'%'},{id:'stfr',l:'personal (%)',min:15,max:35,step:1,val:28,fmt:v=>Math.round(v)+'%'},{id:'rent',l:'arriendo (%)',min:5,max:20,step:1,val:10,fmt:v=>Math.round(v)+'%'},{id:'del',l:'delivery / plataformas (%)',min:0,max:15,step:1,val:5,fmt:v=>Math.round(v)+'%'},{id:'oth',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],
-    mtip:'<b>Benchmarks restaurantes Chile:</b> food cost 28–35%, personal 25–30%, arriendo 8–12%. EBITDA típico 10–20%.',
-    mulF:[{id:'em',l:'múltiplo EBITDA',min:2,max:8,step:0.5,val:4,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'rm',l:'múltiplo revenue',min:0.2,max:1.5,step:0.1,val:0.5,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por marca / posición (%)',min:-30,max:30,step:5,val:0,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],
-    multip:'<b>¿Por qué múltiplos bajos?</b> Los restaurantes no escalan sin el dueño, dependen de un arriendo específico y tienen alta tasa de fracaso.',
-    qual:[{u:true,t:'Clientela fija que no depende del dueño'},{u:true,t:'Arriendo bajo con contrato largo y transferible'},{u:true,t:'Equipo estable y procesos documentados'},{u:false,t:'Negocio dependiente del fundador o chef'},{u:false,t:'Arriendo por vencer o condiciones inciertas'},{u:null,t:'Presencia en delivery (puede subir o bajar margen)'}],
-    dd:[{i:'ti-file-invoice',t:'Declaraciones SII últimos 3 años'},{i:'ti-building-store',t:'Contrato de arriendo y traspaso'},{i:'ti-users',t:'Contratos y deudas laborales'},{i:'ti-receipt',t:'Extractos bancarios 12 meses'},{i:'ti-certificate',t:'Permisos sanitarios vigentes'},{i:'ti-user-check',t:'Plan de transición del dueño'}],
-    qs:['¿Cuánto vende al mes? ¿Puede mostrarlo con extractos bancarios?','¿El arriendo es transferible y a qué precio?','¿Los empleados clave se quedan si cambia el dueño?','¿Por qué vende? ¿Hay algún problema no visible?','¿Estaría dispuesto a quedarse 3–6 meses de transición?'],
-    rc:v=>v.seats*v.rotation*v.ticket*v.opdays,
-  },
-  product:{
-    tip:'<b>Empresa de producto:</b> márgenes más amplios (20–35% EBITDA), múltiplos más altos (6–10x EBITDA). Revenue = unidades × precio. La marca y distribución son activos clave.',
-    rf:[{id:'units',l:'unidades vendidas al mes',min:100,max:200000,step:500,val:10000,fmt:v=>Math.round(v).toLocaleString('es-CL')+' u.'},{id:'punit',l:'precio promedio por unidad ($)',min:500,max:50000,step:500,val:5000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')}],
-    mf:[{id:'cogp',l:'costo de producción (%)',min:20,max:60,step:1,val:38,fmt:v=>Math.round(v)+'%'},{id:'logp',l:'logística y distribución (%)',min:3,max:20,step:1,val:8,fmt:v=>Math.round(v)+'%'},{id:'stfp',l:'personal (%)',min:5,max:25,step:1,val:15,fmt:v=>Math.round(v)+'%'},{id:'mktp',l:'marketing y ventas (%)',min:2,max:15,step:1,val:7,fmt:v=>Math.round(v)+'%'},{id:'othp',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],
-    mtip:'<b>Benchmarks manufactura Chile:</b> producción 30–45%, personal 12–20%. EBITDA típico 15–30%.',
-    mulF:[{id:'em',l:'múltiplo EBITDA',min:3,max:14,step:0.5,val:7,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'rm',l:'múltiplo revenue',min:0.5,max:4,step:0.1,val:1.8,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por marca / posición (%)',min:-30,max:40,step:5,val:10,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],
-    multip:'<b>¿Por qué múltiplos más altos?</b> Una empresa de producto puede escalar sin depender de una persona. Marca, distribución y procesos son activos transferibles.',
-    qual:[{u:true,t:'Distribución establecida en retail o canales propios'},{u:true,t:'Marca reconocida con clientes fieles'},{u:true,t:'Procesos documentados y replicables'},{u:false,t:'Producción dependiente del know-how del fundador'},{u:false,t:'Alta concentración en pocos clientes'},{u:null,t:'Competencia creciente en el segmento'}],
-    dd:[{i:'ti-file-invoice',t:'Declaraciones SII últimos 3 años'},{i:'ti-building-factory-2',t:'Valorización de activos físicos'},{i:'ti-building-store',t:'Contratos con distribuidores y retail'},{i:'ti-users',t:'Contratos y deudas laborales'},{i:'ti-receipt',t:'Extractos bancarios 12 meses'},{i:'ti-user-check',t:'Plan de retención del equipo clave'}],
-    qs:['¿Cuántas unidades vende al mes y a qué precio promedio?','¿Sus 5 clientes más grandes qué % del revenue representan?','¿Los procesos están documentados y funcionan sin usted?','¿Hay deuda con proveedores o empleados?','¿Por qué vende? ¿Piensa abrir algo competidor después?'],
-    rc:v=>v.units*v.punit,
-  },
-  service:{
-    tip:'<b>Empresa de servicios:</b> márgenes variables (15–35% EBITDA), múltiplos medios (4–8x). Revenue = clientes × fee mensual.',
-    rf:[{id:'cli',l:'clientes activos',min:1,max:500,step:1,val:30,fmt:v=>Math.round(v)+' clientes'},{id:'fee',l:'fee mensual promedio por cliente ($)',min:50000,max:5000000,step:50000,val:500000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')},{id:'chu',l:'churn mensual estimado (%)',min:1,max:15,step:1,val:3,fmt:v=>Math.round(v)+'%'}],
-    mf:[{id:'stfs',l:'personal (%)',min:20,max:60,step:1,val:45,fmt:v=>Math.round(v)+'%'},{id:'tos',l:'herramientas y plataformas (%)',min:2,max:15,step:1,val:8,fmt:v=>Math.round(v)+'%'},{id:'ofs',l:'oficina y gastos generales (%)',min:3,max:15,step:1,val:7,fmt:v=>Math.round(v)+'%'},{id:'oths',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],
-    mtip:'<b>Benchmarks servicios Chile:</b> personal 40–55%. EBITDA típico 15–30%.',
-    mulF:[{id:'em',l:'múltiplo EBITDA',min:2,max:10,step:0.5,val:5,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'rm',l:'múltiplo revenue',min:0.3,max:2.5,step:0.1,val:1.0,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por contratos recurrentes (%)',min:-30,max:40,step:5,val:5,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],
-    multip:'<b>La pregunta clave en servicios:</b> ¿los clientes son del negocio o del dueño?',
-    qual:[{u:true,t:'Contratos de largo plazo con clientes (12+ meses)'},{u:true,t:'Equipo técnico estable y know-how documentado'},{u:true,t:'Ningún cliente supera el 20% del revenue'},{u:false,t:'Relaciones de clientes personalizadas al dueño'},{u:false,t:'Dependencia de 1–2 clientes grandes'},{u:null,t:'Mercado en transformación tecnológica'}],
-    dd:[{i:'ti-file-invoice',t:'Declaraciones SII últimos 3 años'},{i:'ti-file-description',t:'Contratos vigentes con clientes'},{i:'ti-users',t:'Contratos laborales y deudas'},{i:'ti-chart-line',t:'Historial de churn'},{i:'ti-receipt',t:'Extractos bancarios 12 meses'},{i:'ti-briefcase',t:'Cláusulas de no competencia'}],
-    qs:['¿Cuántos clientes tiene y cuánto paga cada uno?','¿Los contratos son con la empresa o con usted personalmente?','¿Cuántos clientes ha perdido en el último año?','¿Hay algún cliente que represente más del 30% del revenue?','¿Estaría dispuesto a firmar una cláusula de no competencia?'],
-    rc:v=>v.cli*v.fee*(1-v.chu/100),
-  },
-  retail:{
-    tip:'<b>Retail / tienda:</b> márgenes medianos (8–18% EBITDA), múltiplos bajos-medios (3–6x). El inventario se valora por separado.',
-    rf:[{id:'vis',l:'visitas diarias estimadas',min:10,max:1000,step:10,val:80,fmt:v=>Math.round(v)+' visitas'},{id:'conv',l:'tasa de conversión (%)',min:20,max:90,step:5,val:60,fmt:v=>Math.round(v)+'%'},{id:'tkt',l:'ticket promedio por compra ($)',min:5000,max:200000,step:1000,val:25000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')},{id:'opd2',l:'días operativos al mes',min:20,max:30,step:1,val:26,fmt:v=>Math.round(v)+' días'}],
-    mf:[{id:'cogr',l:'costo de mercadería (%)',min:30,max:65,step:1,val:50,fmt:v=>Math.round(v)+'%'},{id:'stfr2',l:'personal (%)',min:8,max:25,step:1,val:15,fmt:v=>Math.round(v)+'%'},{id:'rent2',l:'arriendo (%)',min:5,max:20,step:1,val:10,fmt:v=>Math.round(v)+'%'},{id:'othr',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],
-    mtip:'<b>Benchmarks retail Chile:</b> mercadería 45–60%, personal 12–18%, arriendo 8–15%. EBITDA típico 8–18%.',
-    mulF:[{id:'em',l:'múltiplo EBITDA',min:2,max:8,step:0.5,val:4,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'rm',l:'múltiplo revenue',min:0.2,max:1.2,step:0.1,val:0.4,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por inventario y activos (%)',min:-20,max:40,step:5,val:10,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],
-    multip:'<b>Ojo con el inventario:</b> puede valer tanto como el negocio mismo. Aclara si el precio incluye el stock.',
-    qual:[{u:true,t:'Clientela recurrente y base de datos propia'},{u:true,t:'Arriendo con contrato largo transferible'},{u:false,t:'Stock obsoleto o con baja rotación'},{u:false,t:'Arriendo por vencer o zona de alto riesgo'},{u:null,t:'Presencia online (puede compensar o competir)'}],
-    dd:[{i:'ti-file-invoice',t:'Declaraciones SII últimos 3 años'},{i:'ti-box',t:'Auditoría de inventario'},{i:'ti-building-store',t:'Contrato de arriendo y traspaso'},{i:'ti-users',t:'Contratos y deudas laborales'},{i:'ti-receipt',t:'Extractos bancarios 12 meses'},{i:'ti-certificate',t:'Permisos municipales vigentes'}],
-    qs:['¿Cuánto vende al mes y cuál es el ticket promedio?','¿El inventario está incluido en el precio?','¿El arriendo es transferible y en qué condiciones?','¿Tiene base de datos de clientes habituales?'],
-    rc:v=>v.vis*(v.conv/100)*v.tkt*v.opd2,
-  },
-  tech:{
-    tip:'<b>Empresa tech / SaaS:</b> márgenes altos al escalar (20–40% EBITDA), múltiplos altos (5–15x ARR). El churn es la métrica más crítica.',
-    rf:[{id:'mrr',l:'MRR — ingresos recurrentes mensuales ($)',min:500000,max:100000000,step:500000,val:5000000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')},{id:'grw',l:'crecimiento mensual (%)',min:0,max:30,step:1,val:5,fmt:v=>Math.round(v)+'%'},{id:'cht',l:'churn mensual (%)',min:1,max:20,step:1,val:3,fmt:v=>Math.round(v)+'%'}],
-    mf:[{id:'host',l:'hosting / infraestructura (%)',min:5,max:30,step:1,val:15,fmt:v=>Math.round(v)+'%'},{id:'stft',l:'personal (%)',min:20,max:60,step:1,val:40,fmt:v=>Math.round(v)+'%'},{id:'mkt',l:'marketing y adquisición (%)',min:5,max:30,step:1,val:15,fmt:v=>Math.round(v)+'%'},{id:'otht',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],
-    mtip:'<b>Benchmarks SaaS:</b> margen bruto típico 60–80%. EBITDA positivo suele llegar después de 3–5 años.',
-    mulF:[{id:'em',l:'múltiplo EBITDA (si positivo)',min:5,max:25,step:1,val:12,fmt:v=>Math.round(v)+'x'},{id:'rm',l:'múltiplo ARR',min:1,max:15,step:0.5,val:4,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por crecimiento / retención (%)',min:-40,max:60,step:5,val:20,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],
-    multip:'<b>¿Por qué múltiplos altos?</b> Churn bajo + crecimiento constante = flujo futuro predecible.',
-    qual:[{u:true,t:'Churn bajo (menos de 3% mensual)'},{u:true,t:'Crecimiento sostenido de MRR (5%+ mensual)'},{u:true,t:'Contratos anuales prepagados'},{u:false,t:'Churn alto o contratos mensuales sin compromiso'},{u:false,t:'Tecnología dependiente de un solo desarrollador'},{u:null,t:'Mercado emergente (oportunidad grande, riesgo también)'}],
-    dd:[{i:'ti-chart-line',t:'Historial MRR, churn y growth 24 meses'},{i:'ti-users',t:'Lista de clientes y contratos'},{i:'ti-code',t:'Auditoría de código y deuda técnica'},{i:'ti-file-invoice',t:'Declaraciones SII'},{i:'ti-certificate',t:'Propiedad intelectual del software'},{i:'ti-user-check',t:'Retención del equipo técnico'}],
-    qs:['¿Cuál es el MRR actual y cómo evolucionó los últimos 12 meses?','¿Cuántos clientes tienen y cuál es el churn mensual real?','¿El código está documentado y puede otro equipo mantenerlo?','¿Los contratos son anuales o mensuales?'],
-    rc:v=>v.mrr*(1+v.grw/100)*(1-v.cht/100),
-  },
+  restaurant:{tip:'<b>Restaurante:</b> márgenes ajustados (10–20% EBITDA), múltiplos bajos (3–5x EBITDA, 0.3–0.7x revenue). Revenue = cubiertos × ticket × días.',rf:[{id:'seats',l:'personas sentadas (capacidad)',min:10,max:150,step:5,val:40,fmt:v=>Math.round(v)+' personas'},{id:'rotation',l:'rotación diaria promedio',min:0.5,max:4,step:0.5,val:1.5,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ticket',l:'ticket promedio por persona ($)',min:3000,max:30000,step:500,val:11000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')},{id:'opdays',l:'días operativos al mes',min:15,max:30,step:1,val:26,fmt:v=>Math.round(v)+' días'}],mf:[{id:'fc',l:'food cost (%)',min:20,max:45,step:1,val:32,fmt:v=>Math.round(v)+'%'},{id:'stfr',l:'personal (%)',min:15,max:35,step:1,val:28,fmt:v=>Math.round(v)+'%'},{id:'rent',l:'arriendo (%)',min:5,max:20,step:1,val:10,fmt:v=>Math.round(v)+'%'},{id:'del',l:'delivery / plataformas (%)',min:0,max:15,step:1,val:5,fmt:v=>Math.round(v)+'%'},{id:'oth',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],mtip:'<b>Benchmarks restaurantes Chile:</b> food cost 28–35%, personal 25–30%, arriendo 8–12%. EBITDA típico 10–20%.',mulF:[{id:'em',l:'múltiplo EBITDA',min:2,max:8,step:0.5,val:4,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'rm',l:'múltiplo revenue',min:0.2,max:1.5,step:0.1,val:0.5,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por marca / posición (%)',min:-30,max:30,step:5,val:0,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],multip:'<b>¿Por qué múltiplos bajos?</b> Los restaurantes no escalan sin el dueño y dependen de un arriendo específico.',qual:[{u:true,t:'Clientela fija que no depende del dueño'},{u:true,t:'Arriendo bajo con contrato largo y transferible'},{u:true,t:'Equipo estable y procesos documentados'},{u:false,t:'Negocio dependiente del fundador o chef'},{u:false,t:'Arriendo por vencer o condiciones inciertas'},{u:null,t:'Presencia en delivery (puede subir o bajar margen)'}],dd:[{i:'ti-file-invoice',t:'Declaraciones SII últimos 3 años'},{i:'ti-building-store',t:'Contrato de arriendo y traspaso'},{i:'ti-users',t:'Contratos y deudas laborales'},{i:'ti-receipt',t:'Extractos bancarios 12 meses'},{i:'ti-certificate',t:'Permisos sanitarios vigentes'},{i:'ti-user-check',t:'Plan de transición del dueño'}],qs:['¿Cuánto vende al mes? ¿Puede mostrarlo con extractos bancarios?','¿El arriendo es transferible y a qué precio?','¿Los empleados clave se quedan si cambia el dueño?','¿Por qué vende? ¿Hay algún problema no visible?','¿Estaría dispuesto a quedarse 3–6 meses de transición?'],rc:v=>v.seats*v.rotation*v.ticket*v.opdays},
+  product:{tip:'<b>Empresa de producto:</b> márgenes más amplios (20–35% EBITDA), múltiplos más altos (6–10x EBITDA). Revenue = unidades × precio.',rf:[{id:'units',l:'unidades vendidas al mes',min:100,max:200000,step:500,val:10000,fmt:v=>Math.round(v).toLocaleString('es-CL')+' u.'},{id:'punit',l:'precio promedio por unidad ($)',min:500,max:50000,step:500,val:5000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')}],mf:[{id:'cogp',l:'costo de producción (%)',min:20,max:60,step:1,val:38,fmt:v=>Math.round(v)+'%'},{id:'logp',l:'logística y distribución (%)',min:3,max:20,step:1,val:8,fmt:v=>Math.round(v)+'%'},{id:'stfp',l:'personal (%)',min:5,max:25,step:1,val:15,fmt:v=>Math.round(v)+'%'},{id:'mktp',l:'marketing y ventas (%)',min:2,max:15,step:1,val:7,fmt:v=>Math.round(v)+'%'},{id:'othp',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],mtip:'<b>Benchmarks manufactura Chile:</b> producción 30–45%, personal 12–20%. EBITDA típico 15–30%.',mulF:[{id:'em',l:'múltiplo EBITDA',min:3,max:14,step:0.5,val:7,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'rm',l:'múltiplo revenue',min:0.5,max:4,step:0.1,val:1.8,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por marca / posición (%)',min:-30,max:40,step:5,val:10,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],multip:'<b>¿Por qué múltiplos más altos?</b> Una empresa de producto puede escalar sin depender de una persona. Marca y distribución son activos transferibles.',qual:[{u:true,t:'Distribución establecida en retail o canales propios'},{u:true,t:'Marca reconocida con clientes fieles'},{u:true,t:'Procesos documentados y replicables'},{u:false,t:'Producción dependiente del know-how del fundador'},{u:false,t:'Alta concentración en pocos clientes'},{u:null,t:'Competencia creciente en el segmento'}],dd:[{i:'ti-file-invoice',t:'Declaraciones SII últimos 3 años'},{i:'ti-building-factory-2',t:'Valorización de activos físicos'},{i:'ti-building-store',t:'Contratos con distribuidores y retail'},{i:'ti-users',t:'Contratos y deudas laborales'},{i:'ti-receipt',t:'Extractos bancarios 12 meses'},{i:'ti-user-check',t:'Plan de retención del equipo clave'}],qs:['¿Cuántas unidades vende al mes y a qué precio promedio?','¿Sus 5 clientes más grandes qué % del revenue representan?','¿Los procesos están documentados y funcionan sin usted?','¿Hay deuda con proveedores o empleados?','¿Por qué vende? ¿Piensa abrir algo competidor después?'],rc:v=>v.units*v.punit},
+  service:{tip:'<b>Empresa de servicios:</b> márgenes variables (15–35% EBITDA), múltiplos medios (4–8x). Revenue = clientes × fee mensual.',rf:[{id:'cli',l:'clientes activos',min:1,max:500,step:1,val:30,fmt:v=>Math.round(v)+' clientes'},{id:'fee',l:'fee mensual promedio por cliente ($)',min:50000,max:5000000,step:50000,val:500000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')},{id:'chu',l:'churn mensual estimado (%)',min:1,max:15,step:1,val:3,fmt:v=>Math.round(v)+'%'}],mf:[{id:'stfs',l:'personal (%)',min:20,max:60,step:1,val:45,fmt:v=>Math.round(v)+'%'},{id:'tos',l:'herramientas y plataformas (%)',min:2,max:15,step:1,val:8,fmt:v=>Math.round(v)+'%'},{id:'ofs',l:'oficina y gastos generales (%)',min:3,max:15,step:1,val:7,fmt:v=>Math.round(v)+'%'},{id:'oths',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],mtip:'<b>Benchmarks servicios Chile:</b> personal 40–55%. EBITDA típico 15–30%.',mulF:[{id:'em',l:'múltiplo EBITDA',min:2,max:10,step:0.5,val:5,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'rm',l:'múltiplo revenue',min:0.3,max:2.5,step:0.1,val:1.0,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por contratos recurrentes (%)',min:-30,max:40,step:5,val:5,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],multip:'<b>La pregunta clave en servicios:</b> ¿los clientes son del negocio o del dueño?',qual:[{u:true,t:'Contratos de largo plazo con clientes (12+ meses)'},{u:true,t:'Equipo técnico estable y know-how documentado'},{u:true,t:'Ningún cliente supera el 20% del revenue'},{u:false,t:'Relaciones de clientes personalizadas al dueño'},{u:false,t:'Dependencia de 1–2 clientes grandes'},{u:null,t:'Mercado en transformación tecnológica'}],dd:[{i:'ti-file-invoice',t:'Declaraciones SII últimos 3 años'},{i:'ti-file-description',t:'Contratos vigentes con clientes'},{i:'ti-users',t:'Contratos laborales y deudas'},{i:'ti-chart-line',t:'Historial de churn'},{i:'ti-receipt',t:'Extractos bancarios 12 meses'},{i:'ti-briefcase',t:'Cláusulas de no competencia'}],qs:['¿Cuántos clientes tiene y cuánto paga cada uno?','¿Los contratos son con la empresa o con usted personalmente?','¿Cuántos clientes ha perdido en el último año?','¿Hay algún cliente que represente más del 30% del revenue?','¿Estaría dispuesto a firmar una cláusula de no competencia?'],rc:v=>v.cli*v.fee*(1-v.chu/100)},
+  retail:{tip:'<b>Retail / tienda:</b> márgenes medianos (8–18% EBITDA), múltiplos bajos-medios (3–6x). El inventario se valora por separado.',rf:[{id:'vis',l:'visitas diarias estimadas',min:10,max:1000,step:10,val:80,fmt:v=>Math.round(v)+' visitas'},{id:'conv',l:'tasa de conversión (%)',min:20,max:90,step:5,val:60,fmt:v=>Math.round(v)+'%'},{id:'tkt',l:'ticket promedio por compra ($)',min:5000,max:200000,step:1000,val:25000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')},{id:'opd2',l:'días operativos al mes',min:20,max:30,step:1,val:26,fmt:v=>Math.round(v)+' días'}],mf:[{id:'cogr',l:'costo de mercadería (%)',min:30,max:65,step:1,val:50,fmt:v=>Math.round(v)+'%'},{id:'stfr2',l:'personal (%)',min:8,max:25,step:1,val:15,fmt:v=>Math.round(v)+'%'},{id:'rent2',l:'arriendo (%)',min:5,max:20,step:1,val:10,fmt:v=>Math.round(v)+'%'},{id:'othr',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],mtip:'<b>Benchmarks retail Chile:</b> mercadería 45–60%, personal 12–18%, arriendo 8–15%. EBITDA típico 8–18%.',mulF:[{id:'em',l:'múltiplo EBITDA',min:2,max:8,step:0.5,val:4,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'rm',l:'múltiplo revenue',min:0.2,max:1.2,step:0.1,val:0.4,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por inventario y activos (%)',min:-20,max:40,step:5,val:10,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],multip:'<b>Ojo con el inventario:</b> puede valer tanto como el negocio mismo.',qual:[{u:true,t:'Clientela recurrente y base de datos propia'},{u:true,t:'Arriendo con contrato largo transferible'},{u:false,t:'Stock obsoleto o con baja rotación'},{u:false,t:'Arriendo por vencer o zona de alto riesgo'},{u:null,t:'Presencia online (puede compensar o competir)'}],dd:[{i:'ti-file-invoice',t:'Declaraciones SII últimos 3 años'},{i:'ti-box',t:'Auditoría de inventario'},{i:'ti-building-store',t:'Contrato de arriendo y traspaso'},{i:'ti-users',t:'Contratos y deudas laborales'},{i:'ti-receipt',t:'Extractos bancarios 12 meses'},{i:'ti-certificate',t:'Permisos municipales vigentes'}],qs:['¿Cuánto vende al mes y cuál es el ticket promedio?','¿El inventario está incluido en el precio?','¿El arriendo es transferible y en qué condiciones?','¿Tiene base de datos de clientes habituales?'],rc:v=>v.vis*(v.conv/100)*v.tkt*v.opd2},
+  tech:{tip:'<b>Empresa tech / SaaS:</b> márgenes altos al escalar (20–40% EBITDA), múltiplos altos (5–15x ARR). El churn es la métrica más crítica.',rf:[{id:'mrr',l:'MRR — ingresos recurrentes mensuales ($)',min:500000,max:100000000,step:500000,val:5000000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')},{id:'grw',l:'crecimiento mensual (%)',min:0,max:30,step:1,val:5,fmt:v=>Math.round(v)+'%'},{id:'cht',l:'churn mensual (%)',min:1,max:20,step:1,val:3,fmt:v=>Math.round(v)+'%'}],mf:[{id:'host',l:'hosting / infraestructura (%)',min:5,max:30,step:1,val:15,fmt:v=>Math.round(v)+'%'},{id:'stft',l:'personal (%)',min:20,max:60,step:1,val:40,fmt:v=>Math.round(v)+'%'},{id:'mkt',l:'marketing y adquisición (%)',min:5,max:30,step:1,val:15,fmt:v=>Math.round(v)+'%'},{id:'otht',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],mtip:'<b>Benchmarks SaaS:</b> margen bruto típico 60–80%. EBITDA positivo suele llegar después de 3–5 años.',mulF:[{id:'em',l:'múltiplo EBITDA (si positivo)',min:5,max:25,step:1,val:12,fmt:v=>Math.round(v)+'x'},{id:'rm',l:'múltiplo ARR',min:1,max:15,step:0.5,val:4,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por crecimiento / retención (%)',min:-40,max:60,step:5,val:20,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],multip:'<b>¿Por qué múltiplos altos?</b> Churn bajo + crecimiento constante = flujo futuro predecible.',qual:[{u:true,t:'Churn bajo (menos de 3% mensual)'},{u:true,t:'Crecimiento sostenido de MRR (5%+ mensual)'},{u:true,t:'Contratos anuales prepagados'},{u:false,t:'Churn alto o contratos mensuales sin compromiso'},{u:false,t:'Tecnología dependiente de un solo desarrollador'},{u:null,t:'Mercado emergente (oportunidad grande, riesgo también)'}],dd:[{i:'ti-chart-line',t:'Historial MRR, churn y growth 24 meses'},{i:'ti-users',t:'Lista de clientes y contratos'},{i:'ti-code',t:'Auditoría de código y deuda técnica'},{i:'ti-file-invoice',t:'Declaraciones SII'},{i:'ti-certificate',t:'Propiedad intelectual del software'},{i:'ti-user-check',t:'Retención del equipo técnico'}],qs:['¿Cuál es el MRR actual y cómo evolucionó los últimos 12 meses?','¿Cuántos clientes tienen y cuál es el churn mensual real?','¿El código está documentado y puede otro equipo mantenerlo?','¿Los contratos son anuales o mensuales?'],rc:v=>v.mrr*(1+v.grw/100)*(1-v.cht/100)}
 };
-
 const BHITOS=[{id:'b1',l:'Idea sólida con mercado validado'},{id:'b2',l:'Prototipo o producto funcionando'},{id:'b3',l:'Equipo con experiencia relevante'},{id:'b4',l:'Alianzas o cartas de intención de clientes'},{id:'b5',l:'Primeros usuarios o ventas piloto'}];
 const SATTRS=[{id:'s1',l:'Fortaleza del equipo fundador',w:30},{id:'s2',l:'Tamaño y crecimiento del mercado',w:25},{id:'s3',l:'Producto o tecnología diferenciada',w:15},{id:'s4',l:'Entorno competitivo',w:10},{id:'s5',l:'Canales de distribución y ventas',w:10},{id:'s6',l:'Necesidad de inversión adicional',w:5},{id:'s7',l:'Otros (red, timing, IP)',w:5}];
-
 let curPreset='product';
-
 function clp(n){return '$'+Math.round(n).toLocaleString('es-CL');}
 function clpMM(n){return n>=1000000000?'$'+(n/1000000000).toFixed(2)+'MM':'$'+(n/1000000).toFixed(0)+'M';}
 function syncS(sId,iId,mn,mx){const s=document.getElementById(sId),i=document.getElementById(iId);if(!s||!i)return;let v=parseFloat(i.value)||0;s.value=Math.max(mn,Math.min(mx,v));}
 function syncI(iId,sId){const s=document.getElementById(sId),i=document.getElementById(iId);if(!s||!i)return;i.value=s.value;}
-
-function setMode(m){
-  document.getElementById('m-rev').classList.toggle('active',m==='rev');
-  document.getElementById('m-pre').classList.toggle('active',m==='pre');
-  document.querySelectorAll('.top-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&m==='rev')||(i===1&&m==='pre')));
-}
-
+function setMode(m){document.getElementById('m-rev').classList.toggle('active',m==='rev');document.getElementById('m-pre').classList.toggle('active',m==='pre');document.querySelectorAll('.top-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&m==='rev')||(i===1&&m==='pre')));}
 function loadExample(key){
   ['ex-blank','ex-ghali','ex-236'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('active',id==='ex-'+key);});
   const ex=EXAMPLES[key];if(!ex)return;
@@ -397,7 +406,6 @@ function loadExample(key){
   if(ex.fields){Object.entries(ex.fields).forEach(([id,val])=>{const el=document.getElementById(id);const sl=document.getElementById(id+'S');if(el)el.value=val;if(sl)sl.value=val;});}
   calcRev();calcMar();calcMul();updateResults();updateDD();gS(0);
 }
-
 function loadExamplePR(key){
   ['ex-blank-pr','ex-agro-pr'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('active',id==='ex-'+key+'-pr');});
   const ex=EXAMPLES_PR[key];if(!ex)return;
@@ -410,24 +418,20 @@ function loadExamplePR(key){
   Object.entries(ex.vc).forEach(([id,v])=>setV(id,v));
   Object.entries(ex.dup).forEach(([id,v])=>setV(id,v));
   buildBerkus();
-  BHITOS.forEach(h=>{const v=ex.berkus[h.id];const el=document.querySelector(`input[name="${h.id}"][value="${v}"]`);if(el)el.checked=true;});
+  BHITOS.forEach(h=>{const v=ex.berkus[h.id];const suffix=v===0?'_0':v===0.5?'_5':'_1';const el=document.getElementById(h.id+suffix);if(el)el.checked=true;});
   buildScorecard();
   Object.entries(ex.scorecard).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.value=v;});
   calcBerkus();calcScorecard();calcVC();calcDup();gT(0);
 }
-
 function buildFieldRows(containerId,fields,calcFn){
   const c=document.getElementById(containerId);if(!c)return;c.innerHTML='';
   fields.forEach(f=>{c.innerHTML+=`<div class="frow"><span class="fl">${f.l}</span><input class="fi" type="number" id="${f.id}" value="${f.val}" step="${f.step}" min="${f.min}" max="${f.max}" oninput="syncS('${f.id}S','${f.id}',${f.min},${f.max});${calcFn}"><input class="fslider" type="range" id="${f.id}S" min="${f.min}" max="${f.max}" step="${f.step}" value="${f.val}" oninput="syncI('${f.id}','${f.id}S');${calcFn}"><span class="fval" id="${f.id}-out">${f.fmt(f.val)}</span></div>`;});
 }
-
 function getV(fields){const r={};fields.forEach(f=>{const el=document.getElementById(f.id);r[f.id]=el?parseFloat(el.value)||0:f.val;});return r;}
 function updOuts(fields){fields.forEach(f=>{const el=document.getElementById(f.id);const o=document.getElementById(f.id+'-out');if(el&&o)o.textContent=f.fmt(parseFloat(el.value)||0);});}
-
 function calcRev(){const p=PRESETS[curPreset];updOuts(p.rf);const m=p.rc(getV(p.rf));const el=document.getElementById('revMetrics');if(el)el.innerHTML=`<div class="mc"><p class="mc-l">revenue mensual estimado</p><p class="mc-v">${clpMM(m)}</p><p class="mc-s">${clp(m)}</p></div><div class="mc"><p class="mc-l">revenue anual estimado</p><p class="mc-v">${clpMM(m*12)}</p><p class="mc-s">${clp(m*12)}</p></div>`;}
 function calcMar(){const p=PRESETS[curPreset];updOuts(p.mf);const mv=getV(p.mf);const ep=Math.max(0,100-Object.values(mv).reduce((a,b)=>a+b,0));const ann=p.rc(getV(p.rf))*12;const ea=ann*ep/100;const el=document.getElementById('marMetrics');if(el)el.innerHTML=`<div class="mc"><p class="mc-l">EBITDA estimado</p><p class="mc-v">${Math.round(ep)}%</p><p class="mc-s">sobre revenue</p></div><div class="mc"><p class="mc-l">EBITDA anual absoluto</p><p class="mc-v">${clpMM(ea)}</p><p class="mc-s">${clp(ea)}</p></div>`;}
 function calcMul(){const p=PRESETS[curPreset];updOuts(p.mulF);const mv=getV(p.mf);const ep=Math.max(0,100-Object.values(mv).reduce((a,b)=>a+b,0))/100;const ann=p.rc(getV(p.rf))*12;const ea=ann*ep;const mulv=getV(p.mulF);const byE=ea*(mulv.em||4);const byR=ann*(mulv.rm||0.5);const avg=((byE+byR)/2)*(1+(mulv.ba||0)/100);const el=document.getElementById('mulMetrics');if(el)el.innerHTML=`<div class="mc"><p class="mc-l">por EBITDA</p><p class="mc-v">${clpMM(byE)}</p><p class="mc-s">${clp(byE)}</p></div><div class="mc"><p class="mc-l">por revenue</p><p class="mc-v">${clpMM(byR)}</p><p class="mc-s">${clp(byR)}</p></div><div class="mc"><p class="mc-l">promedio ajustado</p><p class="mc-v">${clpMM(avg)}</p><p class="mc-s">${clp(avg)}</p></div>`;}
-
 function updateResults(){
   const p=PRESETS[curPreset];
   const mv=getV(p.mf);const ep=Math.max(0,100-Object.values(mv).reduce((a,b)=>a+b,0))/100;
@@ -436,12 +440,12 @@ function updateResults(){
   const s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   s('r-rev',clpMM(ann));s('r-rev2',clp(ann));s('r-ebitda',clpMM(ea));s('r-ep',Math.round(ep*100)+'% del revenue');s('r-em',Math.round(ep*100)+'%');
   s('r-ve',clpMM(byE));s('r-ve2',clp(byE));s('r-vr',clpMM(byR));s('r-vr2',clp(byR));s('r-va',clpMM(avg));s('r-va2',clp(avg));
-  const ql=document.getElementById('qualList');if(ql)ql.innerHTML=p.qual.map(f=>`<li class="ri"><span class="dot" style="background:${f.u===true?'#639922':f.u===false?'#E24B4A':'#BA7517'};"></span>${f.t}</li>`).join('');
+  const ql=document.getElementById('qualList');if(ql)ql.innerHTML=p.qual.map(f=>`<li class="ri"><span class="dot" style="background:${f.u===true?'#166534':f.u===false?'#991B1B':'#92400E'};"></span>${f.t}</li>`).join('');
 }
 function updateDD(){
   const p=PRESETS[curPreset];
-  const dl=document.getElementById('ddList');if(dl)dl.innerHTML=p.dd.map(d=>`<div class="ddi"><i class="ti ${d.i}" style="font-size:14px;flex-shrink:0;margin-top:1px;"></i>${d.t}</div>`).join('');
-  const mq=document.getElementById('meetQ');if(mq)mq.innerHTML=p.qs.map(q=>`<li class="ri"><span class="dot" style="background:#378ADD;"></span>${q}</li>`).join('');
+  const dl=document.getElementById('ddList');if(dl)dl.innerHTML=p.dd.map(d=>`<div class="ddi"><i class="ti ${d.i}"></i>${d.t}</div>`).join('');
+  const mq=document.getElementById('meetQ');if(mq)mq.innerHTML=p.qs.map(q=>`<li class="ri"><span class="dot" style="background:#0F2044;"></span>${q}</li>`).join('');
 }
 function applyPreset(){
   curPreset=document.getElementById('bizType').value;
@@ -460,10 +464,9 @@ function gS(n){
   document.querySelectorAll('.step-btn').forEach((b,i)=>b.classList.toggle('active',i===n));
   if(n===4)updateResults();if(n===5)updateDD();
 }
-
 function buildBerkus(){
   const c=document.getElementById('berkusRows');if(!c)return;c.innerHTML='';
-  BHITOS.forEach(h=>{c.innerHTML+=`<div class="brow"><span class="bl">${h.l}</span><div class="bc"><label><input type="radio" name="${h.id}" value="0" checked onchange="calcBerkus()"> ninguno</label><label><input type="radio" name="${h.id}" value="0.5" onchange="calcBerkus()"> parcial</label><label><input type="radio" name="${h.id}" value="1" onchange="calcBerkus()"> completo</label></div><span class="bv" id="${h.id}-out">$0</span></div>`;});
+  BHITOS.forEach(h=>{c.innerHTML+=`<div class="brow"><span class="bl">${h.l}</span><div class="bc"><input type="radio" name="${h.id}" id="${h.id}_0" value="0" checked onchange="calcBerkus()"><label for="${h.id}_0">ninguno</label><input type="radio" name="${h.id}" id="${h.id}_5" value="0.5" onchange="calcBerkus()"><label for="${h.id}_5">parcial</label><input type="radio" name="${h.id}" id="${h.id}_1" value="1" onchange="calcBerkus()"><label for="${h.id}_1">completo</label></div><span class="bv" id="${h.id}-out">$0</span></div>`;});
 }
 function calcBerkus(){
   const maxEl=document.getElementById('maxHito');const max=maxEl?parseFloat(maxEl.value)||400000000:400000000;
@@ -515,26 +518,29 @@ function getBV(){const max=parseFloat(document.getElementById('maxHito')?.value)
 function getSV(){const base=parseFloat(document.getElementById('baseVal')?.value)||800000000;let w=0;SATTRS.forEach(a=>{const el=document.getElementById(a.id);w+=(el?parseFloat(el.value):1)*(a.w/100);});return base*w;}
 function getVCV(){const g=id=>{const el=document.getElementById(id);return el?parseFloat(el.value)||0:0;};const eR=g('exitRev')||5000000000,eM=g('exitMult')||4,vR=g('vcRet')||10,sP=g('survP')||25;return eR*eM*(sP/100)/vR;}
 function getDV(){const g=id=>{const el=document.getElementById(id);return el?parseFloat(el.value)||0:0;};return(g('devM')*g('team')*g('sal')+g('infra')+g('res'))*(1+g('lPrem')/100)||0;}
-
 function updatePR(){
   const b=getBV(),sc=getSV(),v=getVCV(),d=getDV();
-  const cols=[{bg:'#EAF3DE',t:'#3B6D11',v:'#27500A',s:'#639922'},{bg:'#E6F1FB',t:'#185FA5',v:'#0C447C',s:'#378ADD'},{bg:'#EEEDFE',t:'#534AB7',v:'#3C3489',s:'#7F77DD'},{bg:'#FAEEDA',t:'#854F0B',v:'#633806',s:'#BA7517'}];
+  const cols=[
+    {bg:'#EEF2F9',t:'#0F2044',v:'#0F2044',s:'#1A3666'},
+    {bg:'#FBF5DC',t:'#92400E',v:'#92400E',s:'#B8960C'},
+    {bg:'#0F2044',t:'#E8CC6A',v:'#FFFFFF',s:'rgba(255,255,255,0.6)'},
+    {bg:'#F2EEE6',t:'#4A4A6A',v:'#1A1A2E',s:'#8A8AAA'}
+  ];
   const cards=[{l:'Berkus',v:b},{l:'Scorecard',v:sc},{l:'VC Method',v:v},{l:'Costo duplicar',v:d}];
-  const pc=document.getElementById('prCards');if(pc)pc.innerHTML=cards.map((c,i)=>`<div class="rc" style="background:${cols[i].bg};"><p class="rc-t" style="color:${cols[i].t};">${c.l}</p><p class="rc-v" style="color:${cols[i].v};">${clpMM(c.v)}</p><p class="rc-s" style="color:${cols[i].s};">${clp(c.v)}</p></div>`).join('');
+  const pc=document.getElementById('prCards');if(pc)pc.innerHTML=cards.map((c,i)=>`<div class="rc" style="background:${cols[i].bg};border:1px solid ${i===2?'#1A3666':'var(--line)'}"><p class="rc-t" style="color:${cols[i].t};">${c.l}</p><p class="rc-v" style="color:${cols[i].v};">${clpMM(c.v)}</p><p class="rc-s" style="color:${cols[i].s};">${clp(c.v)}</p></div>`).join('');
   const vals=[b,sc,v,d].filter(x=>x>0);if(!vals.length)return;
   const minV=Math.min(...vals),maxV=Math.max(...vals),midV=(b+sc+v+d)/4;
   const pr=document.getElementById('prRange');if(pr)pr.textContent=clpMM(minV)+' — '+clpMM(maxV);
   const pm=document.getElementById('prMid');if(pm)pm.textContent='Punto medio: '+clpMM(midV)+' ('+clp(midV)+')';
   const spread=midV>0?Math.round((maxV-minV)/midV*100):0;
   const pi=document.getElementById('prInterp');
-  if(pi)pi.innerHTML=`<li class="ri"><span class="dot" style="background:#378ADD;"></span>El rango entre el método más bajo y el más alto es de <b>${spread}%</b>. Ese porcentaje es la incertidumbre real del negocio en esta etapa.</li><li class="ri"><span class="dot" style="background:#BA7517;"></span>El <b>Costo de duplicar</b> (${clpMM(d)}) es el piso. Vender por debajo es regalar el esfuerzo invertido.</li><li class="ri"><span class="dot" style="background:#534AB7;"></span>El <b>VC Method</b> (${clpMM(v)}) es el techo teórico si el potencial se cumple.</li><li class="ri"><span class="dot" style="background:#639922;"></span>El precio real suele cerrarse entre el Scorecard y el VC Method, dependiendo del poder de negociación.</li><li class="ri"><span class="dot" style="background:#E24B4A;"></span>En pre-revenue, <b>el equipo lo es todo</b>. Si el Scorecard de equipo es bajo, ningún otro método justifica una valorización alta.</li>`;
+  if(pi)pi.innerHTML=`<li class="ri"><span class="dot" style="background:#0F2044;"></span>El rango entre el método más bajo y el más alto es de <b>${spread}%</b>. Ese porcentaje es la incertidumbre real del negocio en esta etapa.</li><li class="ri"><span class="dot" style="background:#B8960C;"></span>El <b>Costo de duplicar</b> (${clpMM(d)}) es el piso. Vender por debajo es regalar el esfuerzo invertido.</li><li class="ri"><span class="dot" style="background:#1A3666;"></span>El <b>VC Method</b> (${clpMM(v)}) es el techo teórico si el potencial se cumple.</li><li class="ri"><span class="dot" style="background:#166534;"></span>El precio real suele cerrarse entre el Scorecard y el VC Method, dependiendo del poder de negociación.</li><li class="ri"><span class="dot" style="background:#991B1B;"></span>En pre-revenue, <b>el equipo lo es todo</b>. Si el Scorecard de equipo es bajo, ningún otro método justifica una valorización alta.</li>`;
 }
 function gT(n){
   document.querySelectorAll('.pr').forEach((p,i)=>p.classList.toggle('active',i===n));
   document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===n));
   if(n===4)updatePR();
 }
-
 loadExample('ghali');
 buildBerkus();buildScorecard();
 loadExamplePR('agro');
