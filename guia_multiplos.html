@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valorización por Múltiplos — Guía Interactiva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root {
+  --navy:      #0F2044;
+  --navy-mid:  #1A3666;
+  --navy-soft: #EEF2F9;
+  --navy-line: #C8D4EA;
+  --gold:      #B8960C;
+  --gold-light:#FBF5DC;
+  --gold-mid:  #E8CC6A;
+  --cream:     #FAF8F4;
+  --cream2:    #F2EEE6;
+  --ink:       #1A1A2E;
+  --ink2:      #4A4A6A;
+  --ink3:      #8A8AAA;
+  --white:     #FFFFFF;
+  --line:      #E2DDD4;
+  --line2:     #CCC8BE;
+  --pat:       #0B7C5B;
+  --pat-light: #E8F5F0;
+  --pat-mid:   #C5E8DC;
+  --oni:       #4C3DB5;
+  --oni-light: #EEEDFD;
+  --oni-mid:   #C8C2F5;
+  --warn:      #92400E;
+  --warn-bg:   #FFF7ED;
+  --danger:    #991B1B;
+  --danger-bg: #FEF2F2;
+  --r: 10px; --r-lg: 16px;
+  --sh: 0 1px 4px rgba(15,32,68,.07), 0 4px 16px rgba(15,32,68,.05);
+  --sh-lg: 0 2px 8px rgba(15,32,68,.10), 0 12px 32px rgba(15,32,68,.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  background: linear-gradient(135deg,#0F2044 0%,#1A3666 60%,#2A4A80 100%);
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 2rem 1rem 3rem;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* PAGE WRAPPER */
+.page-header {
+  max-width: 900px; margin: 0 auto 1.25rem;
+  display: flex; align-items: center; gap: 12px;
+}
+.page-logo {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--gold) 0%, #D4A40E 100%);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; box-shadow: 0 2px 8px rgba(184,150,12,.4);
+}
+.page-logo i { font-size: 20px; color: var(--navy); }
+.page-header-text h1 { font-size: 17px; font-weight: 600; color: #fff; letter-spacing:-.01em; }
+.page-header-text p  { font-size: 12px; color: rgba(255,255,255,.5); margin-top: 2px; }
+
+.shell {
+  max-width: 900px; margin: 0 auto;
+  background: var(--cream); border-radius: 20px;
+  box-shadow: var(--sh-lg); overflow: hidden;
+}
+
+/* TOP BANNER */
+.top-banner {
+  background: linear-gradient(90deg, var(--navy) 0%, var(--navy-mid) 100%);
+  padding: 1.25rem 2rem 1rem; border-bottom: 3px solid var(--gold);
+}
+.top-banner .badge {
+  font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--gold-mid); margin-bottom: 6px;
+}
+.top-banner h1 { font-size: 20px; font-weight: 600; color: #fff; line-height: 1.2; letter-spacing:-.01em; }
+.top-banner p  { font-size: 12px; color: rgba(255,255,255,.5); margin-top: 3px; }
+
+.inner { padding: 1.75rem 2rem; }
+
+.shell-footer {
+  background: linear-gradient(90deg, var(--navy) 0%, var(--navy-mid) 100%);
+  padding: .75rem 2rem; display: flex; align-items: center;
+  justify-content: space-between; border-top: 1px solid rgba(255,255,255,.08);
+}
+.shell-footer p { font-size: 11px; color: rgba(255,255,255,.4); font-family: 'DM Mono', monospace; }
+.footer-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+
+/* PROGRESS */
+.progress {
+  display: flex; gap: 4px; margin-bottom: 2rem;
+  border: 1px solid var(--navy-line); border-radius: var(--r-lg);
+  overflow: hidden; box-shadow: var(--sh);
+}
+.pb {
+  flex: 1; padding: 16px 6px; font-size: 11px; font-weight: 500;
+  background: var(--white); border: none; border-right: 1px solid var(--navy-line);
+  cursor: pointer; color: var(--ink3); text-align: center;
+  line-height: 1.3; transition: all .2s; font-family: 'DM Sans', sans-serif;
+}
+.pb:last-child { border-right: none; }
+.pb .pn { display: block; font-size: 9px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .06em; color: var(--ink3); margin-bottom: 3px; }
+.pb:hover { background: var(--navy-soft); color: var(--navy); }
+.pb.active { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); border-color: var(--navy); color: #fff; }
+.pb.active .pn { color: var(--gold-mid); }
+
+/* STEPS */
+.step { display: none; }
+.step.active { display: block; animation: fadeIn .22s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* STEP HEADER */
+.step-header { margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--line); }
+.step-num {
+  font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--gold); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 6px;
+}
+.step-num::before { content:''; display:inline-block; width:18px; height:2px; background:var(--gold); border-radius:2px; }
+.step-title { font-size: 22px; font-weight: 600; color: var(--navy); line-height: 1.2; }
+
+/* TYPOGRAPHY */
+.stit {
+  font-size: 11px; font-weight: 600; color: var(--navy);
+  text-transform: uppercase; letter-spacing: .07em;
+  font-family: 'DM Mono', monospace; margin: 0 0 .75rem;
+  display: flex; align-items: center; gap: 6px;
+}
+.stit::before { content:''; display:inline-block; width:16px; height:2px; background:var(--gold); border-radius:2px; flex-shrink:0; }
+.lead { font-size: 15px; color: var(--ink2); line-height: 1.7; margin-bottom: 1.25rem; }
+.lead b { color: var(--navy); font-weight: 600; }
+.div { border: none; border-top: 1px solid var(--line); margin: 1.5rem 0; }
+
+/* TIP */
+.tip {
+  background: var(--navy-soft); border: 1px solid var(--navy-line);
+  border-left: 3px solid var(--navy); border-radius: var(--r);
+  padding: 12px 16px; font-size: 13px; color: var(--ink2);
+  margin: 1rem 0; line-height: 1.6;
+}
+.tip b { color: var(--navy); font-weight: 600; }
+.tip.green  { border-left-color: var(--pat); background: var(--pat-light); }
+.tip.purple { border-left-color: var(--oni); background: var(--oni-light); }
+.tip.warn   { border-left-color: var(--warn); background: var(--warn-bg); }
+
+/* CASES GRID */
+.cases { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 1rem 0; }
+.case-card {
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: var(--r-lg); padding: 1.25rem; box-shadow: var(--sh);
+}
+.case-card.pat { border-top: 3px solid var(--pat); }
+.case-card.oni { border-top: 3px solid var(--oni); }
+.case-title { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.case-sub { font-size: 12px; color: var(--ink2); line-height: 1.5; margin-bottom: 10px; }
+
+/* TAGS */
+.tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.tag { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 20px; font-family: 'DM Mono', monospace; }
+.tag-green  { background: var(--pat-light); color: var(--pat); }
+.tag-purple { background: var(--oni-light); color: var(--oni); }
+.tag-warn   { background: var(--warn-bg); color: var(--warn); }
+.tag-gray   { background: var(--cream2); color: var(--ink2); }
+
+/* METRIC CARDS */
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 1rem 0; }
+.mc { background: var(--cream2); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; }
+.mc-l { font-size: 10px; color: var(--ink3); margin-bottom: 4px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .05em; }
+.mc-v { font-size: 20px; font-weight: 600; color: var(--navy); line-height: 1.2; font-family: 'DM Mono', monospace; }
+.mc-s { font-size: 11px; color: var(--ink3); margin-top: 3px; }
+
+/* HERO */
+.result-card {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  border-radius: var(--r-lg); padding: 1.25rem 1.5rem; margin: 1rem 0;
+  box-shadow: var(--sh-lg); position: relative; overflow: hidden;
+}
+.result-card::after { content:''; position:absolute; top:-20px; right:-20px; width:100px; height:100px; border-radius:50%; background:rgba(184,150,12,.12); }
+.result-card .label { font-size: 10px; color: rgba(255,255,255,.5); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+.result-card .value { font-size: 28px; font-weight: 600; color: #fff; line-height: 1.1; font-family: 'DM Mono', monospace; position: relative; }
+.result-card .sub   { font-size: 12px; color: var(--gold-mid); margin-top: 4px; }
+
+/* ANALOGY */
+.analogy { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1rem 0; }
+.analogy-col { border-radius: var(--r); padding: 1rem; font-size: 13px; line-height: 1.6; }
+.analogy-col p:first-child { font-weight: 600; margin-bottom: 6px; font-size: 11px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .05em; }
+.analogy-col.green  { background: var(--pat-light); color: var(--pat); }
+.analogy-col.purple { background: var(--oni-light); color: var(--oni); }
+
+/* QUIZ */
+.qa-opt {
+  border: 1px solid var(--line); border-radius: var(--r); padding: 11px 15px;
+  cursor: pointer; margin-bottom: 7px; font-size: 13px; color: var(--ink2);
+  transition: all .18s; background: var(--white); font-weight: 400;
+}
+.qa-opt:hover { border-color: var(--navy-line); color: var(--navy); background: var(--navy-soft); }
+.qa-opt.correct { border-color: var(--pat); background: var(--pat-light); color: var(--pat); font-weight: 500; }
+.qa-opt.wrong   { border-color: var(--danger); background: var(--danger-bg); color: var(--danger); }
+.qa-fb {
+  font-size: 13px; color: var(--ink2); margin-top: 10px;
+  padding: 11px 14px; background: var(--navy-soft); border-radius: var(--r);
+  border: 1px solid var(--navy-line); display: none; line-height: 1.5;
+}
+.qa-fb.show { display: block; }
+.qa-fb b { color: var(--navy); font-weight: 600; }
+
+/* MULTIPLE CHOICE */
+.mult-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 1rem 0; }
+.mult-opt {
+  border: 1px solid var(--line); border-radius: var(--r);
+  padding: 14px 16px; cursor: pointer; background: var(--white); transition: all .18s;
+}
+.mult-opt:hover { border-color: var(--navy-line); box-shadow: var(--sh); background: var(--navy-soft); }
+.mult-opt.selected { border-color: var(--pat); background: var(--pat-light); }
+.mult-opt-name { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 5px; font-family: 'DM Mono', monospace; }
+.mult-opt-desc { font-size: 12px; color: var(--ink2); line-height: 1.5; }
+.mult-opt-when { font-size: 11px; color: var(--ink3); margin-top: 6px; font-style: italic; }
+
+/* TABLE */
+.comp-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: .75rem 0; }
+.comp-table th {
+  text-align: left; font-weight: 600; color: var(--navy); padding: 10px 12px;
+  border-bottom: 2px solid var(--navy-line); font-size: 10px;
+  font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .06em;
+  background: var(--navy-soft);
+}
+.comp-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); color: var(--ink); vertical-align: middle; }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table tr:hover td { background: var(--cream2); }
+.comp-table tr.excluded td { opacity: .3; text-decoration: line-through; }
+.comp-table tr.excluded:hover td { background: transparent; }
+.toggle-btn {
+  font-size: 11px; padding: 4px 12px; border: 1px solid var(--navy-line);
+  border-radius: 20px; background: var(--white); cursor: pointer;
+  color: var(--navy); font-family: 'DM Sans', sans-serif; transition: all .18s; font-weight: 500;
+}
+.toggle-btn:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+.toggle-btn.excl { background: var(--cream2); color: var(--ink3); border-color: var(--line); }
+.toggle-btn.excl:hover { background: var(--pat); color: #fff; border-color: var(--pat); }
+.mult-num { font-family: 'DM Mono', monospace; font-weight: 600; color: var(--navy); }
+
+/* SLIDERS */
+.frow { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.fl { font-size: 12px; color: var(--ink2); min-width: 200px; line-height: 1.4; }
+.fval { font-size: 13px; font-weight: 600; color: var(--navy); min-width: 90px; text-align: right; font-family: 'DM Mono', monospace; }
+input[type=range] {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  height: 4px; background: var(--navy-line); border-radius: 2px; outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 17px; height: 17px;
+  border-radius: 50%; background: var(--navy); cursor: pointer;
+  border: 2px solid #fff; box-shadow: 0 1px 4px rgba(15,32,68,.3);
+}
+
+/* INSIGHT LIST */
+.insight-row { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--ink2); margin-bottom: 10px; line-height: 1.5; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.insight-row b { color: var(--navy); font-weight: 600; }
+
+/* RANGE CARDS */
+.rcards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 1rem 0; }
+.rc { border-radius: var(--r); padding: 13px 14px; }
+.rc-t { font-size: 10px; font-weight: 600; margin-bottom: 5px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .05em; }
+.rc-v { font-size: 17px; font-weight: 600; font-family: 'DM Mono', monospace; }
+.rc-s { font-size: 11px; margin-top: 3px; }
+
+/* NAV */
+.nav { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+button {
+  padding: 10px 20px; border: 1px solid var(--line2); border-radius: var(--r);
+  background: var(--white); color: var(--ink2); font-size: 13px; font-weight: 500;
+  font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all .2s;
+  display: inline-flex; align-items: center; gap: 6px; letter-spacing: .01em;
+}
+button i { font-size: 14px; }
+button:hover { border-color: var(--navy); color: var(--navy); background: var(--navy-soft); }
+button.primary { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); color: #fff; border-color: var(--navy); box-shadow: 0 2px 8px rgba(15,32,68,.25); }
+button.primary:hover { background: linear-gradient(135deg, #1A3666 0%, #2A4A80 100%); box-shadow: 0 4px 12px rgba(15,32,68,.35); }
+button.primary i { color: var(--gold-mid); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.5rem; }
+.btn-row button { font-size: 12px; padding: 8px 14px; }
+
+/* FINAL COMPARISON */
+.final-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 1rem 0; }
+.final-card { border-radius: var(--r-lg); padding: 1.5rem; }
+.final-card.pat-card { background: var(--pat-light); border: 1px solid var(--pat-mid); }
+.final-card.oni-card { background: var(--oni-light); border: 1px solid var(--oni-mid); }
+.final-label { font-size: 10px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; font-weight: 600; }
+.final-val { font-size: 26px; font-weight: 600; line-height: 1.1; font-family: 'DM Mono', monospace; }
+.final-sub { font-size: 11px; margin-top: 4px; }
+.pat-card .final-label, .pat-card .final-sub, .pat-card .final-val { color: var(--pat); }
+.oni-card .final-label, .oni-card .final-sub, .oni-card .final-val { color: var(--oni); }
+
+/* SELECT */
+select {
+  font-size: 13px; padding: 8px 12px; border: 1px solid var(--line2); border-radius: var(--r);
+  background: var(--white); color: var(--navy); font-family: 'DM Sans', sans-serif; cursor: pointer; outline: none;
+}
+select:focus { border-color: var(--navy); }
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .inner { padding: 1.25rem 1rem; }
+  .top-banner { padding: 1rem 1.25rem .75rem; }
+  .shell-footer { padding: .75rem 1rem; }
+  .cases { grid-template-columns: 1fr; }
+  .analogy { grid-template-columns: 1fr; }
+  .mult-opts { grid-template-columns: 1fr; }
+  .progress { border-radius: var(--r); }
+  .pb { padding: 12px 4px; }
+  .rcards { grid-template-columns: 1fr 1fr; }
+  .final-grid { grid-template-columns: 1fr; }
+  .frow { flex-wrap: wrap; }
+  .fl { min-width: 100%; }
+  .fval { min-width: 60px; }
+}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="page-logo"><i class="ti ti-trending-up"></i></div>
+  <div class="page-header-text">
+    <h1>Valorización por Múltiplos de Mercado</h1>
+    <p>ICOM I006 · Unidad 3 · Guía interactiva</p>
+  </div>
+</div>
+<div class="shell">
+  <div class="top-banner">
+    <p class="badge">ICOM I006 · Unidad 3 · Valorización por Múltiplos</p>
+    <h1>¿Cuánto vale una empresa comparada con sus peers?</h1>
+    <p>Casos reales: Patagonia · Onitsuka Tiger</p>
+  </div>
+  <div class="inner">
+
+  <div class="progress" id="prog">
+    <button class="pb active" onclick="gP(0)"><span class="pn">paso 1</span>intuición</button>
+    <button class="pb" onclick="gP(1)"><span class="pn">paso 2</span>elegir múltiplo</button>
+    <button class="pb" onclick="gP(2)"><span class="pn">paso 3</span>comparables</button>
+    <button class="pb" onclick="gP(3)"><span class="pn">paso 4</span>leer mercado</button>
+    <button class="pb" onclick="gP(4)"><span class="pn">paso 5</span>aplicar</button>
+    <button class="pb" onclick="gP(5)"><span class="pn">paso 6</span>ajustar y concluir</button>
+  </div>
+
+  <!-- PASO 1 -->
+  <div class="step active" id="st0">
+    <div class="step-header">
+      <p class="step-num">Paso 1 de 6</p>
+      <h2 class="step-title">¿Qué es un múltiplo y por qué funciona?</h2>
+    </div>
+
+    <p class="lead">Un múltiplo es la respuesta a esta pregunta: <b>¿cuántas veces está pagando el mercado una unidad de resultado de esta empresa?</b> Si el mercado paga $10 por cada $1 de utilidad, el múltiplo P/E es 10x.</p>
+
+    <div class="analogy">
+      <div class="analogy-col green">
+        <p><i class="ti ti-building" style="vertical-align:-2px;margin-right:4px;"></i>analogía: precio por m²</p>
+        <span style="font-size:13px;">Un departamento en Providencia cuesta $4.000 UF. ¿Caro o barato? No lo sabes hasta dividirlo por los m². Si tiene 80 m², el precio es $50 UF/m². Si los vecinos se venden a $55–60 UF/m², el departamento está barato.</span>
+      </div>
+      <div class="analogy-col purple">
+        <p><i class="ti ti-building-factory-2" style="vertical-align:-2px;margin-right:4px;"></i>lo mismo con empresas</p>
+        <span style="font-size:13px;">Una empresa vale $500M. ¿Caro o barato? No lo sabes hasta dividirlo por algo: sus utilidades, su EBITDA, sus ingresos. Si el resultado es menor que los comparables, está barata. Si es mayor, está cara.</span>
+      </div>
+    </div>
+
+    <div class="div"></div>
+    <p class="stit">los dos casos de esta guía</p>
+
+    <div class="cases">
+      <div class="case-card pat">
+        <div class="case-title"><i class="ti ti-mountain" style="color:var(--pat);"></i>Patagonia</div>
+        <p class="case-sub">Empresa de outdoor y ropa técnica fundada en 1973 por Yvon Chouinard. Privada. En 2022 el dueño donó la empresa a una fundación medioambiental. Revenue estimado: USD 1.500M anuales.</p>
+        <div class="tags">
+          <span class="tag tag-green">privada</span>
+          <span class="tag tag-green">outdoor técnico</span>
+          <span class="tag tag-green">marca con propósito</span>
+          <span class="tag tag-warn">sin comparables perfectos</span>
+        </div>
+      </div>
+      <div class="case-card oni">
+        <div class="case-title"><i class="ti ti-shoe" style="color:var(--oni);"></i>Onitsuka Tiger</div>
+        <p class="case-sub">Marca de calzado y ropa retro-deportiva fundada en 1949 en Japón. Es una división de Asics Corporation, que cotiza en la Bolsa de Tokio. Revenue estimado: USD 400M anuales.</p>
+        <div class="tags">
+          <span class="tag tag-purple">división de Asics</span>
+          <span class="tag tag-purple">lifestyle / retro</span>
+          <span class="tag tag-purple">Asia + Europa</span>
+          <span class="tag tag-warn">no es empresa independiente</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip warn"><b>Fricción pedagógica:</b> ninguno de estos casos es limpio. Patagonia es privada y tiene un intangible enorme que los múltiplos no capturan bien. Onitsuka Tiger no existe como empresa independiente. Ambos casos te van a obligar a razonar, no solo a calcular.</div>
+
+    <div class="div"></div>
+    <p class="stit">pregunta de entrada</p>
+    <p style="font-size:13px;color:var(--ink2);margin-bottom:10px;">¿Por qué se puede usar el mismo múltiplo para comparar empresas de tamaños muy distintos?</p>
+    <div id="q0a">
+      <div class="qa-opt" onclick="ansQ('0',0,false,'Cercano, pero incompleto. La razón más profunda es que los múltiplos eliminan el efecto del tamaño absoluto y permiten comparar en términos relativos.')">Porque todas las empresas generan utilidades de la misma manera</div>
+      <div class="qa-opt" onclick="ansQ('0',1,true,'Exacto. Si Apple vale $3 billones y una startup vale $10M, no puedes comparar los valores absolutos. Pero si ambas tienen un P/E de 25x, están siendo valoradas igual en términos relativos. El múltiplo actúa como un normalizador.')">Porque un múltiplo elimina el efecto del tamaño y permite comparar en términos relativos</div>
+      <div class="qa-opt" onclick="ansQ('0',2,false,'Los múltiplos no asumen tasas de crecimiento iguales — de hecho, una empresa de mayor crecimiento suele tener un múltiplo más alto.')">Porque se asume que todas las empresas crecen a la misma tasa</div>
+    </div>
+    <div class="qa-fb" id="qfb0"></div>
+
+    <div class="nav">
+      <span></span>
+      <button class="primary" onclick="gP(1)">siguiente <i class="ti ti-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- PASO 2 -->
+  <div class="step" id="st1">
+    <div class="step-header">
+      <p class="step-num">Paso 2 de 6</p>
+      <h2 class="step-title">Elegir el múltiplo correcto</h2>
+    </div>
+
+    <p class="lead">No existe un único múltiplo correcto. La elección depende del tipo de negocio, su etapa y qué tan disponible y significativa es cada métrica. El error más común es usar siempre el mismo múltiplo para todo.</p>
+
+    <p class="stit">los múltiplos más usados — selecciona uno para ver más</p>
+    <div class="mult-opts">
+      <div class="mult-opt" id="mo-evebitda" onclick="selMult('evebitda')">
+        <p class="mult-opt-name">EV / EBITDA</p>
+        <p class="mult-opt-desc">Valor empresa sobre utilidad operativa antes de impuestos, depreciación y amortización.</p>
+        <p class="mult-opt-when">Cuándo: empresa madura con EBITDA positivo y estable.</p>
+      </div>
+      <div class="mult-opt" id="mo-evrev" onclick="selMult('evrev')">
+        <p class="mult-opt-name">EV / Revenue</p>
+        <p class="mult-opt-desc">Valor empresa sobre ingresos totales. Ignora la rentabilidad.</p>
+        <p class="mult-opt-when">Cuándo: empresa sin EBITDA positivo, o cuando los márgenes son comparables entre peers.</p>
+      </div>
+      <div class="mult-opt" id="mo-pe" onclick="selMult('pe')">
+        <p class="mult-opt-name">P / E</p>
+        <p class="mult-opt-desc">Precio de la acción sobre utilidad por acción.</p>
+        <p class="mult-opt-when">Cuándo: empresa cotizada en bolsa con utilidades positivas y estables.</p>
+      </div>
+      <div class="mult-opt" id="mo-evgmv" onclick="selMult('evgmv')">
+        <p class="mult-opt-name">EV / GMV</p>
+        <p class="mult-opt-desc">Valor empresa sobre volumen bruto de transacciones.</p>
+        <p class="mult-opt-when">Cuándo: marketplaces donde el revenue contable no refleja la actividad real.</p>
+      </div>
+    </div>
+    <div class="tip" id="multDesc" style="display:none;"></div>
+
+    <div class="div"></div>
+    <p class="stit">¿cuál múltiplo usarías para cada caso?</p>
+    <div class="cases">
+      <div class="case-card pat">
+        <div class="case-title"><i class="ti ti-mountain" style="color:var(--pat);"></i>Patagonia</div>
+        <p style="font-size:12px;color:var(--ink2);margin-bottom:10px;">Revenue ~USD 1.500M. EBITDA estimado ~USD 225M (margen ~15%). Empresa privada.</p>
+        <div id="patMult">
+          <div class="qa-opt" onclick="ansCaseMult('pat',0,false,'EV/Revenue puede usarse, pero pierde información valiosa. Patagonia sí tiene EBITDA positivo y estable (~15%), así que podemos ser más precisos con EV/EBITDA.')">EV / Revenue</div>
+          <div class="qa-opt" onclick="ansCaseMult('pat',1,true,'Correcto. Patagonia tiene EBITDA positivo y estable. EV/EBITDA es el estándar para empresas de consumo y outdoor maduros. Permite comparar directamente con VF Corp, Columbia y otros peers.')">EV / EBITDA</div>
+          <div class="qa-opt" onclick="ansCaseMult('pat',2,false,'El P/E requiere que la empresa cotice en bolsa. Patagonia es privada — no hay precio de mercado observable.')">P / E</div>
+        </div>
+        <div class="qa-fb" id="patMultFb"></div>
+      </div>
+      <div class="case-card oni">
+        <div class="case-title"><i class="ti ti-shoe" style="color:var(--oni);"></i>Onitsuka Tiger</div>
+        <p style="font-size:12px;color:var(--ink2);margin-bottom:10px;">Revenue ~USD 400M. No reporta EBITDA separado de Asics. Marca dentro de empresa cotizada.</p>
+        <div id="oniMult">
+          <div class="qa-opt" onclick="ansCaseMult('oni',0,true,'Correcto. Onitsuka no reporta EBITDA separado. EV/Revenue nos permite aplicar un múltiplo al revenue estimado de la marca usando comparables de lifestyle y fashion.')">EV / Revenue</div>
+          <div class="qa-opt" onclick="ansCaseMult('oni',1,false,'Onitsuka Tiger no reporta EBITDA por separado de Asics — no tenemos ese número de forma confiable.')">EV / EBITDA</div>
+          <div class="qa-opt" onclick="ansCaseMult('oni',2,false,'Asics sí cotiza, pero su P/E incluye todas sus marcas. No podemos aislar el valor de Onitsuka Tiger así.')">P / E de Asics</div>
+        </div>
+        <div class="qa-fb" id="oniMultFb"></div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button onclick="gP(0)"><i class="ti ti-arrow-left"></i> anterior</button>
+      <button class="primary" onclick="gP(2)">siguiente <i class="ti ti-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- PASO 3 -->
+  <div class="step" id="st2">
+    <div class="step-header">
+      <p class="step-num">Paso 3 de 6</p>
+      <h2 class="step-title">Encontrar y filtrar comparables</h2>
+    </div>
+
+    <p class="lead"><b>La pregunta clave:</b> ¿qué hace que dos empresas sean realmente comparables? No basta con estar en el mismo sector. Los comparables deben tener márgenes similares, perfil de crecimiento parecido, riesgo geográfico equivalente y un modelo de negocio análogo.</p>
+
+    <div class="tip warn">¿Por qué Nike no es un buen comparable para Onitsuka Tiger? Nike tiene USD 51.000M en revenue, economías de escala globales y poder de marca que Onitsuka no tiene. Usarlo distorsionaría el múltiplo artificialmente hacia arriba.</div>
+
+    <div class="div"></div>
+    <p class="stit" style="color:var(--pat);">comparables Patagonia — EV/EBITDA · incluye o excluye</p>
+    <table class="comp-table" id="patTable">
+      <thead><tr><th>empresa</th><th>segmento</th><th>EV/EBITDA</th><th></th></tr></thead>
+      <tbody id="patTbody"></tbody>
+    </table>
+    <div class="metrics" id="patCompsMetrics"></div>
+
+    <div class="div"></div>
+    <p class="stit" style="color:var(--oni);">comparables Onitsuka Tiger — EV/Revenue · incluye o excluye</p>
+    <table class="comp-table" id="oniTable">
+      <thead><tr><th>empresa</th><th>segmento</th><th>EV/Revenue</th><th></th></tr></thead>
+      <tbody id="oniTbody"></tbody>
+    </table>
+    <div class="metrics" id="oniCompsMetrics"></div>
+
+    <div class="tip">Observa cómo cambia la mediana cuando incluyes o excluyes empresas. Esa mediana es el múltiplo que usarás en el paso 5.</div>
+
+    <div class="nav">
+      <button onclick="gP(1)"><i class="ti ti-arrow-left"></i> anterior</button>
+      <button class="primary" onclick="gP(3)">siguiente <i class="ti ti-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- PASO 4 -->
+  <div class="step" id="st3">
+    <div class="step-header">
+      <p class="step-num">Paso 4 de 6</p>
+      <h2 class="step-title">Leer e interpretar los múltiplos del mercado</h2>
+    </div>
+
+    <p class="lead"><b>El múltiplo no es solo un número.</b> Refleja las expectativas del mercado. Una empresa con múltiplo alto no es necesariamente cara — puede ser que el mercado espera mucho crecimiento. Una empresa con múltiplo bajo no es necesariamente barata — puede ser que el mercado ve riesgo.</p>
+
+    <div class="cases">
+      <div class="case-card pat">
+        <div class="case-title"><i class="ti ti-mountain" style="color:var(--pat);"></i>sector outdoor — EV/EBITDA</div>
+        <p style="font-size:12px;color:var(--ink2);margin-bottom:10px;">¿Por qué lululemon tiene un múltiplo más alto que VF Corp (dueña de The North Face)?</p>
+        <div id="q3pata">
+          <div class="qa-opt" onclick="ansQ('3p',0,false,'El sector importa, pero ambas son marcas de ropa de alto desempeño. La diferencia está en algo más específico.')">Porque son de sectores distintos</div>
+          <div class="qa-opt" onclick="ansQ('3p',1,true,'Exacto. lululemon tiene márgenes de ~25% EBITDA y crece ~20% anual. VF Corp tiene márgenes más ajustados y crecimiento menor. El mercado paga más por crecimiento y márgenes altos.')">Porque lululemon tiene márgenes y crecimiento superiores — el mercado paga más por eso</div>
+          <div class="qa-opt" onclick="ansQ('3p',2,false,'Ambas cotizan en EE.UU. La bolsa no explica la diferencia de múltiplo.')">Porque cotizan en bolsas distintas</div>
+        </div>
+        <div class="qa-fb" id="qfb3p"></div>
+      </div>
+      <div class="case-card oni">
+        <div class="case-title"><i class="ti ti-shoe" style="color:var(--oni);"></i>sector fashion/lifestyle — EV/Revenue</div>
+        <p style="font-size:12px;color:var(--ink2);margin-bottom:10px;">¿Por qué LVMH tiene un EV/Revenue mucho más alto que un fabricante de calzado promedio?</p>
+        <div id="q3oni">
+          <div class="qa-opt" onclick="ansQ('3o',0,false,'El tamaño no explica el múltiplo. Empresas muy grandes a veces tienen múltiplos más bajos porque les cuesta más crecer.')">Porque es más grande</div>
+          <div class="qa-opt" onclick="ansQ('3o',1,false,'La diversificación puede bajar el múltiplo. LVMH tiene el múltiplo alto por otra razón.')">Porque tiene más marcas diversificadas</div>
+          <div class="qa-opt" onclick="ansQ('3o',2,true,'Exacto. LVMH tiene marcas con pricing power extremo (Louis Vuitton, Dior, Hublot) que generan márgenes de 30%+ y fidelidad imposible de replicar. El mercado paga una prima por intangibles únicos.')">Porque sus marcas tienen pricing power y márgenes imposibles de replicar</div>
+        </div>
+        <div class="qa-fb" id="qfb3o"></div>
+      </div>
+    </div>
+
+    <div class="div"></div>
+    <p class="stit">el rango que usarás en el paso siguiente</p>
+    <div class="cases">
+      <div class="case-card pat">
+        <div class="case-title" style="color:var(--pat);">Patagonia — EV/EBITDA</div>
+        <p style="font-size:12px;color:var(--ink2);margin-bottom:6px;">Basado en los comparables que incluiste:</p>
+        <p style="font-size:22px;font-weight:500;color:var(--pat);font-family:'DM Mono',monospace;" id="patMultRange">—</p>
+        <p style="font-size:11px;color:var(--ink3);">mediana y rango de los peers seleccionados</p>
+      </div>
+      <div class="case-card oni">
+        <div class="case-title" style="color:var(--oni);">Onitsuka Tiger — EV/Revenue</div>
+        <p style="font-size:12px;color:var(--ink2);margin-bottom:6px;">Basado en los comparables que incluiste:</p>
+        <p style="font-size:22px;font-weight:500;color:var(--oni);font-family:'DM Mono',monospace;" id="oniMultRange">—</p>
+        <p style="font-size:11px;color:var(--ink3);">mediana y rango de los peers seleccionados</p>
+      </div>
+    </div>
+    <div class="tip">Si excluiste pocos comparables, el rango es amplio y la valorización tendrá más incertidumbre. 3–4 comparables muy similares dan mayor precisión. Eso está bien — refleja la realidad de la información disponible.</div>
+
+    <div class="nav">
+      <button onclick="gP(2)"><i class="ti ti-arrow-left"></i> anterior</button>
+      <button class="primary" onclick="gP(4)">siguiente <i class="ti ti-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- PASO 5 -->
+  <div class="step" id="st4">
+    <div class="step-header">
+      <p class="step-num">Paso 5 de 6</p>
+      <h2 class="step-title">Aplicar el múltiplo a la empresa objetivo</h2>
+    </div>
+
+    <p class="lead"><b>La mecánica es simple.</b> Valorización = métrica de la empresa × múltiplo elegido. Lo difícil es justificar cada supuesto. ¿Por qué ese múltiplo y no otro? ¿Por qué ese EBITDA estimado?</p>
+
+    <div class="cases">
+      <div class="case-card pat">
+        <div class="case-title"><i class="ti ti-mountain" style="color:var(--pat);"></i>Patagonia — EV/EBITDA</div>
+        <div style="margin-top:12px;">
+          <div class="frow">
+            <span class="fl">revenue anual (USD M)</span>
+            <input type="range" id="patRev" min="800" max="2500" step="50" value="1500" oninput="calcPat()">
+            <span class="fval" id="patRevOut">1.500</span>
+          </div>
+          <div class="frow">
+            <span class="fl">margen EBITDA estimado (%)</span>
+            <input type="range" id="patMargin" min="8" max="25" step="1" value="15" oninput="calcPat()">
+            <span class="fval" id="patMarginOut">15%</span>
+          </div>
+          <div class="frow">
+            <span class="fl">múltiplo EV/EBITDA elegido</span>
+            <input type="range" id="patMultSlider" min="6" max="22" step="0.5" value="12" oninput="calcPat()">
+            <span class="fval" id="patMultOut">12.0x</span>
+          </div>
+        </div>
+        <div class="metrics" id="patCalcMetrics"></div>
+        <div class="tip green" id="patJust" style="margin-top:.5rem;"></div>
+      </div>
+      <div class="case-card oni">
+        <div class="case-title"><i class="ti ti-shoe" style="color:var(--oni);"></i>Onitsuka Tiger — EV/Revenue</div>
+        <div style="margin-top:12px;">
+          <div class="frow">
+            <span class="fl">revenue anual (USD M)</span>
+            <input type="range" id="oniRev" min="200" max="800" step="25" value="400" oninput="calcOni()">
+            <span class="fval" id="oniRevOut">400</span>
+          </div>
+          <div class="frow">
+            <span class="fl">múltiplo EV/Revenue elegido</span>
+            <input type="range" id="oniMultSlider" min="1" max="8" step="0.1" value="3" oninput="calcOni()">
+            <span class="fval" id="oniMultOut">3.0x</span>
+          </div>
+          <div class="frow">
+            <span class="fl">descuento por no ser independiente (%)</span>
+            <input type="range" id="oniDisc" min="0" max="40" step="5" value="20" oninput="calcOni()">
+            <span class="fval" id="oniDiscOut">20%</span>
+          </div>
+        </div>
+        <div class="metrics" id="oniCalcMetrics"></div>
+        <div class="tip purple" id="oniJust" style="margin-top:.5rem;"></div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button onclick="gP(3)"><i class="ti ti-arrow-left"></i> anterior</button>
+      <button class="primary" onclick="gP(5)">ver resultado final <i class="ti ti-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- PASO 6 -->
+  <div class="step" id="st5">
+    <div class="step-header">
+      <p class="step-num">Paso 6 de 6</p>
+      <h2 class="step-title">Ajustar por factores cualitativos y concluir</h2>
+    </div>
+
+    <p class="lead"><b>El múltiplo da un rango. Los factores cualitativos justifican dónde dentro del rango debería estar la empresa.</b> Mejor posición competitiva, marca más fuerte o menos riesgo merecen el extremo alto del rango.</p>
+
+    <div class="cases">
+      <div class="case-card pat">
+        <div class="case-title"><i class="ti ti-mountain" style="color:var(--pat);"></i>Patagonia — factores de ajuste</div>
+        <div style="margin-top:10px;">
+          <div class="insight-row"><span class="dot" style="background:var(--pat);"></span><b>Sube el múltiplo:</b> marca con propósito único y fidelidad de cliente extraordinaria. El intangible de "marca con valores" es muy difícil de replicar.</div>
+          <div class="insight-row"><span class="dot" style="background:var(--pat);"></span><b>Sube el múltiplo:</b> sin presión de accionistas. Al ser de una fundación, puede invertir en calidad sin presión trimestral.</div>
+          <div class="insight-row"><span class="dot" style="background:var(--danger);"></span><b>Baja el múltiplo:</b> descuento por iliquidez. Es privada. Un comprador exigiría 20–30% de descuento sobre una empresa comparable cotizada.</div>
+          <div class="insight-row"><span class="dot" style="background:var(--danger);"></span><b>Baja el múltiplo:</b> la donación a la fundación complica cualquier compra futura. El comprador negociaría con la fundación, no con un dueño tradicional.</div>
+        </div>
+        <div class="div"></div>
+        <p style="font-size:11px;color:var(--ink3);font-family:'DM Mono',monospace;margin-bottom:4px;">valorización final con ajuste cualitativo</p>
+        <p style="font-size:28px;font-weight:500;color:var(--pat);font-family:'DM Mono',monospace;" id="patFinalVal">—</p>
+        <p style="font-size:11px;color:var(--ink3);">+10% prima de marca · −25% descuento iliquidez</p>
+      </div>
+      <div class="case-card oni">
+        <div class="case-title"><i class="ti ti-shoe" style="color:var(--oni);"></i>Onitsuka Tiger — factores de ajuste</div>
+        <div style="margin-top:10px;">
+          <div class="insight-row"><span class="dot" style="background:var(--oni);"></span><b>Sube el múltiplo:</b> marca con historia auténtica de 75 años. El heritage (Bruce Lee, Kill Bill) tiene valor de intangible difícil de replicar.</div>
+          <div class="insight-row"><span class="dot" style="background:var(--oni);"></span><b>Sube el múltiplo:</b> crecimiento fuerte en Europa y Sudeste Asiático justifica una prima sobre comparables estables.</div>
+          <div class="insight-row"><span class="dot" style="background:var(--danger);"></span><b>Baja el múltiplo:</b> dependencia de Asics para infraestructura. Si se vendiera sola, tendría que replicar toda la cadena de suministro.</div>
+          <div class="insight-row"><span class="dot" style="background:var(--warn);"></span><b>Incierto:</b> riesgo de tendencia. El segmento retro/lifestyle puede perder popularidad más rápido que el outdoor técnico.</div>
+        </div>
+        <div class="div"></div>
+        <p style="font-size:11px;color:var(--ink3);font-family:'DM Mono',monospace;margin-bottom:4px;">valorización final con ajuste cualitativo</p>
+        <p style="font-size:28px;font-weight:500;color:var(--oni);font-family:'DM Mono',monospace;" id="oniFinalVal">—</p>
+        <p style="font-size:11px;color:var(--ink3);">+15% prima marca/crecimiento · −20% descuento dependencia</p>
+      </div>
+    </div>
+
+    <div class="div"></div>
+    <p class="stit">comparación final</p>
+    <div class="final-grid" id="finalComparison"></div>
+
+    <div class="tip" style="margin-top:1.5rem;"><b>Lección central:</b> los múltiplos no dan un precio, dan un rango. Patagonia y Onitsuka Tiger llegan a rangos muy distintos no porque uno sea "mejor" negocio, sino porque tienen estructuras distintas, información disponible distinta y comparables distintos. Eso es exactamente lo que hace la valorización difícil — y valiosa.</div>
+
+    <div class="btn-row">
+      <button onclick="sendQ('¿Cuál es el descuento por iliquidez típico para empresas privadas en Chile y cómo se calcula?')">Descuento por iliquidez ↗</button>
+      <button onclick="sendQ('¿Cómo se valoriza una marca (intangible) dentro de una empresa más grande?')">Valorizar intangibles ↗</button>
+      <button onclick="sendQ('¿Cuál es la diferencia entre EV y el precio de las acciones?')">EV vs. precio acción ↗</button>
+    </div>
+
+    <div class="nav">
+      <button onclick="gP(4)"><i class="ti ti-arrow-left"></i> anterior</button>
+      <button onclick="gP(0)"><i class="ti ti-refresh"></i> volver al inicio</button>
+    </div>
+  </div>
+
+  </div><!-- .inner -->
+  <div class="shell-footer">
+    <p>ICOM I006 · Valorización por Múltiplos</p>
+    <div class="footer-dot"></div>
+    <p>Patagonia · Onitsuka Tiger · Guía interactiva</p>
+  </div>
+</div><!-- .shell -->
+<script>
+const PAT_COMPS=[
+  {name:'lululemon',seg:'apparel / performance',mult:18.5,def:true},
+  {name:'Columbia Sportswear',seg:'outdoor / mid-market',mult:10.2,def:true},
+  {name:'VF Corp (North Face)',seg:'outdoor / multi-marca',mult:7.8,def:true},
+  {name:"Amer Sports (Arc'teryx)",seg:'outdoor / premium',mult:14.1,def:true},
+  {name:'Nike',seg:'calzado / mega-marca',mult:21.3,def:false},
+  {name:'PVH Corp',seg:'moda masiva',mult:6.1,def:false},
+];
+const ONI_COMPS=[
+  {name:'New Balance (est.)',seg:'calzado lifestyle / running',mult:2.8,def:true},
+  {name:"Vans (VF Corp)",seg:'calzado lifestyle urbano',mult:3.1,def:true},
+  {name:'Salomon (Amer Sports)',seg:'outdoor / calzado técnico',mult:3.8,def:true},
+  {name:"Tod's",seg:'calzado premium italiano',mult:2.1,def:true},
+  {name:'Moncler',seg:'moda de lujo / premium',mult:6.4,def:false},
+  {name:'LVMH',seg:'lujo megagrupo',mult:9.2,def:false},
+];
+
+let patExcl=new Set(),oniExcl=new Set();
+
+function buildTables(){
+  document.getElementById('patTbody').innerHTML=PAT_COMPS.map((c,i)=>
+    `<tr id="patr${i}" class="${!c.def?'excluded':''}">
+      <td>${c.name}</td>
+      <td><span class="tag tag-green">${c.seg}</span></td>
+      <td class="mult-num">${c.mult}x</td>
+      <td><button class="toggle-btn ${!c.def?'excl':''}" id="patb${i}" onclick="toggleComp('pat',${i})">${!c.def?'incluir':'excluir'}</button></td>
+    </tr>`).join('');
+  document.getElementById('oniTbody').innerHTML=ONI_COMPS.map((c,i)=>
+    `<tr id="onir${i}" class="${!c.def?'excluded':''}">
+      <td>${c.name}</td>
+      <td><span class="tag tag-purple">${c.seg}</span></td>
+      <td class="mult-num">${c.mult}x</td>
+      <td><button class="toggle-btn ${!c.def?'excl':''}" id="onib${i}" onclick="toggleComp('oni',${i})">${!c.def?'incluir':'excluir'}</button></td>
+    </tr>`).join('');
+  PAT_COMPS.forEach((_,i)=>{if(!PAT_COMPS[i].def)patExcl.add(i);});
+  ONI_COMPS.forEach((_,i)=>{if(!ONI_COMPS[i].def)oniExcl.add(i);});
+  updateCompMetrics();
+}
+
+function toggleComp(which,i){
+  const excl=which==='pat'?patExcl:oniExcl;
+  const row=document.getElementById(which+'r'+i);
+  const btn=document.getElementById(which+'b'+i);
+  if(excl.has(i)){excl.delete(i);row.classList.remove('excluded');btn.classList.remove('excl');btn.textContent='excluir';}
+  else{excl.add(i);row.classList.add('excluded');btn.classList.add('excl');btn.textContent='incluir';}
+  updateCompMetrics();
+}
+
+function median(arr){
+  if(!arr.length)return 0;
+  const s=[...arr].sort((a,b)=>a-b);
+  const m=Math.floor(s.length/2);
+  return s.length%2?s[m]:(s[m-1]+s[m])/2;
+}
+
+function fmt(n){return n.toLocaleString('es-CL',{maximumFractionDigits:1});}
+
+function updateCompMetrics(){
+  const pm=PAT_COMPS.filter((_,i)=>!patExcl.has(i)).map(c=>c.mult);
+  const om=ONI_COMPS.filter((_,i)=>!oniExcl.has(i)).map(c=>c.mult);
+  const pmed=median(pm),omed=median(om);
+  const pmin=pm.length?Math.min(...pm):0,pmax=pm.length?Math.max(...pm):0;
+  const omin=om.length?Math.min(...om):0,omax=om.length?Math.max(...om):0;
+  const pc=document.getElementById('patCompsMetrics');
+  if(pc)pc.innerHTML=`<div class="mc"><p class="mc-l">mediana peers</p><p class="mc-v" style="font-family:'DM Mono',monospace;">${pmed.toFixed(1)}x</p><p class="mc-s">${pm.length} empresas incluidas</p></div><div class="mc"><p class="mc-l">rango</p><p class="mc-v" style="font-family:'DM Mono',monospace;">${pmin.toFixed(1)}–${pmax.toFixed(1)}x</p><p class="mc-s">mín – máx</p></div>`;
+  const oc=document.getElementById('oniCompsMetrics');
+  if(oc)oc.innerHTML=`<div class="mc"><p class="mc-l">mediana peers</p><p class="mc-v" style="font-family:'DM Mono',monospace;">${omed.toFixed(1)}x</p><p class="mc-s">${om.length} empresas incluidas</p></div><div class="mc"><p class="mc-l">rango</p><p class="mc-v" style="font-family:'DM Mono',monospace;">${omin.toFixed(1)}–${omax.toFixed(1)}x</p><p class="mc-s">mín – máx</p></div>`;
+  const pmr=document.getElementById('patMultRange');
+  if(pmr)pmr.textContent=`mediana ${pmed.toFixed(1)}x · rango ${pmin.toFixed(1)}–${pmax.toFixed(1)}x`;
+  const omr=document.getElementById('oniMultRange');
+  if(omr)omr.textContent=`mediana ${omed.toFixed(1)}x · rango ${omin.toFixed(1)}–${omax.toFixed(1)}x`;
+  const ps=document.getElementById('patMultSlider');
+  if(ps){ps.value=pmed.toFixed(1);calcPat();}
+  const os=document.getElementById('oniMultSlider');
+  if(os){os.value=omed.toFixed(1);calcOni();}
+}
+
+function calcPat(){
+  const rev=parseFloat(document.getElementById('patRev').value);
+  const margin=parseFloat(document.getElementById('patMargin').value)/100;
+  const mult=parseFloat(document.getElementById('patMultSlider').value);
+  document.getElementById('patRevOut').textContent=fmt(rev);
+  document.getElementById('patMarginOut').textContent=Math.round(margin*100)+'%';
+  document.getElementById('patMultOut').textContent=mult.toFixed(1)+'x';
+  const ebitda=rev*margin,ev=ebitda*mult;
+  const el=document.getElementById('patCalcMetrics');
+  if(el)el.innerHTML=`<div class="mc"><p class="mc-l">EBITDA estimado</p><p class="mc-v" style="font-family:'DM Mono',monospace;">USD ${Math.round(ebitda)}M</p><p class="mc-s">${Math.round(margin*100)}% del revenue</p></div><div class="mc"><p class="mc-l">EV calculado</p><p class="mc-v" style="font-family:'DM Mono',monospace;">USD ${Math.round(ev).toLocaleString('es-CL')}M</p><p class="mc-s">${Math.round(ebitda)}M × ${mult.toFixed(1)}x</p></div>`;
+  const j=document.getElementById('patJust');
+  if(j)j.innerHTML=mult<=9?'<b>Múltiplo bajo:</b> implica descuento por iliquidez o expectativas moderadas. Justifícalo con la posición competitiva.':mult<=15?'<b>Múltiplo en rango:</b> coherente con la mediana de peers. Justifica con la posición competitiva de Patagonia.':'<b>Múltiplo alto:</b> implica que Patagonia vale más que sus peers. Justifica con la prima de marca y propósito único.';
+  updateFinalVals();
+}
+
+function calcOni(){
+  const rev=parseFloat(document.getElementById('oniRev').value);
+  const mult=parseFloat(document.getElementById('oniMultSlider').value);
+  const disc=parseFloat(document.getElementById('oniDisc').value)/100;
+  document.getElementById('oniRevOut').textContent=fmt(rev);
+  document.getElementById('oniMultOut').textContent=mult.toFixed(1)+'x';
+  document.getElementById('oniDiscOut').textContent=Math.round(disc*100)+'%';
+  const evB=rev*mult,evN=evB*(1-disc);
+  const el=document.getElementById('oniCalcMetrics');
+  if(el)el.innerHTML=`<div class="mc"><p class="mc-l">EV bruto (sin descuento)</p><p class="mc-v" style="font-family:'DM Mono',monospace;">USD ${Math.round(evB).toLocaleString('es-CL')}M</p><p class="mc-s">${fmt(rev)}M × ${mult.toFixed(1)}x</p></div><div class="mc"><p class="mc-l">EV ajustado</p><p class="mc-v" style="font-family:'DM Mono',monospace;">USD ${Math.round(evN).toLocaleString('es-CL')}M</p><p class="mc-s">–${Math.round(disc*100)}% descuento</p></div>`;
+  const j=document.getElementById('oniJust');
+  if(j)j.innerHTML=disc===0?'<b>Sin descuento:</b> asumes que Onitsuka Tiger puede operar completamente independiente. Difícil de justificar.':disc<=0.15?'<b>Descuento bajo:</b> asumes alta capacidad operacional independiente.':disc<=0.25?'<b>Descuento moderado:</b> el más común en transacciones de marcas dentro de conglomerados.':'<b>Descuento alto:</b> implica alta dependencia de Asics. Justificado si la marca no puede operar sola.';
+  updateFinalVals();
+}
+
+function updateFinalVals(){
+  const pRev=parseFloat(document.getElementById('patRev')?.value)||1500;
+  const pM=parseFloat(document.getElementById('patMargin')?.value)/100||.15;
+  const pMult=parseFloat(document.getElementById('patMultSlider')?.value)||12;
+  const patEV=pRev*pM*pMult;
+  const patAdj=Math.round(patEV*1.10*0.75);
+  const pfv=document.getElementById('patFinalVal');
+  if(pfv)pfv.textContent='USD '+patAdj.toLocaleString('es-CL')+'M';
+  const oRev=parseFloat(document.getElementById('oniRev')?.value)||400;
+  const oMult=parseFloat(document.getElementById('oniMultSlider')?.value)||3;
+  const oDisc=parseFloat(document.getElementById('oniDisc')?.value)/100||.20;
+  const oniEV=oRev*oMult*(1-oDisc);
+  const oniAdj=Math.round(oniEV*1.15*0.80);
+  const ofv=document.getElementById('oniFinalVal');
+  if(ofv)ofv.textContent='USD '+oniAdj.toLocaleString('es-CL')+'M';
+  const fc=document.getElementById('finalComparison');
+  if(fc)fc.innerHTML=`
+    <div class="final-card pat-card">
+      <p class="final-label">Patagonia — EV/EBITDA</p>
+      <p class="final-val">USD ${patAdj.toLocaleString('es-CL')}M</p>
+      <p class="final-sub">Empresa madura de outdoor · descuento iliquidez aplicado</p>
+    </div>
+    <div class="final-card oni-card">
+      <p class="final-label">Onitsuka Tiger — EV/Revenue</p>
+      <p class="final-val">USD ${oniAdj.toLocaleString('es-CL')}M</p>
+      <p class="final-sub">Marca dentro de Asics · descuento independencia aplicado</p>
+    </div>`;
+}
+
+function selMult(id){
+  ['evebitda','evrev','pe','evgmv'].forEach(m=>document.getElementById('mo-'+m).classList.remove('selected'));
+  document.getElementById('mo-'+id).classList.add('selected');
+  const descs={
+    evebitda:'<b>EV/EBITDA:</b> el múltiplo más usado en M&A. Elimina el efecto de la estructura de capital y las diferencias contables entre países. Ideal para empresas maduras. Rango típico en outdoor/consumo: 8–18x.',
+    evrev:'<b>EV/Revenue:</b> útil cuando no hay EBITDA positivo o cuando los márgenes son muy comparables. También se usa para marcas dentro de empresas más grandes. Rango típico en fashion/lifestyle: 1.5–6x. <b>Advertencia:</b> ignora la rentabilidad — una empresa con EV/Revenue alto puede ser muy rentable o estar quemando caja.',
+    pe:'<b>P/E:</b> el múltiplo más conocido en análisis bursátil. Simple con datos de bolsa. <b>Limitación:</b> solo aplica a empresas cotizadas con utilidades positivas. Muy sensible a la estructura tributaria y cargos no recurrentes.',
+    evgmv:'<b>EV/GMV:</b> específico para marketplaces y plataformas. El GMV (volumen bruto) refleja mejor la actividad que el revenue contable en estos modelos. <b>No aplica</b> a Patagonia ni Onitsuka Tiger.',
+  };
+  const d=document.getElementById('multDesc');
+  d.style.display='block';d.innerHTML=descs[id];
+}
+
+function ansQ(qid,opt,correct,fb){
+  const prefix=qid==='3p'?'q3pata':qid==='3o'?'q3oni':'q'+qid+'a';
+  const c=document.getElementById(prefix);if(!c)return;
+  c.querySelectorAll('.qa-opt').forEach((o,i)=>{
+    o.style.pointerEvents='none';
+    if(i===opt)o.classList.add(correct?'correct':'wrong');
+  });
+  const f=document.getElementById('qfb'+qid);
+  if(f){f.innerHTML=(correct?'<b>Correcto.</b> ':'<b>No exactamente.</b> ')+fb;f.classList.add('show');}
+}
+
+function ansCaseMult(which,opt,correct,fb){
+  const c=document.getElementById(which+'Mult');if(!c)return;
+  c.querySelectorAll('.qa-opt').forEach((o,i)=>{
+    o.style.pointerEvents='none';
+    if(i===opt)o.classList.add(correct?'correct':'wrong');
+  });
+  const f=document.getElementById(which+'MultFb');
+  if(f){f.innerHTML=(correct?'<b>Correcto.</b> ':'<b>No exactamente.</b> ')+fb;f.classList.add('show');}
+}
+
+function gP(n){
+  document.querySelectorAll('.step').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.pb').forEach((b,i)=>b.classList.toggle('active',i===n));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n>=3)updateCompMetrics();
+  if(n>=4){calcPat();calcOni();}
+}
+
+function sendQ(text){
+  window.open('https://claude.ai/new?q='+encodeURIComponent(text),'_blank');
+}
+
+buildTables();
+calcPat();
+calcOni();
+</script>
+</body>
+</html>
