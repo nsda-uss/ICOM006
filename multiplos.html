@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valorización de Empresas Privadas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root {
+  --c1:  #0A1628;   /* midnight — sidebar bg */
+  --c2:  #112240;   /* deep navy — sidebar hover */
+  --c3:  #1B3A6B;   /* navy — accents */
+  --c4:  #2563EB;   /* cobalt — primary action */
+  --c5:  #3B82F6;   /* cobalt light — hover */
+  --c6:  #DBEAFE;   /* cobalt wash */
+  --c7:  #EFF6FF;   /* cobalt ultra-light */
+  --gold:  #CA8A04;
+  --gold-l:#FEF9C3;
+  --gold-m:#FDE047;
+  --teal:  #0D9488;
+  --teal-l:#F0FDFA;
+  --slate: #F8FAFC;
+  --white: #FFFFFF;
+  --ink:   #0F172A;
+  --ink2:  #334155;
+  --ink3:  #64748B;
+  --line:  #E2E8F0;
+  --line2: #CBD5E1;
+  --green: #15803D; --green-bg:#F0FDF4;
+  --amber: #92400E; --amber-bg:#FFFBEB;
+  --red:   #991B1B; --red-bg:#FEF2F2;
+  --r:8px; --r-lg:12px; --r-xl:16px;
+  --sh:  0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04);
+  --sh-lg:0 4px 16px rgba(0,0,0,.08), 0 16px 40px rgba(0,0,0,.06);
+  --sidebar-w: 240px;
+  --header-h:  56px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--slate);color:var(--ink);min-height:100vh;font-size:14px;line-height:1.5;}
+
+/* ── LAYOUT ── */
+.app{display:flex;min-height:100vh;}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--c1);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;height:100vh;
+  z-index:100;transition:transform .25s ease;
+  overflow-y:auto;
+}
+.sidebar-logo{
+  padding:20px 20px 16px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:10px;
+}
+.logo-mark{
+  width:32px;height:32px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--c4) 0%,var(--c5) 100%);
+  display:flex;align-items:center;justify-content:center;
+}
+.logo-mark i{font-size:17px;color:#fff;}
+.logo-text{font-size:13px;font-weight:600;color:#fff;letter-spacing:-.01em;line-height:1.2;}
+.logo-text span{display:block;font-size:10px;font-weight:400;color:rgba(255,255,255,.4);font-family:'JetBrains Mono',monospace;margin-top:1px;}
+
+.sb-section{padding:16px 12px 8px;font-size:9px;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;font-family:'JetBrains Mono',monospace;}
+
+.sb-item{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 14px;margin:1px 8px;border-radius:var(--r);
+  font-size:12px;font-weight:500;color:rgba(255,255,255,.55);
+  cursor:pointer;transition:all .18s;border:none;background:transparent;
+  width:calc(100% - 16px);text-align:left;
+}
+.sb-item i{font-size:15px;flex-shrink:0;opacity:.7;}
+.sb-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85);}
+.sb-item.active{background:linear-gradient(90deg,var(--c4) 0%,var(--c3) 100%);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.35);}
+.sb-item.active i{opacity:1;}
+
+.sb-mode-section{padding:12px 8px;margin:8px 0;border-top:1px solid rgba(255,255,255,.07);}
+.sb-mode-label{font-size:9px;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;font-family:'JetBrains Mono',monospace;padding:0 6px 8px;}
+.mode-pill{
+  display:flex;align-items:center;gap:8px;width:100%;
+  padding:10px 14px;border-radius:var(--r);border:none;
+  font-size:12px;font-weight:500;cursor:pointer;transition:all .18s;
+  text-align:left;margin-bottom:4px;
+}
+.mode-pill.rev{background:rgba(37,99,235,.15);color:#93C5FD;}
+.mode-pill.rev.active{background:var(--c4);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.4);}
+.mode-pill.pre{background:rgba(13,148,136,.15);color:#5EEAD4;}
+.mode-pill.pre.active{background:var(--teal);color:#fff;box-shadow:0 2px 8px rgba(13,148,136,.4);}
+.mode-pill i{font-size:14px;flex-shrink:0;}
+
+.sb-footer{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,.07);}
+.sb-footer p{font-size:10px;color:rgba(255,255,255,.25);font-family:'JetBrains Mono',monospace;line-height:1.5;}
+
+/* MOBILE OVERLAY */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;}
+.sb-overlay.show{display:block;}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{
+  height:var(--header-h);background:var(--white);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;padding:0 24px;gap:12px;
+  position:sticky;top:0;z-index:50;box-shadow:var(--sh);
+}
+.topbar-menu{display:none;background:transparent;border:none;cursor:pointer;color:var(--ink2);padding:6px;}
+.topbar-menu i{font-size:20px;}
+.topbar-title{font-size:14px;font-weight:600;color:var(--ink);flex:1;}
+.topbar-badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;font-family:'JetBrains Mono',monospace;background:var(--c6);color:var(--c4);}
+
+/* CONTENT */
+.content{flex:1;padding:28px 28px 40px;}
+
+/* MODE PANELS */
+.mode-panel{display:none;}.mode-panel.active{display:block;animation:fadeUp .2s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* EXAMPLE BAR */
+.ex-bar{display:flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:10px 14px;margin-bottom:20px;flex-wrap:wrap;box-shadow:var(--sh);}
+.ex-label{font-size:10px;color:var(--ink3);font-weight:600;margin-right:4px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em;}
+.ex-btn{font-size:12px;font-weight:500;padding:5px 13px;border:1px solid var(--line2);border-radius:20px;background:var(--slate);cursor:pointer;color:var(--ink2);transition:all .18s;font-family:'Inter',sans-serif;}
+.ex-btn:hover{border-color:var(--c4);color:var(--c4);}
+.ex-btn.active{background:var(--c4);color:#fff;border-color:var(--c4);box-shadow:0 2px 8px rgba(37,99,235,.3);}
+.ex-card{border-radius:var(--r);padding:12px 15px;margin-bottom:16px;border-left:3px solid var(--gold);background:var(--gold-l);}
+.ex-card-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+.ex-card-sub{font-size:12px;color:var(--ink2);line-height:1.5;}
+
+/* STEP NAV */
+.step-nav{display:flex;background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:20px;box-shadow:var(--sh);}
+.step-btn{flex:1;padding:14px 4px;font-size:11px;font-weight:500;background:transparent;border:none;border-right:1px solid var(--line);cursor:pointer;color:var(--ink3);text-align:center;line-height:1.3;transition:all .18s;font-family:'Inter',sans-serif;}
+.step-btn:last-child{border-right:none;}
+.step-btn .num{display:block;font-size:9px;color:var(--ink3);margin-bottom:3px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
+.step-btn:hover{background:var(--c7);color:var(--c4);}
+.step-btn.active{background:var(--c4);color:#fff;}
+.step-btn.active .num{color:rgba(255,255,255,.65);}
+
+.sp{display:none;}.sp.active{display:block;animation:fadeUp .2s ease;}
+
+/* TAB ROW */
+.tab-row{display:flex;background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:20px;box-shadow:var(--sh);}
+.tab-btn{flex:1;padding:14px 4px;font-size:11px;font-weight:500;background:transparent;border:none;border-right:1px solid var(--line);cursor:pointer;color:var(--ink3);text-align:center;line-height:1.3;transition:all .18s;font-family:'Inter',sans-serif;}
+.tab-btn:last-child{border-right:none;}
+.tab-btn .num{display:block;font-size:9px;color:var(--ink3);margin-bottom:3px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
+.tab-btn:hover{background:var(--teal-l);color:var(--teal);}
+.tab-btn.active{background:var(--teal);color:#fff;}
+.tab-btn.active .num{color:rgba(255,255,255,.65);}
+.pr{display:none;}.pr.active{display:block;animation:fadeUp .2s ease;}
+
+/* SECTION TITLE */
+.stit{font-size:11px;font-weight:600;color:var(--ink3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:8px;}
+.stit::before{content:'';display:inline-block;width:16px;height:2px;background:var(--c4);border-radius:2px;flex-shrink:0;}
+
+/* DIVIDER */
+.div{border:none;border-top:1px solid var(--line);margin:20px 0;}
+
+/* TIP */
+.tip{background:var(--c7);border:1px solid var(--c6);border-left:3px solid var(--c4);border-radius:var(--r);padding:11px 14px;font-size:12px;color:var(--ink2);margin:12px 0;line-height:1.6;}
+.tip b{color:var(--c3);font-weight:600;}
+
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;box-shadow:var(--sh);margin-bottom:16px;}
+.card-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+
+/* METRICS */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0;}
+.mc{background:var(--slate);border:1px solid var(--line);border-radius:var(--r);padding:14px;}
+.mc-l{font-size:10px;color:var(--ink3);margin-bottom:4px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
+.mc-v{font-size:19px;font-weight:600;color:var(--c3);font-family:'JetBrains Mono',monospace;}
+.mc-s{font-size:11px;color:var(--ink3);margin-top:3px;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--c1) 0%,var(--c2) 100%);border-radius:var(--r-xl);padding:20px 24px;margin:12px 0;box-shadow:var(--sh-lg);position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(37,99,235,.15);}
+.hero-l{font-size:10px;color:rgba(255,255,255,.45);margin-bottom:4px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.08em;}
+.hero-v{font-size:28px;font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace;position:relative;}
+.hero-s{font-size:12px;color:var(--gold-m);margin-top:4px;}
+
+/* INPUTS */
+.frow{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.fl{font-size:12px;color:var(--ink2);min-width:155px;line-height:1.4;}
+.fi{width:95px;text-align:right;font-size:12px;padding:5px 8px;border:1px solid var(--line2);border-radius:var(--r);background:var(--white);color:var(--ink);font-family:'JetBrains Mono',monospace;font-weight:500;}
+.fi:focus{outline:none;border-color:var(--c4);box-shadow:0 0 0 3px var(--c7);}
+.fslider{flex:1;}
+.fval{font-size:12px;font-weight:500;color:var(--c3);min-width:95px;text-align:right;font-family:'JetBrains Mono',monospace;}
+input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--line2);outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--c4);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(37,99,235,.4);}
+
+/* RESULT CARDS */
+.rcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0;}
+.rc{border-radius:var(--r);padding:14px;}
+.rc-t{font-size:10px;font-weight:600;margin-bottom:6px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
+.rc-v{font-size:16px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.rc-s{font-size:11px;margin-top:3px;}
+
+/* NAV */
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:20px;border-top:1px solid var(--line);}
+button{padding:9px 18px;border:1px solid var(--line2);border-radius:var(--r);background:var(--white);color:var(--ink2);font-size:12px;font-weight:500;cursor:pointer;transition:all .18s;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px;}
+button i{font-size:14px;}
+button:hover{border-color:var(--c4);color:var(--c4);background:var(--c7);}
+button.primary{background:var(--c4);color:#fff;border-color:var(--c4);box-shadow:0 2px 8px rgba(37,99,235,.3);}
+button.primary:hover{background:var(--c5);box-shadow:0 4px 12px rgba(37,99,235,.4);}
+
+/* BERKUS */
+.brow{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:11px 14px;}
+.bl{font-size:12px;color:var(--ink2);min-width:185px;line-height:1.4;font-weight:500;}
+.bc{display:flex;gap:6px;}
+.bc input[type=radio]{display:none;}
+.bc label{font-size:11px;color:var(--ink2);display:inline-flex;align-items:center;cursor:pointer;padding:5px 12px;border:1px solid var(--line2);border-radius:20px;transition:all .18s;background:var(--slate);user-select:none;font-weight:500;}
+.bc label:hover{border-color:var(--c4);color:var(--c4);}
+.bc input[type=radio]:checked+label{background:var(--c4);color:#fff;border-color:var(--c4);box-shadow:0 2px 6px rgba(37,99,235,.3);}
+.bv{font-size:12px;font-weight:600;color:var(--c3);min-width:85px;text-align:right;font-family:'JetBrains Mono',monospace;}
+
+/* SCORECARD */
+.srow{display:flex;align-items:center;gap:10px;margin-bottom:8px;background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:10px 14px;}
+.sl2{font-size:12px;color:var(--ink2);min-width:170px;line-height:1.4;font-weight:500;}
+.sw{font-size:10px;color:var(--gold);min-width:25px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.sv{font-size:12px;font-weight:600;color:var(--c3);min-width:38px;text-align:right;font-family:'JetBrains Mono',monospace;}
+
+/* LISTS */
+.rl{list-style:none;}
+.ri{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--ink2);margin-bottom:8px;line-height:1.5;}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+
+/* DUE DILIGENCE */
+.ddg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.ddi{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;font-size:11px;color:var(--ink2);display:flex;align-items:flex-start;gap:8px;line-height:1.4;}
+.ddi i{color:var(--c4);flex-shrink:0;font-size:14px;margin-top:1px;}
+
+/* SELECT */
+select{font-size:13px;padding:8px 10px;border:1px solid var(--line2);border-radius:var(--r);background:var(--white);color:var(--ink);font-family:'Inter',sans-serif;cursor:pointer;}
+select:focus{outline:none;border-color:var(--c4);}
+
+/* PRE-REVENUE TIP */
+.pre-intro{background:linear-gradient(90deg,rgba(13,148,136,.08) 0%,rgba(13,148,136,.03) 100%);border:1px solid rgba(13,148,136,.2);border-left:3px solid var(--teal);border-radius:var(--r);padding:11px 14px;font-size:12px;color:var(--ink2);margin:0 0 16px;line-height:1.6;}
+.pre-intro b{color:var(--teal);font-weight:600;}
+
+/* MOBILE */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .topbar-menu{display:block;}
+  .content{padding:20px 16px 32px;}
+  .fl{min-width:120px;}
+  .fi{width:75px;font-size:11px;}
+  .fval{min-width:70px;font-size:11px;}
+  .ddg{grid-template-columns:1fr;}
+  .bl{min-width:140px;}
+  .step-btn{padding:12px 2px;font-size:10px;}
+  .tab-btn{padding:12px 2px;font-size:10px;}
+}
+
+/* ── GUÍA MÁS QUE UN PITCH ── */
+.mode-pill.guide{background:rgba(202,138,4,.15);color:#FCD34D;}
+.mode-pill.guide.active{background:var(--gold);color:var(--c1);box-shadow:0 2px 8px rgba(202,138,4,.4);}
+
+.guide-header{background:linear-gradient(135deg,#78350F 0%,#92400E 100%);border-radius:var(--r-xl);padding:20px 24px;margin-bottom:20px;position:relative;overflow:hidden;}
+.guide-header::after{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(253,224,71,.1);}
+.guide-header .badge{font-size:10px;font-weight:600;padding:3px 10px;background:rgba(253,224,71,.2);color:#FDE047;border-radius:20px;font-family:'JetBrains Mono',monospace;display:inline-block;margin-bottom:10px;}
+.guide-header h2{font-size:18px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:6px;}
+.guide-header p{font-size:12px;color:rgba(255,255,255,.6);line-height:1.5;}
+
+.guide-phase{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:16px;box-shadow:var(--sh);}
+.guide-phase-header{padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;transition:background .15s;}
+.guide-phase-header:hover{background:var(--slate);}
+.guide-phase-header.open{background:var(--slate);}
+.phase-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+.phase-title{flex:1;font-size:13px;font-weight:600;color:var(--ink);}
+.phase-sub{font-size:11px;color:var(--ink3);margin-top:1px;}
+.phase-chevron{font-size:16px;color:var(--ink3);transition:transform .2s;}
+.phase-chevron.open{transform:rotate(180deg);}
+.guide-phase-body{display:none;padding:0 18px 16px;border-top:1px solid var(--line);}
+.guide-phase-body.open{display:block;}
+
+.checklist{list-style:none;margin:12px 0;}
+.cl-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink2);line-height:1.5;}
+.cl-item:last-child{border-bottom:none;}
+.cl-item input[type=checkbox]{margin-top:2px;flex-shrink:0;width:15px;height:15px;accent-color:var(--c4);cursor:pointer;}
+.cl-item label{cursor:pointer;flex:1;}
+.cl-item label.checked{text-decoration:line-through;color:var(--ink3);}
+
+.decision-tree{margin:12px 0;}
+.dt-q{font-size:12px;font-weight:600;color:var(--ink);background:var(--c7);border:1px solid var(--c6);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;}
+.dt-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.dt-opt{border:1px solid var(--line2);border-radius:var(--r);padding:9px 12px;cursor:pointer;transition:all .15s;background:var(--white);text-align:left;}
+.dt-opt:hover{border-color:var(--c4);background:var(--c7);}
+.dt-opt.selected{border-color:var(--c4);background:var(--c4);color:#fff;}
+.dt-opt-label{font-size:12px;font-weight:600;display:block;}
+.dt-opt-desc{font-size:11px;opacity:.7;display:block;margin-top:2px;}
+.dt-result{background:linear-gradient(90deg,var(--c7) 0%,var(--slate) 100%);border:1px solid var(--c6);border-left:3px solid var(--c4);border-radius:var(--r);padding:12px 14px;font-size:12px;color:var(--ink2);display:none;}
+.dt-result.show{display:block;}
+.dt-result b{color:var(--c3);font-weight:600;}
+.dt-result .action-btn{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:6px 14px;background:var(--c4);color:#fff;border:none;border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;}
+.dt-result .action-btn:hover{background:var(--c5);}
+
+.inference-card{background:var(--slate);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:10px;}
+.inference-trigger{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.inference-trigger i{color:var(--gold);font-size:14px;}
+.inference-formula{font-size:11px;color:var(--ink3);font-family:'JetBrains Mono',monospace;background:var(--white);border:1px solid var(--line);border-radius:4px;padding:6px 10px;margin-bottom:6px;}
+.inference-example{font-size:11px;color:var(--ink2);font-style:italic;}
+
+.validate-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r);margin-bottom:8px;background:var(--white);}
+.validate-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.validate-q{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:3px;}
+.validate-hint{font-size:11px;color:var(--ink3);line-height:1.4;}
+
+.progress-bar-wrap{background:var(--line);border-radius:4px;height:6px;margin:16px 0 4px;overflow:hidden;}
+.progress-bar{background:var(--c4);height:100%;border-radius:4px;transition:width .3s;}
+.progress-label{font-size:11px;color:var(--ink3);text-align:right;font-family:'JetBrains Mono',monospace;}
+
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark"><i class="ti ti-chart-candle"></i></div>
+    <div class="logo-text">ValorizApp<span>ICOM I006 · Unidad 3</span></div>
+  </div>
+
+  <div class="sb-section">Empresa</div>
+  <button class="sb-item" onclick="selectType('restaurant')"><i class="ti ti-tool-kitchen-2"></i>Restaurante</button>
+  <button class="sb-item" onclick="selectType('product')"><i class="ti ti-package"></i>Empresa de producto</button>
+  <button class="sb-item" onclick="selectType('service')"><i class="ti ti-briefcase"></i>Empresa de servicios</button>
+  <button class="sb-item" onclick="selectType('retail')"><i class="ti ti-building-store"></i>Retail / tienda</button>
+  <button class="sb-item" onclick="selectType('tech')"><i class="ti ti-device-laptop"></i>Tech / SaaS</button>
+
+  <div class="sb-mode-section">
+    <div class="sb-mode-label">modo de valorización</div>
+    <button class="mode-pill rev active" id="modeRevBtn" onclick="setMode('rev')"><i class="ti ti-chart-bar"></i>Con ingresos</button>
+    <button class="mode-pill pre" id="modePreBtn" onclick="setMode('pre')"><i class="ti ti-seedling"></i>Pre-revenue</button>
+  </div>
+
+  <div class="sb-section">Ejemplos</div>
+  <button class="sb-item" onclick="loadExample('ghali')"><i class="ti ti-bottle"></i>Ghali Kombucha</button>
+  <button class="sb-item" onclick="loadExample('236')"><i class="ti ti-burger"></i>236 Burgers</button>
+  <button class="sb-item" onclick="loadExamplePR('agro')"><i class="ti ti-plant-2"></i>AgroSense (agritech)</button>
+
+  <div class="sb-mode-section" style="border-top:1px solid rgba(255,255,255,.07);margin-top:4px;">
+    <div class="sb-mode-label">herramienta especial</div>
+    <button class="mode-pill guide" id="modeGuideBtn" onclick="setMode('guide')"><i class="ti ti-radio"></i>Más que un Pitch</button>
+  </div>
+
+  <div class="sb-footer">
+    <p>Herramienta pedagógica interactiva<br>Todos los valores en CLP</p>
+  </div>
+</aside>
+
+<!-- OVERLAY MOBILE -->
+<div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <button class="topbar-menu" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+    <span class="topbar-title" id="topbarTitle">Valorización de Empresas Privadas</span>
+    <span class="topbar-badge" id="topbarBadge">CLP</span>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- MODO CON INGRESOS -->
+    <div class="mode-panel active" id="m-rev">
+
+      <div class="ex-bar">
+        <span class="ex-label"><i class="ti ti-bulb" style="font-size:12px;vertical-align:-1px;margin-right:3px;"></i>cargar ejemplo:</span>
+        <button class="ex-btn active" id="ex-ghali" onclick="loadExample('ghali')">Ghali Kombucha</button>
+        <button class="ex-btn" id="ex-236" onclick="loadExample('236')">236 Burgers</button>
+        <button class="ex-btn" id="ex-blank" onclick="loadExample('blank')">en blanco</button>
+      </div>
+      <div class="ex-card" id="exCardRev" style="display:none;"></div>
+
+      <div class="step-nav">
+        <button class="step-btn active" onclick="gS(0)"><span class="num">paso 1</span>tipo</button>
+        <button class="step-btn" onclick="gS(1)"><span class="num">paso 2</span>ingresos</button>
+        <button class="step-btn" onclick="gS(2)"><span class="num">paso 3</span>márgenes</button>
+        <button class="step-btn" onclick="gS(3)"><span class="num">paso 4</span>múltiplos</button>
+        <button class="step-btn" onclick="gS(4)"><span class="num">paso 5</span>resultado</button>
+        <button class="step-btn" onclick="gS(5)"><span class="num">paso 6</span>due diligence</button>
+      </div>
+
+      <div class="sp active" id="s0">
+        <p class="stit">tipo de empresa</p>
+        <div class="frow" style="margin-bottom:16px;"><span class="fl">tipo de negocio</span>
+          <select id="bizType" onchange="applyPreset()" style="flex:1;">
+            <option value="restaurant">restaurante / local de comida</option>
+            <option value="product">empresa de producto (manufactura)</option>
+            <option value="service">empresa de servicios</option>
+            <option value="retail">retail / tienda</option>
+            <option value="tech">empresa tecnológica / saas</option>
+          </select>
+        </div>
+        <div class="tip" id="typeTip"></div>
+        <div class="nav"><span></span><button class="primary" onclick="gS(1)">siguiente <i class="ti ti-arrow-right"></i></button></div>
+      </div>
+
+      <div class="sp" id="s1">
+        <p class="stit">reconstruir ingresos</p>
+        <div class="tip">Ingresa el dato en el campo o mueve el slider. Cada supuesto debe ser observable desde afuera.</div>
+        <div id="revInputs"></div>
+        <div class="div"></div>
+        <div class="grid2" id="revMetrics"></div>
+        <div class="nav"><button onclick="gS(0)"><i class="ti ti-arrow-left"></i> anterior</button><button class="primary" onclick="gS(2)">siguiente <i class="ti ti-arrow-right"></i></button></div>
+      </div>
+
+      <div class="sp" id="s2">
+        <p class="stit">estimar márgenes</p>
+        <div id="marInputs"></div>
+        <div class="div"></div>
+        <div class="grid2" id="marMetrics"></div>
+        <div class="tip" id="marTip"></div>
+        <div class="nav"><button onclick="gS(1)"><i class="ti ti-arrow-left"></i> anterior</button><button class="primary" onclick="gS(3)">siguiente <i class="ti ti-arrow-right"></i></button></div>
+      </div>
+
+      <div class="sp" id="s3">
+        <p class="stit">aplicar múltiplos</p>
+        <div id="mulInputs"></div>
+        <div class="div"></div>
+        <div class="grid2" id="mulMetrics"></div>
+        <div class="tip" id="mulTip"></div>
+        <div class="nav"><button onclick="gS(2)"><i class="ti ti-arrow-left"></i> anterior</button><button class="primary" onclick="gS(4)">ver resultado <i class="ti ti-arrow-right"></i></button></div>
+      </div>
+
+      <div class="sp" id="s4">
+        <p class="stit">resultado</p>
+        <div class="hero"><p class="hero-l">revenue anual estimado</p><p class="hero-v" id="r-rev">—</p><p class="hero-s" id="r-rev2">—</p></div>
+        <div class="grid2">
+          <div class="mc"><p class="mc-l">EBITDA anual</p><p class="mc-v" id="r-ebitda">—</p><p class="mc-s" id="r-ep">—</p></div>
+          <div class="mc"><p class="mc-l">margen EBITDA</p><p class="mc-v" id="r-em">—</p><p class="mc-s">sobre revenue</p></div>
+        </div>
+        <div class="div"></div>
+        <p class="stit">valorización por método</p>
+        <div class="rcards">
+          <div class="rc" style="background:#EFF6FF;border:1px solid #BFDBFE;"><p class="rc-t" style="color:#1E40AF;">por EBITDA</p><p class="rc-v" style="color:#1E3A8A;" id="r-ve">—</p><p class="rc-s" style="color:#3B82F6;" id="r-ve2">—</p></div>
+          <div class="rc" style="background:#FEF9C3;border:1px solid #FDE047;"><p class="rc-t" style="color:#854D0E;">por revenue</p><p class="rc-v" style="color:#713F12;" id="r-vr">—</p><p class="rc-s" style="color:#CA8A04;" id="r-vr2">—</p></div>
+          <div class="rc" style="background:var(--c1);border:1px solid var(--c2);"><p class="rc-t" style="color:#FDE047;">promedio ajustado</p><p class="rc-v" style="color:#fff;" id="r-va">—</p><p class="rc-s" style="color:rgba(255,255,255,.5);" id="r-va2">—</p></div>
+        </div>
+        <div class="div"></div>
+        <p class="stit">factores cualitativos</p>
+        <ul class="rl" id="qualList"></ul>
+        <div class="nav"><button onclick="gS(3)"><i class="ti ti-arrow-left"></i> anterior</button><button class="primary" onclick="gS(5)">due diligence <i class="ti ti-arrow-right"></i></button></div>
+      </div>
+
+      <div class="sp" id="s5">
+        <p class="stit">due diligence</p>
+        <p style="font-size:12px;color:var(--ink2);margin-bottom:12px;line-height:1.5;">Cada ítem que no puedes verificar justifica bajar el precio ofrecido.</p>
+        <div class="ddg" id="ddList"></div>
+        <div class="div"></div>
+        <p class="stit">preguntas clave para la reunión</p>
+        <ul class="rl" id="meetQ"></ul>
+        <div class="nav"><button onclick="gS(4)"><i class="ti ti-arrow-left"></i> resultado</button><button onclick="gS(0);loadExample('blank')"><i class="ti ti-refresh"></i> nueva empresa</button></div>
+      </div>
+    </div>
+
+    <!-- MODO PRE-REVENUE -->
+    <div class="mode-panel" id="m-pre">
+
+      <div class="ex-bar">
+        <span class="ex-label"><i class="ti ti-bulb" style="font-size:12px;vertical-align:-1px;margin-right:3px;"></i>cargar ejemplo:</span>
+        <button class="ex-btn active" id="ex-agro-pr" onclick="loadExamplePR('agro')">AgroSense (agritech)</button>
+        <button class="ex-btn" id="ex-blank-pr" onclick="loadExamplePR('blank')">en blanco</button>
+      </div>
+      <div class="ex-card" id="exCardPR" style="display:none;"></div>
+
+      <div class="pre-intro"><b>Empresa pre-revenue:</b> sin ingresos, los métodos tradicionales no aplican. Usamos cuatro métodos complementarios. El rango entre ellos es la negociación.</div>
+
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="gT(0)"><span class="num">método 1</span>Berkus</button>
+        <button class="tab-btn" onclick="gT(1)"><span class="num">método 2</span>Scorecard</button>
+        <button class="tab-btn" onclick="gT(2)"><span class="num">método 3</span>VC Method</button>
+        <button class="tab-btn" onclick="gT(3)"><span class="num">método 4</span>Costo duplicar</button>
+        <button class="tab-btn" onclick="gT(4)"><span class="num">síntesis</span>rango final</button>
+      </div>
+
+      <div class="pr active" id="p0">
+        <p class="stit">hitos de la empresa</p>
+        <div class="tip"><b>Lógica de Berkus:</b> cada hito completado elimina un riesgo concreto. El valor no es lo que gana sino lo que dejó de ser incierto.</div>
+        <div class="frow"><span class="fl">valor máximo por hito ($)</span><input class="fi" type="number" id="maxHito" value="400000000" step="10000000" oninput="syncS('maxHitoS','maxHito',100000000,1000000000);calcBerkus()"><input class="fslider" type="range" min="100000000" max="1000000000" step="10000000" value="400000000" id="maxHitoS" oninput="syncI('maxHito','maxHitoS');calcBerkus()"><span class="fval" id="maxHito-out">$400.000.000</span></div>
+        <div id="berkusRows"></div>
+        <div class="div"></div>
+        <div class="grid2" id="berkusM"></div>
+        <div class="tip" id="berkusTip"></div>
+      </div>
+
+      <div class="pr" id="p1">
+        <p class="stit">comparación con el promedio</p>
+        <div class="tip"><b>Lógica del Scorecard:</b> 1.0x = igual al promedio. El equipo pesa 30% — en pre-revenue es prácticamente todo lo que existe.</div>
+        <div class="frow"><span class="fl">valorización de referencia ($)</span><input class="fi" type="number" id="baseVal" value="800000000" step="50000000" oninput="syncS('baseValS','baseVal',200000000,3000000000);calcScorecard()"><input class="fslider" type="range" min="200000000" max="3000000000" step="50000000" value="800000000" id="baseValS" oninput="syncI('baseVal','baseValS');calcScorecard()"><span class="fval" id="baseVal-out">$800.000.000</span></div>
+        <div id="scorecardRows"></div>
+        <div class="div"></div>
+        <div class="grid2" id="scorecardM"></div>
+        <div class="tip" id="scorecardTip"></div>
+      </div>
+
+      <div class="pr" id="p2">
+        <p class="stit">valor potencial en el exit</p>
+        <div class="tip"><b>Lógica del VC Method:</b> el inversionista ignora el presente y mira el futuro. Estima el exit, descuenta por retorno esperado y probabilidad de sobrevivir.</div>
+        <div class="frow"><span class="fl">revenue proyectado al exit ($)</span><input class="fi" type="number" id="exitRev" value="5000000000" step="500000000" oninput="syncS('exitRevS','exitRev',500000000,50000000000);calcVC()"><input class="fslider" type="range" min="500000000" max="50000000000" step="500000000" value="5000000000" id="exitRevS" oninput="syncI('exitRev','exitRevS');calcVC()"><span class="fval" id="exitRev-out">$5.000M</span></div>
+        <div class="frow"><span class="fl">múltiplo de revenue en el exit</span><input class="fi" type="number" id="exitMult" value="4" step="0.5" min="1" max="15" oninput="syncS('exitMultS','exitMult',1,15);calcVC()"><input class="fslider" type="range" min="1" max="15" step="0.5" value="4" id="exitMultS" oninput="syncI('exitMult','exitMultS');calcVC()"><span class="fval" id="exitMult-out">4x</span></div>
+        <div class="frow"><span class="fl">retorno esperado del inversor</span><input class="fi" type="number" id="vcRet" value="10" step="1" min="3" max="30" oninput="syncS('vcRetS','vcRet',3,30);calcVC()"><input class="fslider" type="range" min="3" max="30" step="1" value="10" id="vcRetS" oninput="syncI('vcRet','vcRetS');calcVC()"><span class="fval" id="vcRet-out">10x</span></div>
+        <div class="frow"><span class="fl">probabilidad de sobrevivir al exit (%)</span><input class="fi" type="number" id="survP" value="25" step="5" min="5" max="80" oninput="syncS('survPS','survP',5,80);calcVC()"><input class="fslider" type="range" min="5" max="80" step="5" value="25" id="survPS" oninput="syncI('survP','survPS');calcVC()"><span class="fval" id="survP-out">25%</span></div>
+        <div class="frow"><span class="fl">años hasta el exit</span><input class="fi" type="number" id="exitYrs" value="5" step="1" min="2" max="10" oninput="syncS('exitYrsS','exitYrs',2,10);calcVC()"><input class="fslider" type="range" min="2" max="10" step="1" value="5" id="exitYrsS" oninput="syncI('exitYrs','exitYrsS');calcVC()"><span class="fval" id="exitYrs-out">5 años</span></div>
+        <div class="div"></div>
+        <div class="grid2" id="vcM"></div>
+        <div class="tip" id="vcTip"></div>
+      </div>
+
+      <div class="pr" id="p3">
+        <p class="stit">costo de duplicar</p>
+        <div class="tip"><b>Lógica del Cost-to-Duplicate:</b> es el piso de valorización. Nadie debería vender por menos de lo que costó construir.</div>
+        <div class="frow"><span class="fl">meses de desarrollo</span><input class="fi" type="number" id="devM" value="12" step="1" min="1" max="36" oninput="syncS('devMS','devM',1,36);calcDup()"><input class="fslider" type="range" min="1" max="36" step="1" value="12" id="devMS" oninput="syncI('devM','devMS');calcDup()"><span class="fval" id="devM-out">12 meses</span></div>
+        <div class="frow"><span class="fl">personas en el equipo (promedio)</span><input class="fi" type="number" id="team" value="3" step="1" min="1" max="20" oninput="syncS('teamS','team',1,20);calcDup()"><input class="fslider" type="range" min="1" max="20" step="1" value="3" id="teamS" oninput="syncI('team','teamS');calcDup()"><span class="fval" id="team-out">3 personas</span></div>
+        <div class="frow"><span class="fl">sueldo mensual promedio ($)</span><input class="fi" type="number" id="sal" value="2000000" step="100000" oninput="syncS('salS','sal',500000,8000000);calcDup()"><input class="fslider" type="range" min="500000" max="8000000" step="100000" value="2000000" id="salS" oninput="syncI('sal','salS');calcDup()"><span class="fval" id="sal-out">$2.000.000</span></div>
+        <div class="frow"><span class="fl">infraestructura y herramientas ($)</span><input class="fi" type="number" id="infra" value="20000000" step="1000000" oninput="syncS('infraS','infra',0,200000000);calcDup()"><input class="fslider" type="range" min="0" max="200000000" step="1000000" value="20000000" id="infraS" oninput="syncI('infra','infraS');calcDup()"><span class="fval" id="infra-out">$20.000.000</span></div>
+        <div class="frow"><span class="fl">investigación y validación ($)</span><input class="fi" type="number" id="res" value="10000000" step="1000000" oninput="syncS('resS','res',0,100000000);calcDup()"><input class="fslider" type="range" min="0" max="100000000" step="1000000" value="10000000" id="resS" oninput="syncI('res','resS');calcDup()"><span class="fval" id="res-out">$10.000.000</span></div>
+        <div class="frow"><span class="fl">prima por aprendizaje acumulado (%)</span><input class="fi" type="number" id="lPrem" value="30" step="5" min="0" max="100" oninput="syncS('lPremS','lPrem',0,100);calcDup()"><input class="fslider" type="range" min="0" max="100" step="5" value="30" id="lPremS" oninput="syncI('lPrem','lPremS');calcDup()"><span class="fval" id="lPrem-out">30%</span></div>
+        <div class="div"></div>
+        <div class="grid2" id="dupM"></div>
+        <div class="tip" id="dupTip"></div>
+      </div>
+
+      <div class="pr" id="p4">
+        <p class="stit">rango de valorización pre-revenue</p>
+        <div class="tip"><b>¿Por qué cuatro métodos?</b> Berkus mide riesgo eliminado. Scorecard mide calidad relativa. VC Method mide potencial futuro. Cost-to-Duplicate mide esfuerzo invertido. El rango entre ellos es la negociación.</div>
+        <div class="rcards" id="prCards"></div>
+        <div class="div"></div>
+        <div class="hero"><p class="hero-l">rango de negociación</p><p class="hero-v" id="prRange">—</p><p class="hero-s" id="prMid">—</p></div>
+        <div class="div"></div>
+        <p class="stit">cómo interpretar el rango</p>
+        <ul class="rl" id="prInterp"></ul>
+      </div>
+
+    </div><!-- /m-pre -->
+
+    <!-- MODO GUÍA MÁS QUE UN PITCH -->
+    <div class="mode-panel" id="m-guide">
+
+      <div class="guide-header">
+        <span class="badge"><i class="ti ti-radio" style="font-size:11px;vertical-align:-1px;margin-right:4px;"></i>MÁS QUE UN PITCH · GUÍA DE VALORIZACIÓN</span>
+        <h2>¿Cómo valorizar una empresa del programa?</h2>
+        <p>Protocolo paso a paso para extraer datos de un episodio y construir una valorización defensible. Completa cada fase antes de avanzar a la siguiente.</p>
+      </div>
+
+      <div class="progress-bar-wrap"><div class="progress-bar" id="guideProgress" style="width:0%"></div></div>
+      <p class="progress-label" id="guideProgressLabel">0 de 4 fases completadas</p>
+
+      <!-- FASE 1: ESCUCHAR -->
+      <div class="guide-phase" id="phase1">
+        <div class="guide-phase-header" onclick="togglePhase(1)">
+          <div class="phase-num" style="background:#EFF6FF;color:#1E40AF;">1</div>
+          <div><div class="phase-title">Escuchar el episodio</div><div class="phase-sub">Identifica y anota los datos clave mientras escuchas</div></div>
+          <i class="ti ti-chevron-down phase-chevron" id="chev1"></i>
+        </div>
+        <div class="guide-phase-body" id="body1">
+          <p style="font-size:12px;color:var(--ink2);margin:12px 0 4px;font-weight:600;">Datos duros — el fundador los menciona explícitamente:</p>
+          <ul class="checklist" id="cl1">
+            <li class="cl-item"><input type="checkbox" id="c1_1" onchange="updateCheck(this)"><label for="c1_1">Unidades vendidas por mes o por año</label></li>
+            <li class="cl-item"><input type="checkbox" id="c1_2" onchange="updateCheck(this)"><label for="c1_2">Precio de venta del producto o servicio</label></li>
+            <li class="cl-item"><input type="checkbox" id="c1_3" onchange="updateCheck(this)"><label for="c1_3">Número de empleados o equipo</label></li>
+            <li class="cl-item"><input type="checkbox" id="c1_4" onchange="updateCheck(this)"><label for="c1_4">Canales de venta (supermercados, delivery, directo)</label></li>
+            <li class="cl-item"><input type="checkbox" id="c1_5" onchange="updateCheck(this)"><label for="c1_5">Años operando o fecha de fundación</label></li>
+          </ul>
+          <p style="font-size:12px;color:var(--ink2);margin:12px 0 4px;font-weight:600;">Señales indirectas — debes inferirlas:</p>
+          <ul class="checklist">
+            <li class="cl-item"><input type="checkbox" id="c1_6" onchange="updateCheck(this)"><label for="c1_6">¿Tiene o ha tenido inversionistas externos?</label></li>
+            <li class="cl-item"><input type="checkbox" id="c1_7" onchange="updateCheck(this)"><label for="c1_7">¿Está en retail masivo o solo en canales propios?</label></li>
+            <li class="cl-item"><input type="checkbox" id="c1_8" onchange="updateCheck(this)"><label for="c1_8">¿Menciona competidores? ¿Cuántos y quiénes?</label></li>
+            <li class="cl-item"><input type="checkbox" id="c1_9" onchange="updateCheck(this)"><label for="c1_9">¿Habla de expansión futura o de problemas operativos?</label></li>
+            <li class="cl-item"><input type="checkbox" id="c1_10" onchange="updateCheck(this)"><label for="c1_10">¿Cuál fue el gatillante para emprender? (¿propósito o oportunidad?)</label></li>
+          </ul>
+          <div class="tip" style="margin-top:12px;"><b>Regla de oro:</b> separa lo que el fundador <b>dice</b> (dato real) de lo que tú <b>inferiste</b> (supuesto). En la presentación debes poder distinguirlos con total claridad.</div>
+        </div>
+      </div>
+
+      <!-- FASE 2: CLASIFICAR -->
+      <div class="guide-phase" id="phase2">
+        <div class="guide-phase-header" onclick="togglePhase(2)">
+          <div class="phase-num" style="background:#FEF9C3;color:#854D0E;">2</div>
+          <div><div class="phase-title">Clasificar la empresa</div><div class="phase-sub">Árbol de decisión para elegir el modo correcto</div></div>
+          <i class="ti ti-chevron-down phase-chevron" id="chev2"></i>
+        </div>
+        <div class="guide-phase-body" id="body2">
+          <div class="decision-tree">
+            <div class="dt-q">¿La empresa tiene ingresos recurrentes o ventas regulares al momento del episodio?</div>
+            <div class="dt-opts">
+              <button class="dt-opt" onclick="dtSelect('q1','yes')"><span class="dt-opt-label">✓ Sí tiene ingresos</span><span class="dt-opt-desc">vende y genera revenue</span></button>
+              <button class="dt-opt" onclick="dtSelect('q1','no')"><span class="dt-opt-label">✗ No tiene ingresos</span><span class="dt-opt-desc">pre-revenue o muy incipiente</span></button>
+            </div>
+            <div class="dt-result" id="dt_q1_yes">
+              <b>Modo: empresa con ingresos</b><br><br>
+              Ahora elige el tipo de negocio:<br><br>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;">
+                <button class="dt-opt" onclick="dtSelectType('restaurant')" style="font-size:11px;padding:7px 10px;"><span class="dt-opt-label">🍽 Restaurante</span><span class="dt-opt-desc">local físico, cocina, servicio</span></button>
+                <button class="dt-opt" onclick="dtSelectType('product')" style="font-size:11px;padding:7px 10px;"><span class="dt-opt-label">📦 Producto</span><span class="dt-opt-desc">manufactura, alimentos, bebidas</span></button>
+                <button class="dt-opt" onclick="dtSelectType('service')" style="font-size:11px;padding:7px 10px;"><span class="dt-opt-label">💼 Servicios</span><span class="dt-opt-desc">consultoría, educación, diseño</span></button>
+                <button class="dt-opt" onclick="dtSelectType('retail')" style="font-size:11px;padding:7px 10px;"><span class="dt-opt-label">🏪 Retail</span><span class="dt-opt-desc">tienda, e-commerce, importación</span></button>
+                <button class="dt-opt" onclick="dtSelectType('tech')" style="font-size:11px;padding:7px 10px;"><span class="dt-opt-label">💻 Tech / SaaS</span><span class="dt-opt-desc">software, plataforma, app</span></button>
+              </div>
+            </div>
+            <div class="dt-result" id="dt_q1_no">
+              <b>Modo: empresa pre-revenue</b><br><br>
+              Usarás los cuatro métodos de valorización temprana: Berkus, Scorecard, VC Method y Cost-to-Duplicate. Evalúa los hitos que ya completó la empresa.
+              <br><button class="action-btn" onclick="setMode('pre');closeSidebar();"><i class="ti ti-seedling"></i> ir a pre-revenue</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FASE 3: RECONSTRUIR -->
+      <div class="guide-phase" id="phase3">
+        <div class="guide-phase-header" onclick="togglePhase(3)">
+          <div class="phase-num" style="background:#F0FDFA;color:#0D9488;">3</div>
+          <div><div class="phase-title">Reconstruir los números</div><div class="phase-sub">Cómo inferir datos cuando el fundador no los da directamente</div></div>
+          <i class="ti ti-chevron-down phase-chevron" id="chev3"></i>
+        </div>
+        <div class="guide-phase-body" id="body3">
+          <p style="font-size:12px;color:var(--ink2);margin-bottom:12px;">Cuando el fundador no da el dato exacto, puedes inferirlo desde lo que sí menciona. Cada inferencia debe declararse como supuesto en tu presentación.</p>
+
+          <div class="inference-card">
+            <div class="inference-trigger"><i class="ti ti-building-store"></i>Si menciona presencia en supermercados</div>
+            <div class="inference-formula">Revenue ≈ nº locales × ventas estimadas por local × precio</div>
+            <div class="inference-example">Ej: "estamos en 200 Cencosud" → 200 locales × ~20 unidades/semana × $3.000 = ~$62M CLP/mes</div>
+          </div>
+
+          <div class="inference-card">
+            <div class="inference-trigger"><i class="ti ti-users"></i>Si menciona el número de empleados</div>
+            <div class="inference-formula">Revenue ≈ empleados × revenue por empleado del sector</div>
+            <div class="inference-example">Ej: "somos 20 personas" → manufactura food: ~$8M CLP/empleado/año → Revenue ~$160M CLP</div>
+          </div>
+
+          <div class="inference-card">
+            <div class="inference-trigger"><i class="ti ti-building-factory-2"></i>Si menciona metros cuadrados de fábrica</div>
+            <div class="inference-formula">Capacidad ≈ m² × densidad de producción típica del sector</div>
+            <div class="inference-example">Ej: "fábrica de 700 m²" → manufactura bebidas: ~60-80 unidades/m²/mes → 42.000–56.000 unidades</div>
+          </div>
+
+          <div class="inference-card">
+            <div class="inference-trigger"><i class="ti ti-coin"></i>Si menciona una oferta de inversión rechazada</div>
+            <div class="inference-formula">Valorización implícita = monto ofrecido ÷ % ofrecido</div>
+            <div class="inference-example">Ej: "nos ofrecieron $1M USD por el 70%" → valorización implícita: $1M ÷ 0.70 = $1,43M USD</div>
+          </div>
+
+          <div class="inference-card">
+            <div class="inference-trigger"><i class="ti ti-star"></i>Si menciona premios, rankings o apariciones en medios</div>
+            <div class="inference-formula">Señal cualitativa: justifica prima de marca sobre el múltiplo base</div>
+            <div class="inference-example">Ej: "ganamos el premio Sercotec" → +5 a +15% sobre múltiplo de comparables sin premio</div>
+          </div>
+
+          <div class="tip" style="margin-top:4px;"><b>Documenta todo.</b> En la lámina de fuentes de tu presentación debes indicar exactamente qué dato viene del episodio y qué dato fue inferido con qué fórmula.</div>
+        </div>
+      </div>
+
+      <!-- FASE 4: VALIDAR -->
+      <div class="guide-phase" id="phase4">
+        <div class="guide-phase-header" onclick="togglePhase(4)">
+          <div class="phase-num" style="background:#F0FDF4;color:#15803D;">4</div>
+          <div><div class="phase-title">Validar antes de presentar</div><div class="phase-sub">Preguntas que debes poder responder sin leer las slides</div></div>
+          <i class="ti ti-chevron-down phase-chevron" id="chev4"></i>
+        </div>
+        <div class="guide-phase-body" id="body4">
+          <div class="validate-item">
+            <span class="validate-dot" style="background:var(--c4);"></span>
+            <div><div class="validate-q">¿De dónde viene cada número que ingresaste en la herramienta?</div><div class="validate-hint">Para cada campo: ¿es un dato del episodio, una inferencia o un benchmark de industria? Si no lo sabes, no está listo.</div></div>
+          </div>
+          <div class="validate-item">
+            <span class="validate-dot" style="background:var(--c4);"></span>
+            <div><div class="validate-q">¿Elegiste el múltiplo correcto para este tipo de empresa?</div><div class="validate-hint">EV/EBITDA si tiene utilidades estables. EV/Revenue si no tiene EBITDA separado. P/E solo si cotiza en bolsa.</div></div>
+          </div>
+          <div class="validate-item">
+            <span class="validate-dot" style="background:var(--c4);"></span>
+            <div><div class="validate-q">¿Por qué incluiste esos comparables y no otros?</div><div class="validate-hint">Un comparable válido tiene modelo de negocio similar, tamaño relativo comparable y riesgo geográfico equivalente.</div></div>
+          </div>
+          <div class="validate-item">
+            <span class="validate-dot" style="background:var(--gold);"></span>
+            <div><div class="validate-q">¿Cuál es tu escenario conservador y cuál el optimista?</div><div class="validate-hint">Cambia el múltiplo al mínimo y al máximo del rango de comparables. Esos son tus dos escenarios. No se acepta solo un número.</div></div>
+          </div>
+          <div class="validate-item">
+            <span class="validate-dot" style="background:var(--gold);"></span>
+            <div><div class="validate-q">¿Aplicaste descuento por iliquidez?</div><div class="validate-hint">Si la empresa es privada (como todas las del programa), corresponde un descuento de 20–35% sobre los múltiplos de empresas cotizadas.</div></div>
+          </div>
+          <div class="validate-item">
+            <span class="validate-dot" style="background:var(--green);"></span>
+            <div><div class="validate-q">¿Comprarías o invertirías en esta empresa al precio que calculaste?</div><div class="validate-hint">Esta es la conclusión de tu presentación. Debe ser consistente con el rango que obtuviste y los riesgos que identificaste.</div></div>
+          </div>
+
+          <div style="margin-top:16px;padding:14px;background:linear-gradient(90deg,#0A1628,#112240);border-radius:var(--r-lg);text-align:center;">
+            <p style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:10px;">¿Ya respondiste todas las preguntas?</p>
+            <button onclick="setMode('rev');gS(0);closeSidebar();" style="background:var(--c4);color:#fff;border:none;padding:9px 20px;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"><i class="ti ti-calculator"></i> ir a valorizar</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /m-guide -->
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+const EXAMPLES={
+  ghali:{preset:'product',title:'Ghali Kombucha — empresa de producto',desc:'Pioneros de la kombucha en Chile. 10 años operando, sin inversionistas externos, distribución en Cencosud. Datos basados en el podcast "Más que un Pitch" con Martín Carrasco. ~47.500 botellas/mes a $3.000 CLP promedio.',fields:{units:47500,punit:3000,cogp:38,logp:10,stfp:15,mktp:7,othp:5,em:7,rm:1.8,ba:10}},
+  '236':{preset:'restaurant',title:'236 Burgers — restaurante / hamburguesería',desc:'Hamburguesería independiente en Santiago. Sin información financiera pública. Supuestos reconstruidos desde afuera: aforo estimado 40 personas, ticket promedio $12.000, rotación 1.5x, 26 días operativos.',fields:{seats:40,rotation:1.5,ticket:12000,opdays:26,fc:32,stfr:28,rent:10,del:5,oth:5,em:4,rm:0.5,ba:0}},
+  blank:{preset:'product',title:null,fields:null}
+};
+const EXAMPLES_PR={
+  agro:{title:'AgroSense — startup agritech pre-revenue',desc:'Startup chilena con 18 meses de desarrollo. Sensor IoT para monitoreo de suelo en tiempo real. Prototipo funcionando y 3 cartas de intención de cooperativas agrícolas. Equipo de 4 personas. Sin ventas aún.',berkus:{b1:1,b2:1,b3:0.5,b4:0.5,b5:0},maxHito:350000000,baseVal:700000000,scorecard:{s1:1.3,s2:1.4,s3:1.2,s4:0.9,s5:0.7,s6:0.8,s7:1.0},vc:{exitRev:8000000000,exitMult:3,vcRet:10,survP:20,exitYrs:6},dup:{devM:18,team:4,sal:1800000,infra:25000000,res:15000000,lPrem:35}},
+  blank:{title:null}
+};
+const PRESETS={
+  restaurant:{tip:'<b>Restaurante:</b> márgenes ajustados (10–20% EBITDA), múltiplos bajos (3–5x EBITDA, 0.3–0.7x revenue). Revenue = cubiertos × ticket × días. Riesgo principal: dependencia del operador y arriendo.',rf:[{id:'seats',l:'personas sentadas (capacidad)',min:10,max:150,step:5,val:40,fmt:v=>Math.round(v)+' personas'},{id:'rotation',l:'rotación diaria promedio',min:0.5,max:4,step:0.5,val:1.5,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ticket',l:'ticket promedio por persona ($)',min:3000,max:30000,step:500,val:11000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')},{id:'opdays',l:'días operativos al mes',min:15,max:30,step:1,val:26,fmt:v=>Math.round(v)+' días'}],mf:[{id:'fc',l:'food cost (%)',min:20,max:45,step:1,val:32,fmt:v=>Math.round(v)+'%'},{id:'stfr',l:'personal (%)',min:15,max:35,step:1,val:28,fmt:v=>Math.round(v)+'%'},{id:'rent',l:'arriendo (%)',min:5,max:20,step:1,val:10,fmt:v=>Math.round(v)+'%'},{id:'del',l:'delivery / plataformas (%)',min:0,max:15,step:1,val:5,fmt:v=>Math.round(v)+'%'},{id:'oth',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],mtip:'<b>Benchmarks restaurantes Chile:</b> food cost 28–35%, personal 25–30%, arriendo 8–12%. EBITDA típico 10–20%.',mulF:[{id:'em',l:'múltiplo EBITDA',min:2,max:8,step:0.5,val:4,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'rm',l:'múltiplo revenue',min:0.2,max:1.5,step:0.1,val:0.5,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por marca / posición (%)',min:-30,max:30,step:5,val:0,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],multip:'<b>¿Por qué múltiplos bajos?</b> Los restaurantes no escalan sin el dueño y dependen de un arriendo específico.',qual:[{u:true,t:'Clientela fija que no depende del dueño'},{u:true,t:'Arriendo bajo con contrato largo y transferible'},{u:true,t:'Equipo estable y procesos documentados'},{u:false,t:'Negocio dependiente del fundador o chef'},{u:false,t:'Arriendo por vencer o condiciones inciertas'},{u:null,t:'Presencia en delivery (puede subir o bajar margen)'}],dd:[{i:'ti-file-invoice',t:'Declaraciones SII últimos 3 años'},{i:'ti-building-store',t:'Contrato de arriendo y traspaso'},{i:'ti-users',t:'Contratos y deudas laborales'},{i:'ti-receipt',t:'Extractos bancarios 12 meses'},{i:'ti-certificate',t:'Permisos sanitarios vigentes'},{i:'ti-user-check',t:'Plan de transición del dueño'}],qs:['¿Cuánto vende al mes? ¿Puede mostrarlo con extractos bancarios?','¿El arriendo es transferible y a qué precio?','¿Los empleados clave se quedan si cambia el dueño?','¿Por qué vende? ¿Hay algún problema no visible?','¿Estaría dispuesto a quedarse 3–6 meses de transición?'],rc:v=>v.seats*v.rotation*v.ticket*v.opdays},
+  product:{tip:'<b>Empresa de producto:</b> márgenes más amplios (20–35% EBITDA), múltiplos más altos (6–10x EBITDA). Revenue = unidades × precio. La marca y distribución son activos clave.',rf:[{id:'units',l:'unidades vendidas al mes',min:100,max:200000,step:500,val:10000,fmt:v=>Math.round(v).toLocaleString('es-CL')+' u.'},{id:'punit',l:'precio promedio por unidad ($)',min:500,max:50000,step:500,val:5000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')}],mf:[{id:'cogp',l:'costo de producción (%)',min:20,max:60,step:1,val:38,fmt:v=>Math.round(v)+'%'},{id:'logp',l:'logística y distribución (%)',min:3,max:20,step:1,val:8,fmt:v=>Math.round(v)+'%'},{id:'stfp',l:'personal (%)',min:5,max:25,step:1,val:15,fmt:v=>Math.round(v)+'%'},{id:'mktp',l:'marketing y ventas (%)',min:2,max:15,step:1,val:7,fmt:v=>Math.round(v)+'%'},{id:'othp',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],mtip:'<b>Benchmarks manufactura Chile:</b> producción 30–45%, personal 12–20%. EBITDA típico 15–30%.',mulF:[{id:'em',l:'múltiplo EBITDA',min:3,max:14,step:0.5,val:7,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'rm',l:'múltiplo revenue',min:0.5,max:4,step:0.1,val:1.8,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por marca / posición (%)',min:-30,max:40,step:5,val:10,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],multip:'<b>¿Por qué múltiplos más altos?</b> Una empresa de producto puede escalar sin depender de una persona. Marca y distribución son activos transferibles.',qual:[{u:true,t:'Distribución establecida en retail o canales propios'},{u:true,t:'Marca reconocida con clientes fieles'},{u:true,t:'Procesos documentados y replicables'},{u:false,t:'Producción dependiente del know-how del fundador'},{u:false,t:'Alta concentración en pocos clientes'},{u:null,t:'Competencia creciente en el segmento'}],dd:[{i:'ti-file-invoice',t:'Declaraciones SII últimos 3 años'},{i:'ti-building-factory-2',t:'Valorización de activos físicos'},{i:'ti-building-store',t:'Contratos con distribuidores y retail'},{i:'ti-users',t:'Contratos y deudas laborales'},{i:'ti-receipt',t:'Extractos bancarios 12 meses'},{i:'ti-user-check',t:'Plan de retención del equipo clave'}],qs:['¿Cuántas unidades vende al mes y a qué precio promedio?','¿Sus 5 clientes más grandes qué % del revenue representan?','¿Los procesos están documentados y funcionan sin usted?','¿Hay deuda con proveedores o empleados?','¿Por qué vende? ¿Piensa abrir algo competidor después?'],rc:v=>v.units*v.punit},
+  service:{tip:'<b>Empresa de servicios:</b> márgenes variables (15–35% EBITDA), múltiplos medios (4–8x). Revenue = clientes × fee mensual. Riesgo principal: ¿los clientes son del negocio o del dueño?',rf:[{id:'cli',l:'clientes activos',min:1,max:500,step:1,val:30,fmt:v=>Math.round(v)+' clientes'},{id:'fee',l:'fee mensual promedio por cliente ($)',min:50000,max:5000000,step:50000,val:500000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')},{id:'chu',l:'churn mensual estimado (%)',min:1,max:15,step:1,val:3,fmt:v=>Math.round(v)+'%'}],mf:[{id:'stfs',l:'personal (%)',min:20,max:60,step:1,val:45,fmt:v=>Math.round(v)+'%'},{id:'tos',l:'herramientas y plataformas (%)',min:2,max:15,step:1,val:8,fmt:v=>Math.round(v)+'%'},{id:'ofs',l:'oficina y gastos generales (%)',min:3,max:15,step:1,val:7,fmt:v=>Math.round(v)+'%'},{id:'oths',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],mtip:'<b>Benchmarks servicios Chile:</b> personal 40–55%. EBITDA típico 15–30%.',mulF:[{id:'em',l:'múltiplo EBITDA',min:2,max:10,step:0.5,val:5,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'rm',l:'múltiplo revenue',min:0.3,max:2.5,step:0.1,val:1.0,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por contratos recurrentes (%)',min:-30,max:40,step:5,val:5,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],multip:'<b>La pregunta clave en servicios:</b> ¿los clientes son del negocio o del dueño?',qual:[{u:true,t:'Contratos de largo plazo con clientes (12+ meses)'},{u:true,t:'Equipo técnico estable y know-how documentado'},{u:true,t:'Ningún cliente supera el 20% del revenue'},{u:false,t:'Relaciones de clientes personalizadas al dueño'},{u:false,t:'Dependencia de 1–2 clientes grandes'},{u:null,t:'Mercado en transformación tecnológica'}],dd:[{i:'ti-file-invoice',t:'Declaraciones SII últimos 3 años'},{i:'ti-file-description',t:'Contratos vigentes con clientes'},{i:'ti-users',t:'Contratos laborales y deudas'},{i:'ti-chart-line',t:'Historial de churn'},{i:'ti-receipt',t:'Extractos bancarios 12 meses'},{i:'ti-briefcase',t:'Cláusulas de no competencia'}],qs:['¿Cuántos clientes tiene y cuánto paga cada uno?','¿Los contratos son con la empresa o con usted personalmente?','¿Cuántos clientes ha perdido en el último año?','¿Hay algún cliente que represente más del 30% del revenue?','¿Estaría dispuesto a firmar una cláusula de no competencia?'],rc:v=>v.cli*v.fee*(1-v.chu/100)},
+  retail:{tip:'<b>Retail / tienda:</b> márgenes medianos (8–18% EBITDA), múltiplos bajos-medios (3–6x). El inventario se valora por separado.',rf:[{id:'vis',l:'visitas diarias estimadas',min:10,max:1000,step:10,val:80,fmt:v=>Math.round(v)+' visitas'},{id:'conv',l:'tasa de conversión (%)',min:20,max:90,step:5,val:60,fmt:v=>Math.round(v)+'%'},{id:'tkt',l:'ticket promedio por compra ($)',min:5000,max:200000,step:1000,val:25000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')},{id:'opd2',l:'días operativos al mes',min:20,max:30,step:1,val:26,fmt:v=>Math.round(v)+' días'}],mf:[{id:'cogr',l:'costo de mercadería (%)',min:30,max:65,step:1,val:50,fmt:v=>Math.round(v)+'%'},{id:'stfr2',l:'personal (%)',min:8,max:25,step:1,val:15,fmt:v=>Math.round(v)+'%'},{id:'rent2',l:'arriendo (%)',min:5,max:20,step:1,val:10,fmt:v=>Math.round(v)+'%'},{id:'othr',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],mtip:'<b>Benchmarks retail Chile:</b> mercadería 45–60%, personal 12–18%, arriendo 8–15%. EBITDA típico 8–18%.',mulF:[{id:'em',l:'múltiplo EBITDA',min:2,max:8,step:0.5,val:4,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'rm',l:'múltiplo revenue',min:0.2,max:1.2,step:0.1,val:0.4,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por inventario y activos (%)',min:-20,max:40,step:5,val:10,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],multip:'<b>Ojo con el inventario:</b> puede valer tanto como el negocio mismo. Aclara si el precio incluye el stock.',qual:[{u:true,t:'Clientela recurrente y base de datos propia'},{u:true,t:'Arriendo con contrato largo transferible'},{u:false,t:'Stock obsoleto o con baja rotación'},{u:false,t:'Arriendo por vencer o zona de alto riesgo'},{u:null,t:'Presencia online (puede compensar o competir)'}],dd:[{i:'ti-file-invoice',t:'Declaraciones SII últimos 3 años'},{i:'ti-box',t:'Auditoría de inventario'},{i:'ti-building-store',t:'Contrato de arriendo y traspaso'},{i:'ti-users',t:'Contratos y deudas laborales'},{i:'ti-receipt',t:'Extractos bancarios 12 meses'},{i:'ti-certificate',t:'Permisos municipales vigentes'}],qs:['¿Cuánto vende al mes y cuál es el ticket promedio?','¿El inventario está incluido en el precio?','¿El arriendo es transferible y en qué condiciones?','¿Tiene base de datos de clientes habituales?'],rc:v=>v.vis*(v.conv/100)*v.tkt*v.opd2},
+  tech:{tip:'<b>Empresa tech / SaaS:</b> márgenes altos al escalar (20–40% EBITDA), múltiplos altos (5–15x ARR). El churn es la métrica más crítica.',rf:[{id:'mrr',l:'MRR — ingresos recurrentes mensuales ($)',min:500000,max:100000000,step:500000,val:5000000,fmt:v=>'$'+Math.round(v).toLocaleString('es-CL')},{id:'grw',l:'crecimiento mensual (%)',min:0,max:30,step:1,val:5,fmt:v=>Math.round(v)+'%'},{id:'cht',l:'churn mensual (%)',min:1,max:20,step:1,val:3,fmt:v=>Math.round(v)+'%'}],mf:[{id:'host',l:'hosting / infraestructura (%)',min:5,max:30,step:1,val:15,fmt:v=>Math.round(v)+'%'},{id:'stft',l:'personal (%)',min:20,max:60,step:1,val:40,fmt:v=>Math.round(v)+'%'},{id:'mkt',l:'marketing y adquisición (%)',min:5,max:30,step:1,val:15,fmt:v=>Math.round(v)+'%'},{id:'otht',l:'otros gastos (%)',min:2,max:10,step:1,val:5,fmt:v=>Math.round(v)+'%'}],mtip:'<b>Benchmarks SaaS:</b> margen bruto típico 60–80%. EBITDA positivo suele llegar después de 3–5 años.',mulF:[{id:'em',l:'múltiplo EBITDA (si positivo)',min:5,max:25,step:1,val:12,fmt:v=>Math.round(v)+'x'},{id:'rm',l:'múltiplo ARR',min:1,max:15,step:0.5,val:4,fmt:v=>parseFloat(v).toFixed(1)+'x'},{id:'ba',l:'ajuste por crecimiento / retención (%)',min:-40,max:60,step:5,val:20,fmt:v=>(v>=0?'+':'')+Math.round(v)+'%'}],multip:'<b>¿Por qué múltiplos altos?</b> Churn bajo + crecimiento constante = flujo futuro predecible.',qual:[{u:true,t:'Churn bajo (menos de 3% mensual)'},{u:true,t:'Crecimiento sostenido de MRR (5%+ mensual)'},{u:true,t:'Contratos anuales prepagados'},{u:false,t:'Churn alto o contratos mensuales sin compromiso'},{u:false,t:'Tecnología dependiente de un solo desarrollador'},{u:null,t:'Mercado emergente (oportunidad grande, riesgo también)'}],dd:[{i:'ti-chart-line',t:'Historial MRR, churn y growth 24 meses'},{i:'ti-users',t:'Lista de clientes y contratos'},{i:'ti-code',t:'Auditoría de código y deuda técnica'},{i:'ti-file-invoice',t:'Declaraciones SII'},{i:'ti-certificate',t:'Propiedad intelectual del software'},{i:'ti-user-check',t:'Retención del equipo técnico'}],qs:['¿Cuál es el MRR actual y cómo evolucionó los últimos 12 meses?','¿Cuántos clientes tienen y cuál es el churn mensual real?','¿El código está documentado y puede otro equipo mantenerlo?','¿Los contratos son anuales o mensuales?'],rc:v=>v.mrr*(1+v.grw/100)*(1-v.cht/100)}
+};
+const BHITOS=[{id:'b1',l:'Idea sólida con mercado validado'},{id:'b2',l:'Prototipo o producto funcionando'},{id:'b3',l:'Equipo con experiencia relevante'},{id:'b4',l:'Alianzas o cartas de intención de clientes'},{id:'b5',l:'Primeros usuarios o ventas piloto'}];
+const SATTRS=[{id:'s1',l:'Fortaleza del equipo fundador',w:30},{id:'s2',l:'Tamaño y crecimiento del mercado',w:25},{id:'s3',l:'Producto o tecnología diferenciada',w:15},{id:'s4',l:'Entorno competitivo',w:10},{id:'s5',l:'Canales de distribución y ventas',w:10},{id:'s6',l:'Necesidad de inversión adicional',w:5},{id:'s7',l:'Otros (red, timing, IP)',w:5}];
+const TYPE_LABELS={restaurant:'Restaurante',product:'Empresa de Producto',service:'Empresa de Servicios',retail:'Retail / Tienda',tech:'Tech / SaaS'};
+let curPreset='product';
+
+function clp(n){return '$'+Math.round(n).toLocaleString('es-CL');}
+function clpMM(n){return n>=1000000000?'$'+(n/1000000000).toFixed(2)+'MM':'$'+(n/1000000).toFixed(0)+'M';}
+function syncS(sId,iId,mn,mx){const s=document.getElementById(sId),i=document.getElementById(iId);if(!s||!i)return;s.value=Math.max(mn,Math.min(mx,parseFloat(i.value)||0));}
+function syncI(iId,sId){const s=document.getElementById(sId),i=document.getElementById(iId);if(!s||!i)return;i.value=s.value;}
+
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('show');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').classList.remove('show');}
+
+function setMode(m){
+  document.getElementById('m-rev').classList.toggle('active',m==='rev');
+  document.getElementById('m-pre').classList.toggle('active',m==='pre');
+  document.getElementById('m-guide').classList.toggle('active',m==='guide');
+  document.getElementById('modeRevBtn').classList.toggle('active',m==='rev');
+  document.getElementById('modePreBtn').classList.toggle('active',m==='pre');
+  document.getElementById('modeGuideBtn').classList.toggle('active',m==='guide');
+  const badges={'rev':'Con Ingresos','pre':'Pre-Revenue','guide':'Más que un Pitch'};
+  const titles={'rev':'Valorización de Empresas Privadas','pre':'Valorización Pre-Revenue','guide':'Guía · Más que un Pitch'};
+  document.getElementById('topbarBadge').textContent=badges[m]||'CLP';
+  document.getElementById('topbarTitle').textContent=titles[m]||'Valorización';
+  closeSidebar();
+}
+
+function selectType(type){
+  document.getElementById('bizType').value=type;
+  applyPreset();
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('topbarTitle').textContent=TYPE_LABELS[type]||'Valorización';
+  closeSidebar();
+}
+
+function loadExample(key){
+  ['ex-blank','ex-ghali','ex-236'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('active',id==='ex-'+key);});
+  const ex=EXAMPLES[key];if(!ex)return;
+  const card=document.getElementById('exCardRev');
+  if(ex.title){card.style.display='block';card.innerHTML=`<p class="ex-card-title"><i class="ti ti-info-circle" style="font-size:13px;vertical-align:-1px;margin-right:4px;color:var(--c4);"></i>${ex.title}</p><p class="ex-card-sub">${ex.desc}</p>`;}
+  else{card.style.display='none';}
+  document.getElementById('bizType').value=ex.preset;curPreset=ex.preset;
+  const p=PRESETS[curPreset];
+  document.getElementById('typeTip').innerHTML=p.tip;
+  buildFieldRows('revInputs',p.rf,'calcRev()');
+  buildFieldRows('marInputs',p.mf,'calcMar()');
+  document.getElementById('marTip').innerHTML=p.mtip;
+  buildFieldRows('mulInputs',p.mulF,'calcMul()');
+  document.getElementById('mulTip').innerHTML=p.multip;
+  if(ex.fields){Object.entries(ex.fields).forEach(([id,val])=>{const el=document.getElementById(id);const sl=document.getElementById(id+'S');if(el)el.value=val;if(sl)sl.value=val;});}
+  calcRev();calcMar();calcMul();updateResults();updateDD();gS(0);
+  setMode('rev');closeSidebar();
+}
+
+function loadExamplePR(key){
+  ['ex-blank-pr','ex-agro-pr'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('active',id==='ex-'+key+'-pr');});
+  const ex=EXAMPLES_PR[key];if(!ex)return;
+  const card=document.getElementById('exCardPR');
+  if(ex.title){card.style.display='block';card.innerHTML=`<p class="ex-card-title"><i class="ti ti-info-circle" style="font-size:13px;vertical-align:-1px;margin-right:4px;color:var(--teal);"></i>${ex.title}</p><p class="ex-card-sub">${ex.desc}</p>`;}
+  else{card.style.display='none';}
+  if(key==='blank'){buildBerkus();buildScorecard();calcBerkus();calcScorecard();calcVC();calcDup();setMode('pre');closeSidebar();return;}
+  const setV=(id,v)=>{const el=document.getElementById(id);const sl=document.getElementById(id+'S');if(el)el.value=v;if(sl)sl.value=v;};
+  setV('maxHito',ex.maxHito);setV('baseVal',ex.baseVal);
+  Object.entries(ex.vc).forEach(([id,v])=>setV(id,v));
+  Object.entries(ex.dup).forEach(([id,v])=>setV(id,v));
+  buildBerkus();
+  BHITOS.forEach(h=>{const v=ex.berkus[h.id];const suffix=v===0?'_0':v===0.5?'_5':'_1';const el=document.getElementById(h.id+suffix);if(el)el.checked=true;});
+  buildScorecard();
+  Object.entries(ex.scorecard).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.value=v;});
+  calcBerkus();calcScorecard();calcVC();calcDup();gT(0);
+  setMode('pre');closeSidebar();
+}
+
+function buildFieldRows(containerId,fields,calcFn){
+  const c=document.getElementById(containerId);if(!c)return;c.innerHTML='';
+  fields.forEach(f=>{c.innerHTML+=`<div class="frow"><span class="fl">${f.l}</span><input class="fi" type="number" id="${f.id}" value="${f.val}" step="${f.step}" min="${f.min}" max="${f.max}" oninput="syncS('${f.id}S','${f.id}',${f.min},${f.max});${calcFn}"><input class="fslider" type="range" id="${f.id}S" min="${f.min}" max="${f.max}" step="${f.step}" value="${f.val}" oninput="syncI('${f.id}','${f.id}S');${calcFn}"><span class="fval" id="${f.id}-out">${f.fmt(f.val)}</span></div>`;});
+}
+
+function getV(fields){const r={};fields.forEach(f=>{const el=document.getElementById(f.id);r[f.id]=el?parseFloat(el.value)||0:f.val;});return r;}
+function updOuts(fields){fields.forEach(f=>{const el=document.getElementById(f.id);const o=document.getElementById(f.id+'-out');if(el&&o)o.textContent=f.fmt(parseFloat(el.value)||0);});}
+
+function calcRev(){const p=PRESETS[curPreset];updOuts(p.rf);const m=p.rc(getV(p.rf));const el=document.getElementById('revMetrics');if(el)el.innerHTML=`<div class="mc"><p class="mc-l">revenue mensual estimado</p><p class="mc-v">${clpMM(m)}</p><p class="mc-s">${clp(m)}</p></div><div class="mc"><p class="mc-l">revenue anual estimado</p><p class="mc-v">${clpMM(m*12)}</p><p class="mc-s">${clp(m*12)}</p></div>`;}
+function calcMar(){const p=PRESETS[curPreset];updOuts(p.mf);const mv=getV(p.mf);const ep=Math.max(0,100-Object.values(mv).reduce((a,b)=>a+b,0));const ann=p.rc(getV(p.rf))*12;const ea=ann*ep/100;const el=document.getElementById('marMetrics');if(el)el.innerHTML=`<div class="mc"><p class="mc-l">EBITDA estimado</p><p class="mc-v">${Math.round(ep)}%</p><p class="mc-s">sobre revenue</p></div><div class="mc"><p class="mc-l">EBITDA anual absoluto</p><p class="mc-v">${clpMM(ea)}</p><p class="mc-s">${clp(ea)}</p></div>`;}
+function calcMul(){const p=PRESETS[curPreset];updOuts(p.mulF);const mv=getV(p.mf);const ep=Math.max(0,100-Object.values(mv).reduce((a,b)=>a+b,0))/100;const ann=p.rc(getV(p.rf))*12;const ea=ann*ep;const mulv=getV(p.mulF);const byE=ea*(mulv.em||4);const byR=ann*(mulv.rm||0.5);const avg=((byE+byR)/2)*(1+(mulv.ba||0)/100);const el=document.getElementById('mulMetrics');if(el)el.innerHTML=`<div class="mc"><p class="mc-l">por EBITDA</p><p class="mc-v">${clpMM(byE)}</p><p class="mc-s">${clp(byE)}</p></div><div class="mc"><p class="mc-l">por revenue</p><p class="mc-v">${clpMM(byR)}</p><p class="mc-s">${clp(byR)}</p></div><div class="mc"><p class="mc-l">promedio ajustado</p><p class="mc-v">${clpMM(avg)}</p><p class="mc-s">${clp(avg)}</p></div>`;}
+
+function updateResults(){
+  const p=PRESETS[curPreset];
+  const mv=getV(p.mf);const ep=Math.max(0,100-Object.values(mv).reduce((a,b)=>a+b,0))/100;
+  const ann=p.rc(getV(p.rf))*12;const ea=ann*ep;
+  const mulv=getV(p.mulF);const byE=ea*(mulv.em||4);const byR=ann*(mulv.rm||0.5);const avg=((byE+byR)/2)*(1+(mulv.ba||0)/100);
+  const s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  s('r-rev',clpMM(ann));s('r-rev2',clp(ann));s('r-ebitda',clpMM(ea));s('r-ep',Math.round(ep*100)+'% del revenue');s('r-em',Math.round(ep*100)+'%');
+  s('r-ve',clpMM(byE));s('r-ve2',clp(byE));s('r-vr',clpMM(byR));s('r-vr2',clp(byR));s('r-va',clpMM(avg));s('r-va2',clp(avg));
+  const ql=document.getElementById('qualList');if(ql)ql.innerHTML=p.qual.map(f=>`<li class="ri"><span class="dot" style="background:${f.u===true?'#15803D':f.u===false?'#991B1B':'#92400E'};"></span>${f.t}</li>`).join('');
+}
+function updateDD(){
+  const p=PRESETS[curPreset];
+  const dl=document.getElementById('ddList');if(dl)dl.innerHTML=p.dd.map(d=>`<div class="ddi"><i class="ti ${d.i}"></i>${d.t}</div>`).join('');
+  const mq=document.getElementById('meetQ');if(mq)mq.innerHTML=p.qs.map(q=>`<li class="ri"><span class="dot" style="background:var(--c4);"></span>${q}</li>`).join('');
+}
+function applyPreset(){
+  curPreset=document.getElementById('bizType').value;
+  const p=PRESETS[curPreset];
+  document.getElementById('typeTip').innerHTML=p.tip;
+  buildFieldRows('revInputs',p.rf,'calcRev()');calcRev();
+  buildFieldRows('marInputs',p.mf,'calcMar()');document.getElementById('marTip').innerHTML=p.mtip;calcMar();
+  buildFieldRows('mulInputs',p.mulF,'calcMul()');document.getElementById('mulTip').innerHTML=p.multip;calcMul();
+  updateResults();updateDD();
+  document.getElementById('exCardRev').style.display='none';
+  ['ex-blank','ex-ghali','ex-236'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('active');});
+  document.getElementById('topbarTitle').textContent=TYPE_LABELS[curPreset]||'Valorización';
+}
+function gS(n){
+  document.querySelectorAll('.sp').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.step-btn').forEach((b,i)=>b.classList.toggle('active',i===n));
+  if(n===4)updateResults();if(n===5)updateDD();
+}
+function buildBerkus(){
+  const c=document.getElementById('berkusRows');if(!c)return;c.innerHTML='';
+  BHITOS.forEach(h=>{c.innerHTML+=`<div class="brow"><span class="bl">${h.l}</span><div class="bc"><input type="radio" name="${h.id}" id="${h.id}_0" value="0" checked onchange="calcBerkus()"><label for="${h.id}_0">ninguno</label><input type="radio" name="${h.id}" id="${h.id}_5" value="0.5" onchange="calcBerkus()"><label for="${h.id}_5">parcial</label><input type="radio" name="${h.id}" id="${h.id}_1" value="1" onchange="calcBerkus()"><label for="${h.id}_1">completo</label></div><span class="bv" id="${h.id}-out">$0</span></div>`;});
+}
+function calcBerkus(){
+  const maxEl=document.getElementById('maxHito');const max=maxEl?parseFloat(maxEl.value)||400000000:400000000;
+  const o=document.getElementById('maxHito-out');if(o)o.textContent=clp(max);
+  let total=0;
+  BHITOS.forEach(h=>{const el=document.querySelector(`input[name="${h.id}"]:checked`);const v=el?parseFloat(el.value):0;const amt=max*v;total+=amt;const ou=document.getElementById(h.id+'-out');if(ou)ou.textContent=clp(amt);});
+  const bm=document.getElementById('berkusM');if(bm)bm.innerHTML=`<div class="mc"><p class="mc-l">valorización Berkus</p><p class="mc-v">${clpMM(total)}</p><p class="mc-s">${clp(total)}</p></div><div class="mc"><p class="mc-l">% del máximo posible</p><p class="mc-v">${Math.round(total/(max*5)*100)}%</p><p class="mc-s">de ${clp(max*5)}</p></div>`;
+  const pct=total/(max*5)*100;const bt=document.getElementById('berkusTip');
+  if(bt)bt.innerHTML=pct<30?'<b>Empresa muy temprana:</b> pocos hitos completados. El riesgo del inversionista es máximo.':pct<60?'<b>Empresa en desarrollo:</b> algunos hitos clave completados. Hay base para negociar.':'<b>Empresa bien posicionada:</b> la mayoría de los riesgos principales están reducidos.';
+  updatePR();
+}
+function buildScorecard(){
+  const c=document.getElementById('scorecardRows');if(!c)return;c.innerHTML='';
+  SATTRS.forEach(a=>{c.innerHTML+=`<div class="srow"><span class="sl2">${a.l}</span><span class="sw">${a.w}%</span><input type="range" id="${a.id}" min="0.5" max="2" step="0.1" value="1" style="flex:1;" oninput="calcScorecard()"><span class="sv" id="${a.id}-out">1.0x</span></div>`;});
+}
+function calcScorecard(){
+  const baseEl=document.getElementById('baseVal');const base=baseEl?parseFloat(baseEl.value)||800000000:800000000;
+  const bo=document.getElementById('baseVal-out');if(bo)bo.textContent=clp(base);
+  let w=0;SATTRS.forEach(a=>{const el=document.getElementById(a.id);const v=el?parseFloat(el.value):1;const o=document.getElementById(a.id+'-out');if(o)o.textContent=v.toFixed(1)+'x';w+=v*(a.w/100);});
+  const res=base*w;const sm=document.getElementById('scorecardM');
+  if(sm)sm.innerHTML=`<div class="mc"><p class="mc-l">multiplicador compuesto</p><p class="mc-v">${w.toFixed(2)}x</p><p class="mc-s">vs. empresa promedio</p></div><div class="mc"><p class="mc-l">valorización Scorecard</p><p class="mc-v">${clpMM(res)}</p><p class="mc-s">${clp(res)}</p></div>`;
+  const diff=Math.round((w-1)*100);const st=document.getElementById('scorecardTip');
+  if(st)st.innerHTML=`Esta startup está <b>${diff>=0?'+':''}${diff}% sobre el promedio</b> para su etapa. El equipo pesa 30% — en pre-revenue, el equipo es prácticamente todo lo que existe.`;
+  updatePR();
+}
+function calcVC(){
+  const g=id=>{const el=document.getElementById(id);return el?parseFloat(el.value)||0:0;};
+  const eR=g('exitRev')||5000000000,eM=g('exitMult')||4,vR=g('vcRet')||10,sP=g('survP')||25,eY=g('exitYrs')||5;
+  const so=(id,v)=>{const el=document.getElementById(id+'-out');if(el)el.textContent=v;};
+  so('exitRev',clpMM(eR));so('exitMult',parseFloat(eM).toFixed(1)+'x');so('vcRet',vR+'x');so('survP',sP+'%');so('exitYrs',eY+' años');
+  const eV=eR*eM,aE=eV*(sP/100),vT=aE/vR,iR=Math.round((Math.pow(vR,1/eY)-1)*100);
+  const vm=document.getElementById('vcM');
+  if(vm)vm.innerHTML=`<div class="mc"><p class="mc-l">valor del exit</p><p class="mc-v">${clpMM(eV)}</p><p class="mc-s">sin ajuste por riesgo</p></div><div class="mc"><p class="mc-l">exit ajustado por riesgo</p><p class="mc-v">${clpMM(aE)}</p><p class="mc-s">${sP}% de probabilidad</p></div><div class="mc"><p class="mc-l">valorización hoy</p><p class="mc-v">${clpMM(vT)}</p><p class="mc-s">${clp(vT)}</p></div><div class="mc"><p class="mc-l">tasa implícita anual</p><p class="mc-v">${iR}%</p><p class="mc-s">${vR}x en ${eY} años</p></div>`;
+  const vt=document.getElementById('vcTip');if(vt)vt.innerHTML=`<b>¿Por qué tan alta la tasa?</b> Un retorno de ${vR}x en ${eY} años equivale a ${iR}% anual. Los inversores de venture exigen esto porque la mayoría de sus apuestas fracasan.`;
+  updatePR();
+}
+function calcDup(){
+  const g=id=>{const el=document.getElementById(id);return el?parseFloat(el.value)||0:0;};
+  const m=g('devM')||12,t=g('team')||3,s=g('sal')||2000000,i=g('infra')||20000000,r=g('res')||10000000,p=g('lPrem')||30;
+  const so=(id,v)=>{const el=document.getElementById(id+'-out');if(el)el.textContent=v;};
+  so('devM',m+' meses');so('team',t+' personas');so('sal',clp(s));so('infra',clp(i));so('res',clp(r));so('lPrem',p+'%');
+  const salT=m*t*s,hard=i+r,total=(salT+hard)*(1+p/100);
+  const dm=document.getElementById('dupM');
+  if(dm)dm.innerHTML=`<div class="mc"><p class="mc-l">salarios totales</p><p class="mc-v">${clpMM(salT)}</p><p class="mc-s">${m}m × ${t} personas</p></div><div class="mc"><p class="mc-l">costos duros</p><p class="mc-v">${clpMM(hard)}</p><p class="mc-s">infra + investigación</p></div><div class="mc"><p class="mc-l">total con prima</p><p class="mc-v">${clpMM(total)}</p><p class="mc-s">${clp(total)}</p></div>`;
+  const dt=document.getElementById('dupTip');if(dt)dt.innerHTML='<b>Este es el piso, no el precio.</b> Nadie debería vender por menos de lo que costó construirlo.';
+  updatePR();
+}
+function getBV(){const max=parseFloat(document.getElementById('maxHito')?.value)||400000000;let t=0;BHITOS.forEach(h=>{const el=document.querySelector(`input[name="${h.id}"]:checked`);if(el)t+=max*parseFloat(el.value);});return t;}
+function getSV(){const base=parseFloat(document.getElementById('baseVal')?.value)||800000000;let w=0;SATTRS.forEach(a=>{const el=document.getElementById(a.id);w+=(el?parseFloat(el.value):1)*(a.w/100);});return base*w;}
+function getVCV(){const g=id=>{const el=document.getElementById(id);return el?parseFloat(el.value)||0:0;};const eR=g('exitRev')||5000000000,eM=g('exitMult')||4,vR=g('vcRet')||10,sP=g('survP')||25;return eR*eM*(sP/100)/vR;}
+function getDV(){const g=id=>{const el=document.getElementById(id);return el?parseFloat(el.value)||0:0;};return(g('devM')*g('team')*g('sal')+g('infra')+g('res'))*(1+g('lPrem')/100)||0;}
+function updatePR(){
+  const b=getBV(),sc=getSV(),v=getVCV(),d=getDV();
+  const cols=[
+    {bg:'#EFF6FF',bc:'#BFDBFE',t:'#1E40AF',v:'#1E3A8A',s:'#3B82F6'},
+    {bg:'#FEF9C3',bc:'#FDE047',t:'#854D0E',v:'#713F12',s:'#CA8A04'},
+    {bg:'#0A1628',bc:'#112240',t:'#FDE047',v:'#FFFFFF',s:'rgba(255,255,255,.5)'},
+    {bg:'#F8FAFC',bc:'#E2E8F0',t:'#475569',v:'#0F172A',s:'#64748B'}
+  ];
+  const cards=[{l:'Berkus',v:b},{l:'Scorecard',v:sc},{l:'VC Method',v:v},{l:'Costo duplicar',v:d}];
+  const pc=document.getElementById('prCards');if(pc)pc.innerHTML=cards.map((c,i)=>`<div class="rc" style="background:${cols[i].bg};border:1px solid ${cols[i].bc};"><p class="rc-t" style="color:${cols[i].t};">${c.l}</p><p class="rc-v" style="color:${cols[i].v};">${clpMM(c.v)}</p><p class="rc-s" style="color:${cols[i].s};">${clp(c.v)}</p></div>`).join('');
+  const vals=[b,sc,v,d].filter(x=>x>0);if(!vals.length)return;
+  const minV=Math.min(...vals),maxV=Math.max(...vals),midV=(b+sc+v+d)/4;
+  const pr=document.getElementById('prRange');if(pr)pr.textContent=clpMM(minV)+' — '+clpMM(maxV);
+  const pm=document.getElementById('prMid');if(pm)pm.textContent='Punto medio: '+clpMM(midV)+' ('+clp(midV)+')';
+  const spread=midV>0?Math.round((maxV-minV)/midV*100):0;
+  const pi=document.getElementById('prInterp');
+  if(pi)pi.innerHTML=`<li class="ri"><span class="dot" style="background:var(--c4);"></span>El rango entre el método más bajo y el más alto es de <b>${spread}%</b>. Ese porcentaje es la incertidumbre real del negocio en esta etapa.</li><li class="ri"><span class="dot" style="background:var(--gold);"></span>El <b>Costo de duplicar</b> (${clpMM(d)}) es el piso. Vender por debajo es regalar el esfuerzo invertido.</li><li class="ri"><span class="dot" style="background:var(--c3);"></span>El <b>VC Method</b> (${clpMM(v)}) es el techo teórico si el potencial se cumple.</li><li class="ri"><span class="dot" style="background:var(--green);"></span>El precio real suele cerrarse entre el Scorecard y el VC Method, dependiendo del poder de negociación.</li><li class="ri"><span class="dot" style="background:var(--red);"></span>En pre-revenue, <b>el equipo lo es todo</b>. Si el Scorecard de equipo es bajo, ningún otro método justifica una valorización alta.</li>`;
+}
+function gT(n){
+  document.querySelectorAll('.pr').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===n));
+  if(n===4)updatePR();
+}
+loadExample('ghali');
+buildBerkus();buildScorecard();
+loadExamplePR('agro');
+
+// ── GUÍA JS ──
+function togglePhase(n){
+  const body=document.getElementById('body'+n);
+  const chev=document.getElementById('chev'+n);
+  const header=document.querySelector('#phase'+n+' .guide-phase-header');
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  chev.classList.toggle('open',!isOpen);
+  header.classList.toggle('open',!isOpen);
+}
+
+function updateCheck(el){
+  const label=el.nextElementSibling;
+  if(label)label.classList.toggle('checked',el.checked);
+  updateGuideProgress();
+}
+
+function updateGuideProgress(){
+  const phases=[1,2,3,4];
+  let done=0;
+  // Phase 1: at least 5 checkboxes checked
+  const c1=document.querySelectorAll('#cl1 input[type=checkbox]:checked').length;
+  if(c1>=5)done++;
+  // Phase 2: a type selected
+  if(document.querySelectorAll('.dt-result.show').length>0)done++;
+  // Phase 3: always counts as available once open
+  if(document.getElementById('body3').classList.contains('open'))done++;
+  // Phase 4: always counts as available once open
+  if(document.getElementById('body4').classList.contains('open'))done++;
+  const pct=Math.round(done/4*100);
+  const bar=document.getElementById('guideProgress');
+  const lbl=document.getElementById('guideProgressLabel');
+  if(bar)bar.style.width=pct+'%';
+  if(lbl)lbl.textContent=done+' de 4 fases completadas';
+}
+
+let dtSelections={};
+function dtSelect(q,ans){
+  // toggle both options
+  const opts=document.querySelectorAll('.dt-opts .dt-opt');
+  opts.forEach(o=>o.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  // hide all results for this q
+  document.querySelectorAll(`[id^="dt_${q}_"]`).forEach(el=>el.classList.remove('show'));
+  // show selected
+  const result=document.getElementById('dt_'+q+'_'+ans);
+  if(result)result.classList.add('show');
+  dtSelections[q]=ans;
+  updateGuideProgress();
+}
+
+function dtSelectType(type){
+  // highlight selected type button
+  const parent=document.getElementById('dt_q1_yes');
+  parent.querySelectorAll('.dt-opt').forEach(b=>b.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  // apply to tool
+  const sel=document.getElementById('bizType');
+  if(sel){sel.value=type;applyPreset();}
+  // show action button
+  if(!parent.querySelector('.action-btn')){
+    const btn=document.createElement('button');
+    btn.className='action-btn';
+    btn.style.marginTop='10px';
+    btn.innerHTML='<i class="ti ti-calculator"></i> ir a valorizar';
+    btn.onclick=()=>{setMode('rev');gS(0);};
+    parent.appendChild(btn);
+  }
+  updateGuideProgress();
+}
+
+</script>
+</body>
+</html>
