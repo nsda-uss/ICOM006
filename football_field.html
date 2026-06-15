@@ -1,0 +1,375 @@
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.ff{font-family:'Inter',system-ui,sans-serif;display:flex;min-height:620px;border-radius:14px;overflow:hidden;background:#F4F5F7}
+.sb{width:200px;flex-shrink:0;background:#1A202C;padding:18px 13px;display:flex;flex-direction:column;gap:3px;overflow-y:auto}
+.sb-logo{font-family:'Playfair Display',Georgia,serif;font-size:13px;color:#E2E8F0;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.08);line-height:1.4}
+.sb-logo span{display:block;font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;color:#4A5568;letter-spacing:.09em;text-transform:uppercase;margin-bottom:4px}
+.sb-sect{font-size:9.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#4A5568;margin:12px 0 5px;padding-left:2px}
+.sb-btn{width:100%;text-align:left;padding:8px 10px;border-radius:7px;border:none;background:transparent;color:#A0AEC0;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;line-height:1.3;transition:all .13s}
+.sb-btn:hover{background:rgba(255,255,255,.06);color:#E2E8F0}
+.sb-btn.on{background:rgba(99,179,237,.13);color:#90CDF4}
+.sb-btn.on .sb-tag{color:#63B3ED}
+.sb-tag{font-size:10px;color:#4A5568;display:block;margin-top:2px;transition:color .13s}
+.sb-div{height:1px;background:rgba(255,255,255,.06);margin:7px 0}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.top-bar{background:#fff;padding:16px 22px 14px;border-bottom:1px solid #E8EAF0}
+.co-ey{font-size:9.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#A0AEC0;margin-bottom:3px}
+.co-nm{font-family:'Playfair Display',Georgia,serif;font-size:19px;color:#1A202C;line-height:1.2;margin-bottom:2px}
+.co-ds{font-size:11px;color:#718096;line-height:1.45}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid #E8EAF0}
+.met{padding:12px 18px;border-right:1px solid #E8EAF0}
+.met:last-child{border-right:none}
+.met-l{font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#A0AEC0;margin-bottom:4px}
+.met-v{font-size:17px;font-weight:600;color:#1A202C;letter-spacing:-.02em}
+.met-v.pos{color:#276749}.met-v.neg{color:#9B2C2C}
+.body{flex:1;padding:18px 22px;display:flex;flex-direction:column;gap:16px;overflow-y:auto}
+.sec-lbl{font-size:9.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#A0AEC0;margin-bottom:9px}
+
+/* PRICE INPUT ROW */
+.price-row{display:flex;align-items:center;gap:10px;background:#F7FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:10px 14px}
+.price-row label{font-size:11px;font-weight:500;color:#718096;white-space:nowrap}
+.price-inp{width:110px;padding:5px 8px;border-radius:6px;border:1px solid #CBD5E0;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;color:#1A202C;background:#fff;text-align:right}
+.price-inp:focus{outline:none;border-color:#2B6CB0;box-shadow:0 0 0 2px rgba(43,108,176,.1)}
+.price-range-hint{font-size:10px;color:#A0AEC0;margin-left:4px}
+.price-slider-wrap{flex:1}
+
+/* SLIDERS */
+.sg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px 18px}
+.sl-row{display:flex;flex-direction:column;gap:3px}
+.sl-top{display:flex;justify-content:space-between;align-items:baseline}
+.sl-lbl{font-size:11px;color:#718096;font-weight:500}
+.sl-v{font-size:12px;font-weight:600;color:#2D3748;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:#E2E8F0;border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:#2B6CB0;border:2px solid #fff;box-shadow:0 1px 3px rgba(43,108,176,.3)}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:#2B6CB0;border:2px solid #fff}
+
+/* CUSTOM METHODS */
+.cm-grid{display:flex;flex-direction:column;gap:8px}
+.cm-row{display:grid;grid-template-columns:1fr 90px 90px 24px;gap:8px;align-items:center}
+.cm-inp{width:100%;padding:5px 8px;border-radius:6px;border:1px solid #E2E8F0;font-size:12px;font-family:'Inter',sans-serif;color:#1A202C;background:#fff}
+.cm-inp:focus{outline:none;border-color:#2B6CB0}
+.cm-inp.num{text-align:right;font-variant-numeric:tabular-nums}
+.cm-hdr{font-size:10px;font-weight:600;color:#A0AEC0;letter-spacing:.05em;text-transform:uppercase;padding:0 8px}
+.cm-del{background:none;border:none;cursor:pointer;color:#CBD5E0;font-size:16px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center}
+.cm-del:hover{color:#FC8181}
+.cm-add{background:none;border:1px dashed #CBD5E0;border-radius:6px;width:100%;padding:7px;font-size:12px;color:#A0AEC0;cursor:pointer;font-family:'Inter',sans-serif;margin-top:4px;transition:all .12s}
+.cm-add:hover{border-color:#2B6CB0;color:#2B6CB0}
+
+/* CHART */
+.rows{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;align-items:center;gap:8px}
+.rlbl{width:120px;flex-shrink:0;font-size:11px;color:#718096;text-align:right;line-height:1.3;font-weight:500}
+.track{flex:1;position:relative;height:26px;background:#EDF2F7;border-radius:5px}
+.bar{position:absolute;top:4px;height:18px;border-radius:3px;background:#DBEAFE;border:1.5px solid #2B6CB0;transition:left .22s,width .22s}
+.bv{position:absolute;top:5px;font-size:10px;white-space:nowrap;font-weight:600;color:#1E40AF;font-variant-numeric:tabular-nums}
+.pline{position:absolute;top:0;height:100%;border-left:2px dashed #C05621;pointer-events:none;transition:left .22s}
+.oline{position:absolute;top:0;height:100%;border-left:2px dashed #276749;pointer-events:none;transition:left .22s}
+.xax{display:flex;justify-content:space-between;font-size:10px;color:#A0AEC0;padding-left:128px;margin-top:4px;font-variant-numeric:tabular-nums}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:11px;color:#718096;font-weight:500;padding-top:10px;border-top:1px solid #E8EAF0}
+.li{display:flex;align-items:center;gap:6px}
+.l-bar{width:16px;height:10px;border-radius:2px;background:#DBEAFE;border:1.5px solid #2B6CB0;flex-shrink:0}
+.l-dp{width:18px;border-top:2px dashed #C05621}
+.l-do{width:18px;border-top:2px dashed #276749}
+.note{font-size:10px;color:#CBD5E0;line-height:1.6;padding-top:10px;border-top:1px solid #E8EAF0;margin-top:auto}
+.empty{font-size:12px;color:#A0AEC0;padding:14px 0 0 128px;font-style:italic}
+</style>
+
+<div class="ff">
+  <div class="sb">
+    <div class="sb-logo"><span>ICOM I006</span>Football Field<br>Valuation Chart</div>
+    <div class="sb-sect">Empresas ejemplo</div>
+    <button class="sb-btn on" onclick="pick('meli',this)">MercadoLibre<span class="sb-tag">MELI · NYSE · FY2024</span></button>
+    <button class="sb-btn" onclick="pick('oni',this)">Onitsuka Tiger<span class="sb-tag">ASICS 8841 · TSE · FY2023</span></button>
+    <button class="sb-btn" onclick="pick('spx',this)">SpaceX<span class="sb-tag">Privada · rondas 2025</span></button>
+    <div class="sb-div"></div>
+    <div class="sb-sect">Personalizada</div>
+    <button class="sb-btn" onclick="pick('cus',this)">Ingresar datos<span class="sb-tag">Nombre, rangos y premium</span></button>
+  </div>
+
+  <div class="main">
+    <div class="top-bar">
+      <div class="co-ey" id="ey">Empresa seleccionada</div>
+      <div class="co-nm" id="dn">MercadoLibre (MELI)</div>
+      <div class="co-ds" id="dd">E-commerce y fintech líder en Latinoamérica · NYSE · FY2024</div>
+    </div>
+    <div class="metrics">
+      <div class="met"><div class="met-l">Precio actual</div><div class="met-v" id="mp">—</div></div>
+      <div class="met"><div class="met-l">Oferta de compra</div><div class="met-v" id="mo">—</div></div>
+      <div class="met"><div class="met-l">Rango implícito</div><div class="met-v" id="mr">—</div></div>
+      <div class="met"><div class="met-l">Premium mínimo</div><div class="met-v pos" id="mpm">—</div></div>
+    </div>
+
+    <div class="body">
+      <!-- PRECIO EDITABLE -->
+      <div id="price-section">
+        <div class="sec-lbl">Precio de la acción</div>
+        <div class="price-row">
+          <label>Precio actual (USD)</label>
+          <input class="price-inp" type="number" id="price-inp" value="2050" oninput="onPriceType(this.value)">
+          <span class="price-range-hint" id="price-hint">Slider: ±50% del valor ingresado</span>
+          <div class="price-slider-wrap">
+            <input type="range" id="price-sl" min="1025" max="3075" step="10" value="2050" oninput="onPriceSlide(this.value)">
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDERS -->
+      <div id="sliders-section">
+        <div class="sec-lbl" id="sl-lbl">Parámetros de valorización</div>
+        <div class="sg" id="sliders"></div>
+      </div>
+
+      <!-- EMPRESA PERSONALIZADA -->
+      <div id="custom-section" style="display:none">
+        <div class="sec-lbl">Empresa e indicadores personalizados</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div class="sl-row">
+            <div class="sl-top"><span class="sl-lbl">Nombre de la empresa</span></div>
+            <input class="cm-inp" type="text" id="cus-name" placeholder="ej. Falabella S.A." oninput="rc()">
+          </div>
+          <div class="sl-row">
+            <div class="sl-top"><span class="sl-lbl">Ticker / Bolsa</span></div>
+            <input class="cm-inp" type="text" id="cus-ticker" placeholder="ej. FALABELLA · BCS" oninput="rc()">
+          </div>
+          <div class="sl-row">
+            <div class="sl-top"><span class="sl-lbl">Sector</span></div>
+            <input class="cm-inp" type="text" id="cus-sector" placeholder="ej. Retail · Consumo" oninput="rc()">
+          </div>
+          <div class="sl-row">
+            <div class="sl-top"><span class="sl-lbl">Período / Año fiscal</span></div>
+            <input class="cm-inp" type="text" id="cus-period" placeholder="ej. FY2024" oninput="rc()">
+          </div>
+        </div>
+        <div class="sec-lbl">Métodos de valorización y rangos (USD)</div>
+        <div class="cm-grid">
+          <div class="cm-row" style="padding:0 8px">
+            <div class="cm-hdr">Método / Indicador</div>
+            <div class="cm-hdr" style="text-align:right">Valor mín.</div>
+            <div class="cm-hdr" style="text-align:right">Valor máx.</div>
+            <div></div>
+          </div>
+          <div id="cm-rows"></div>
+        </div>
+        <button class="cm-add" onclick="addRow()">+ Agregar método</button>
+      </div>
+
+      <!-- CHART -->
+      <div id="chart-section">
+        <div class="sec-lbl">Rango de valorización por método</div>
+        <div class="rows" id="rows"></div>
+        <div class="xax" id="xax"></div>
+      </div>
+
+      <div class="legend">
+        <span class="li"><span class="l-bar"></span>Rango de valorización</span>
+        <span class="li"><span class="l-dp"></span>Precio actual</span>
+        <span class="li"><span class="l-do"></span>Oferta de compra <span style="font-weight:400;color:#A0AEC0;margin-left:3px">(precio × (1 + premium%))</span></span>
+      </div>
+      <div class="note" id="fn"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DB={
+  meli:{ey:"NYSE · E-commerce & Fintech",nm:"MercadoLibre (MELI)",ds:"Plataforma de e-commerce y servicios financieros líder en Latinoamérica · FY2024",note:"Fuentes: TradingView, StockAnalysis, cobertura Wall Street 2024–2025. Rangos referenciales — verificar precios objetivo antes de clase.",
+    price:2050,prem:14,spread:15,
+    rows:[{l:"DCF (caso base)",lo:1800,hi:2200},{l:"EV/EBITDA comps",lo:1900,hi:2400},{l:"P/FCF comps",lo:1700,hi:2100},{l:"PEG Ratio",lo:2000,hi:2500},{l:"EV/Revenue",lo:1600,hi:2000}]},
+  oni:{ey:"TSE: 8841 · Calzado Premium",nm:"Onitsuka Tiger / ASICS Corp.",ds:"Calzado premium japonés, subsidiaria de ASICS Corp. · FY2023 (USD equiv. por acción)",note:"Onitsuka Tiger es subsidiaria de ASICS Corp. (TSE: 8841). Valores en USD equivalentes. Fuentes: TSE, GuruFocus, ASICS IR 2023.",
+    price:28,prem:21,spread:18,
+    rows:[{l:"DCF (caso base)",lo:22,hi:32},{l:"EV/EBITDA comps",lo:25,hi:35},{l:"P/E comps",lo:24,hi:33},{l:"EV/Sales",lo:20,hi:30},{l:"P/B ajustado",lo:18,hi:28}]},
+  spx:{ey:"Privada · Aeroespacial",nm:"SpaceX",ds:"Empresa aeroespacial privada · valorización implícita ~$350B en rondas secundarias (2025)",note:"SpaceX no cotiza en bolsa. Valores estimados desde rondas secundarias y valoración implícita ~$350B. Fuentes: Bloomberg, Reuters, Axios.",
+    price:185,prem:22,spread:25,
+    rows:[{l:"DCF – Starlink",lo:140,hi:220},{l:"EV/Revenue comps",lo:160,hi:240},{l:"Mercado secundario",lo:175,hi:230},{l:"Suma de partes",lo:150,hi:260},{l:"VC Method",lo:130,hi:200}]},
+  cus:null
+};
+
+let cur='meli';
+let state={price:2050,prem:14,spread:15};
+let cusRows=[
+  {l:"DCF (caso base)",lo:80,hi:120},
+  {l:"EV/EBITDA comps",lo:90,hi:130},
+  {l:"P/E comps",lo:85,hi:125},
+];
+
+const $=id=>document.getElementById(id);
+const fmtD=v=>'$'+Math.round(v).toLocaleString('en-US');
+const fmtPct=v=>(v>=0?'+':'')+Number(v).toFixed(1)+'%';
+
+function pick(id,btn){
+  cur=id;
+  document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  if(id==='cus'){
+    const co=DB.meli;
+    state={price:100,prem:15,spread:20};
+    $('custom-section').style.display='block';
+    buildCusRows();
+    renderCusRows();
+  } else {
+    $('custom-section').style.display='none';
+    const co=DB[id];
+    state={price:co.price,prem:co.prem,spread:co.spread};
+  }
+  syncPriceControls();
+  buildSliders();
+  render();
+}
+
+function syncPriceControls(){
+  const p=state.price;
+  $('price-inp').value=p;
+  const sl=$('price-sl');
+  sl.min=Math.round(p*0.5);sl.max=Math.round(p*1.5);sl.value=p;
+  $('price-hint').textContent=`Slider: $${Math.round(p*0.5).toLocaleString('en-US')} – $${Math.round(p*1.5).toLocaleString('en-US')}`;
+}
+
+function onPriceType(val){
+  const p=parseFloat(val)||0;
+  if(p<=0)return;
+  state.price=p;
+  const sl=$('price-sl');
+  sl.min=Math.round(p*0.5);sl.max=Math.round(p*1.5);sl.value=p;
+  $('price-hint').textContent=`Slider: $${Math.round(p*0.5).toLocaleString('en-US')} – $${Math.round(p*1.5).toLocaleString('en-US')}`;
+  render();
+}
+
+function onPriceSlide(val){
+  state.price=parseFloat(val);
+  $('price-inp').value=Math.round(state.price);
+  render();
+}
+
+function buildSliders(){
+  const extra= cur==='cus'
+    ? [{id:"prem",lbl:"Premium de oferta (%)",min:0,max:80,step:1,val:state.prem,fmt:"%"}]
+    : [
+        {id:"spread",lbl:"Amplitud de rangos (%)",min:5,max:50,step:1,val:state.spread,fmt:"%"},
+        {id:"prem",lbl:"Premium de oferta (%)",min:0,max:60,step:1,val:state.prem,fmt:"%"},
+      ];
+  let html='';
+  extra.forEach(s=>{
+    const disp=s.fmt==='%'?Math.round(state[s.id]||s.val)+'%':fmtD(state[s.id]||s.val);
+    html+=`<div class="sl-row">
+      <div class="sl-top"><span class="sl-lbl">${s.lbl}</span><span class="sl-v" id="sv-${s.id}">${disp}</span></div>
+      <input type="range" min="${s.min}" max="${s.max}" step="${s.step}" value="${state[s.id]||s.val}" oninput="onSlide('${s.id}','${s.fmt}',this.value)">
+    </div>`;
+  });
+  $('sliders').innerHTML=html;
+  const cols=extra.length;
+  $('sliders').style.gridTemplateColumns=`repeat(${cols},1fr)`;
+}
+
+function onSlide(id,fmt,val){
+  state[id]=parseFloat(val);
+  $('sv-'+id).textContent=fmt==='%'?Math.round(state[id])+'%':fmtD(state[id]);
+  render();
+}
+
+/* CUSTOM ROWS */
+function buildCusRows(){
+  if(!cusRows.length)cusRows=[{l:"DCF (caso base)",lo:80,hi:120}];
+}
+
+function renderCusRows(){
+  let html='';
+  cusRows.forEach((r,i)=>{
+    html+=`<div class="cm-row" id="cmr-${i}">
+      <input class="cm-inp" type="text" value="${r.l}" placeholder="ej. EV/EBITDA comps" oninput="cusRows[${i}].l=this.value;render()">
+      <input class="cm-inp num" type="number" value="${r.lo}" placeholder="mín." oninput="cusRows[${i}].lo=parseFloat(this.value)||0;render()">
+      <input class="cm-inp num" type="number" value="${r.hi}" placeholder="máx." oninput="cusRows[${i}].hi=parseFloat(this.value)||0;render()">
+      <button class="cm-del" onclick="delRow(${i})" title="Eliminar">×</button>
+    </div>`;
+  });
+  $('cm-rows').innerHTML=html;
+}
+
+function addRow(){
+  cusRows.push({l:"Nuevo método",lo:80,hi:140});
+  renderCusRows();render();
+}
+
+function delRow(i){
+  if(cusRows.length<=1)return;
+  cusRows.splice(i,1);
+  renderCusRows();render();
+}
+
+function rc(){render();}
+
+function getRows(){
+  if(cur==='cus') return cusRows.filter(r=>r.lo>0&&r.hi>0&&r.hi>r.lo);
+  const sp=(state.spread||15)/100;
+  return DB[cur].rows.map(r=>{const mid=(r.lo+r.hi)/2;return{l:r.l,lo:mid*(1-sp/2),hi:mid*(1+sp/2)};});
+}
+
+function render(){
+  if(cur==='cus'){
+    const nm=$('cus-name').value.trim()||'Empresa personalizada';
+    const tk=$('cus-ticker').value.trim()||'—';
+    const sc=$('cus-sector').value.trim()||'—';
+    const pr=$('cus-period').value.trim()||'—';
+    $('ey').textContent=`${sc} · ${pr}`;
+    $('dn').textContent=nm;
+    $('dd').textContent=`${tk} · Datos ingresados manualmente`;
+    $('fn').textContent='Datos ingresados por el usuario.';
+  } else {
+    const co=DB[cur];
+    $('ey').textContent=co.ey;$('dn').textContent=co.nm;$('dd').textContent=co.ds;$('fn').textContent=co.note;
+  }
+
+  const price=state.price||null;
+  const prem=state.prem!=null?state.prem:0;
+  const offer=price?price*(1+prem/100):null;
+
+  $('mp').textContent=price?fmtD(price):'—';
+  $('mo').textContent=offer?fmtD(offer):'—';
+  const pmEl=$('mpm');
+  pmEl.textContent=fmtPct(prem);
+  pmEl.className='met-v '+(prem>=0?'pos':'neg');
+
+  const rows=getRows();
+  if(!rows.length){
+    $('rows').innerHTML='<div class="empty">Agrega al menos un método con rango válido.</div>';
+    $('mr').textContent='—';$('xax').innerHTML='';return;
+  }
+
+  const lo=Math.min(...rows.map(r=>r.lo)),hi=Math.max(...rows.map(r=>r.hi));
+  $('mr').textContent=fmtD(lo)+'–'+fmtD(hi);
+
+  const allv=rows.flatMap(r=>[r.lo,r.hi]);
+  if(price)allv.push(price);
+  if(offer)allv.push(offer);
+  const minv=Math.min(...allv)*0.92,maxv=Math.max(...allv)*1.06,span=maxv-minv;
+  const pct=v=>(((v-minv)/span)*100).toFixed(2);
+
+  let html='';
+  rows.forEach(r=>{
+    const lp=pct(r.lo),wp=((r.hi-r.lo)/span*100).toFixed(2);
+    let pins='';
+    if(price)pins+=`<div class="pline" style="left:${pct(price)}%"></div>`;
+    if(offer)pins+=`<div class="oline" style="left:${pct(offer)}%"></div>`;
+    html+=`<div class="row">
+      <div class="rlbl">${r.l}</div>
+      <div class="track">
+        <div class="bar" style="left:${lp}%;width:${wp}%"></div>
+        <div class="bv" style="left:${lp}%;transform:translateX(3px)">${fmtD(r.lo)}</div>
+        <div class="bv" style="left:${parseFloat(lp)+parseFloat(wp)}%;transform:translateX(calc(-100% - 3px))">${fmtD(r.hi)}</div>
+        ${pins}
+      </div>
+    </div>`;
+  });
+  $('rows').innerHTML=html;
+
+  let ax='';
+  for(let i=0;i<=4;i++)ax+=`<span>${fmtD(minv+span*i/4)}</span>`;
+  $('xax').innerHTML=ax;
+}
+
+// init
+syncPriceControls();
+buildSliders();
+render();
+</script>
