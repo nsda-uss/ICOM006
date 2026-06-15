@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Football Field Valuation Chart — ICOM I006</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-main: #F8FAFC;
+  --bg-sidebar: #0F172A;
+  --sidebar-hover: #1E293B;
+  --sidebar-active: #334155;
+  --card-bg: #FFFFFF;
+  --border-color: #E2E8F0;
+  --text-main: #0F172A;
+  --text-muted: #475569;
+  --text-light: #94A3B8;
+  
+  /* Paleta Financiera */
+  --primary: #2563EB;
+  --primary-light: #EFF6FF;
+  --primary-border: #3B82F6;
+  --accent-orange: #EA580C;
+  --accent-green: #16A34A;
+  --accent-green-bg: #DCFCE7;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #111827; padding: 20px; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+.ff-root {
+  max-width: 1280px;
+  margin: 0 auto;
+  background: var(--bg-main);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  min-height: 750px;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3), 0 10px 10px -5px rgba(0,0,0,0.3);
+}
+
+/* Sidebar */
+.sidebar { width: 260px; flex-shrink: 0; background: var(--bg-sidebar); padding: 24px 16px; display: flex; flex-direction: column; gap: 6px; }
+.sb-logo { margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.sb-logo span { display: block; font-size: 11px; font-weight: 700; color: var(--primary-border); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+.sb-logo h1 { font-size: 16px; font-weight: 600; color: #F8FAFC; letter-spacing: -0.02em; line-height: 1.3; }
+.sb-sect { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #64748B; margin: 16px 0 8px; padding-left: 8px; }
+.sb-btn { width: 100%; text-align: left; padding: 12px 14px; border-radius: 8px; border: none; background: transparent; color: #94A3B8; cursor: pointer; transition: all .2s ease; display: flex; flex-direction: column; gap: 2px; }
+.sb-btn:hover { background: var(--sidebar-hover); color: #F1F5F9; }
+.sb-btn.on { background: var(--primary); color: #FFFFFF; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
+.sb-sub { font-size: 11px; color: #64748B; display: block; font-weight: 500; transition: color .2s; }
+.sb-btn.on .sb-sub { color: #93C5FD; }
+.sb-div { height: 1px; background: rgba(255,255,255,0.08); margin: 12px 0; }
+
+/* Main Content */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: var(--bg-main); }
+.top-bar { background: var(--card-bg); padding: 24px 32px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.top-left { flex: 1; }
+.co-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--primary); margin-bottom: 6px; }
+.co-name { font-size: 24px; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; margin-bottom: 4px; }
+.co-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+/* Dashboard Metrics */
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border-color); border-bottom: 1px solid var(--border-color); }
+.met { background: var(--card-bg); padding: 20px 32px; display: flex; flex-direction: column; gap: 6px; }
+.met-lbl { font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--text-muted); }
+.met-val { font-size: 22px; font-weight: 700; color: var(--text-main); font-family: 'JetBrains Mono', monospace; letter-spacing: -0.03em; }
+.met-val.pos { color: var(--accent-green); }
+.tag-premium { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: var(--accent-green-bg); color: var(--accent-green); margin-left: 6px; vertical-align: middle; }
+
+/* Workspace Body */
+.body { flex: 1; padding: 32px; display: flex; flex-direction: column; gap: 28px; }
+.section-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+
+/* Control Sliders */
+.slider-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+.sl-row { display: flex; flex-direction: column; gap: 8px; }
+.sl-top { display: flex; justify-content: space-between; align-items: center; }
+.sl-lbl { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+.sl-val { font-size: 13px; font-weight: 700; color: var(--text-main); font-family: 'JetBrains Mono', monospace; background: var(--bg-main); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border-color); }
+
+input[type=range] { width: 100%; height: 6px; -webkit-appearance: none; appearance: none; background: #E2E8F0; border-radius: 3px; outline: none; cursor: pointer; transition: background 0.2s; }
+input[type=range]:hover { background: #CBD5E1; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--primary); border: 2.5px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15); cursor: pointer; transition: transform 0.1s; }
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+/* Chart Visualization */
+.chart-container { position: relative; margin-top: 10px; }
+.rows { display: flex; flex-direction: column; gap: 14px; position: relative; z-index: 2; }
+.row { display: flex; align-items: center; gap: 16px; }
+.rlbl { width: 150px; flex-shrink: 0; font-size: 12px; color: var(--text-muted); text-align: right; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.track { flex: 1; position: relative; height: 36px; background: var(--bg-main); border-radius: 6px; border: 1px solid rgba(0,0,0,0.02); display: flex; align-items: center; }
+.bar { position: absolute; height: 20px; border-radius: 4px; background: rgba(59, 130, 246, 0.12); border: 1.5px solid var(--primary); transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1), width 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
+.bv { position: absolute; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--primary); pointer-events: none; transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
+.bv-lo { transform: translateX(6px); }
+.bv-hi { transform: translateX(calc(-100% - 6px)); }
+
+/* Overlay Lines (Price & Offer markers) */
+.pline, .oline { position: absolute; top: 0; height: 100%; width: 2px; z-index: 3; pointer-events: none; transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
+.pline { border-left: 2px dashed var(--accent-orange); }
+.oline { border-left: 2px dashed var(--accent-green); }
+
+/* X-Axis Grid Lines Background */
+.grid-overlay { position: absolute; top: 0; left: 166px; right: 0; bottom: 0; height: calc(100% + 14px); display: flex; justify-content: space-between; pointer-events: none; z-index: 1; }
+.grid-line { width: 1px; height: calc(100% - 25px); background: #E2E8F0; position: relative; }
+.grid-line:first-child, .grid-line:last-child { background: #CBD5E1; }
+
+.xax { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: var(--text-light); padding-left: 166px; margin-top: 14px; font-family: 'JetBrains Mono', monospace; position: relative; z-index: 2; }
+.xax span { transform: translateX(-50%); width: 0; text-align: center; white-space: nowrap; }
+.xax span:first-child { transform: translateX(0); text-align: left; }
+.xax span:last-child { transform: translateX(-100%); text-align: right; }
+
+/* Footnotes & Legend */
+.meta-footer { display: flex; flex-direction: column; gap: 16px; margin-top: auto; padding-top: 8px; }
+.legend { display: flex; gap: 24px; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); padding-bottom: 16px; border-bottom: 1px solid var(--border-color); }
+.li { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.l-bar { width: 20px; height: 12px; border-radius: 3px; background: rgba(59, 130, 246, 0.12); border: 1.5px solid var(--primary); flex-shrink: 0; }
+.l-dash { width: 24px; flex-shrink: 0; height: 0; }
+.note { font-size: 11px; color: var(--text-light); line-height: 1.6; font-style: italic; }
+
+/* Custom Form Styles */
+.custom-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px dashed var(--border-color); }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+.form-group input { padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-main); outline: none; }
+.form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+/* Utilities */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+</style>
+</head>
+<body>
+
+<h2 class="sr-only">Football Field Valuation Chart — herramienta interactiva de valorización con diseño profesional</h2>
+
+<div class="ff-root">
+  <div class="sidebar">
+    <div class="sb-logo">
+      <span>Finanzas Corporativas</span>
+      <h1>ICOM I006<br>Valuation Suite</h1>
+    </div>
+
+    <div class="sb-sect">Casos de Estudio</div>
+    <button class="sb-btn on" onclick="pick('meli',this)">
+      MercadoLibre
+      <span class="sb-sub">MELI · NYSE · FY2024</span>
+    </button>
+    <button class="sb-btn" onclick="pick('oni',this)">
+      Onitsuka Tiger
+      <span class="sb-sub">ASICS 8841 · TSE · FY2023</span>
+    </button>
+    <button class="sb-btn" onclick="pick('spx',this)">
+      SpaceX
+      <span class="sb-sub">Privada · Rondas 2025</span>
+    </button>
+
+    <div class="sb-div"></div>
+    <div class="sb-sect">Modelación</div>
+    <button class="sb-btn" onclick="pick('cus',this)">
+      Datos Manuales
+      <span class="sb-sub">Configuración ad-hoc</span>
+    </button>
+  </div>
+
+  <div class="main">
+    <div class="top-bar">
+      <div class="top-left">
+        <div class="co-eyebrow" id="ey">—</div>
+        <div class="co-name" id="dn">—</div>
+        <div class="co-desc" id="dd">—</div>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="met"><div class="met-lbl">Precio de Referencia</div><div class="met-val" id="mp">—</div></div>
+      <div class="met"><div class="met-lbl">Oferta de Compra Implícita</div><div class="met-val" id="mo">—</div></div>
+      <div class="met"><div class="met-lbl">Rango Combinado</div><div class="met-val" id="mr">—</div></div>
+      <div class="met"><div class="met-lbl">Premium Solicitado</div><div class="met-val" id="mpm">—</div></div>
+    </div>
+
+    <div class="body">
+      <div class="section-card">
+        <div class="sl-head-row" style="margin-bottom: 16px;">
+          <div class="co-eyebrow" style="color: var(--text-main)">Variables Macroeconómicas y de Control</div>
+        </div>
+        
+        <div id="custom-inputs-panel" style="display: none;">
+          <div class="custom-form">
+            <div class="form-group">
+              <label>Rango DCF Mín ($)</label>
+              <input type="number" id="inp-rmin" value="80" oninput="onCustomParamChange()">
+            </div>
+            <div class="form-group">
+              <label>Rango Múltiplos Máx ($)</label>
+              <input type="number" id="inp-rmax" value="160" oninput="onCustomParamChange()">
+            </div>
+          </div>
+        </div>
+
+        <div class="slider-grid" id="sliders"></div>
+      </div>
+
+      <div class="section-card" style="flex: 1; display: flex; flex-direction: column;">
+        <div class="co-eyebrow" style="color: var(--text-main); margin-bottom: 24px;">Metodologías de Valoración Comparadas ($)</div>
+        
+        <div class="chart-container">
+          <div class="grid-overlay" id="grid-overlay">
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+          </div>
+          
+          <div class="rows" id="rows"></div>
+        </div>
+        
+        <div class="xax" id="xax"></div>
+      </div>
+
+      <div class="meta-footer">
+        <div class="legend">
+          <span class="li"><span class="l-bar"></span>Rango Objetivo Estimado</span>
+          <span class="li"><span class="l-dash" style="border-top: 2px dashed var(--accent-orange)"></span>Precio de Mercado / Referencia</span>
+          <span class="li"><span class="l-dash" style="border-top: 2px dashed var(--accent-green)"></span>Target de Adquisición (Premium Inc.)</span>
+        </div>
+        <div class="note" id="fn">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DB={
+  meli:{ey:"NYSE · E-commerce & Fintech",name:"MercadoLibre (MELI)",desc:"Plataforma líder en comercio electrónico y servicios fintech en América Latina.",note:"Fuentes: Proyecciones de consenso Wall Street, TradingView. Los rangos reflejan modelos DCF base y múltiplos de crecimiento de transacciones ajustados para el año fiscal.",
+    sliders:[{id:"price",lbl:"Precio de Referencia (USD)",min:1200,max:3000,step:10,val:2050,fmt:"$"},{id:"spread",lbl:"Amplitud de Rangos (%)",min:5,max:40,step:1,val:15,fmt:"%"},{id:"prem",lbl:"Premium de Control (%)",min:0,max:50,step:1,val:14,fmt:"%"}],
+    rows:[{l:"DCF (Caso Base)",lo:1800,hi:2200},{l:"EV / EBITDA Multiples",lo:1900,hi:2400},{l:"P / FCF Multiples",lo:1700,hi:2100},{l:"PEG Ratio Valuation",lo:2000,hi:2500},{l:"EV / Revenue Target",lo:1600,hi:2000}]},
+  oni:{ey:"TSE: 8841 · Premium Footwear",name:"Onitsuka Tiger (ASICS Corp.)",desc:"Línea premium de calzado e identidad de marca. Análisis derivado de la matriz corporativa ASICS Corp.",note:"Valores simulados en USD equivalentes por acción de control. Fuente: Tokyo Stock Exchange, balances anuales consolidados e informes de relación con inversores (IR).",
+    sliders:[{id:"price",lbl:"Precio de Referencia (USD)",min:10,max:60,step:0.5,val:28,fmt:"$"},{id:"spread",lbl:"Amplitud de Rangos (%)",min:5,max:40,step:1,val:18,fmt:"%"},{id:"prem",lbl:"Premium de Control (%)",min:0,max:60,step:1,val:21,fmt:"%"}],
+    rows:[{l:"DCF (Caso Base)",lo:22,hi:32},{l:"EV / EBITDA Comps",lo:25,hi:35},{l:"P/E Multiple Comps",lo:24,hi:33},{l:"EV / Sales Target",lo:20,hi:30},{l:"P/B Ajustado",lo:18,hi:28}]},
+  spx:{ey:"Private Equity · Aerospace",name:"SpaceX",desc:"Valoración implícita de mercado secundario e hitos de capitalización privada.",note:"Valores nominales estimados por acción. Compañía privada (No cotizada públicamente). Datos recopilados a partir de colocaciones privadas institucionales secundarias.",
+    sliders:[{id:"price",lbl:"Precio Secundario (USD)",min:80,max:350,step:5,val:185,fmt:"$"},{id:"spread",lbl:"Amplitud de Rangos (%)",min:5,max:50,step:1,val:25,fmt:"%"},{id:"prem",lbl:"Premium de Control (%)",min:0,max:60,step:1,val:22,fmt:"%"}],
+    rows:[{l:"DCF – Starlink Operations",lo:140,hi:220},{l:"EV / Revenue Comps",lo:160,hi:240},{l:"Transacciones Secundarias",lo:175,hi:230},{l:"Suma de las Partes (SOTP)",lo:150,hi:260},{l:"Venture Capital Method",lo:130,hi:200}]},
+  cus:{ey:"Ad-Hoc Valuation",name:"Modelo Personalizado",desc:"Defina los parámetros globales y analice la sensibilidad de los rangos de salida en tiempo real.",note:"Datos estructurados de forma manual por el usuario para pruebas rápidas de sensibilidad financiera.",
+    sliders:[{id:"price",lbl:"Precio Objetivo Manual (USD)",min:10,max:500,step:1,val:100,fmt:"$"},{id:"spread",lbl:"Sensibilidad de Amplitud (%)",min:5,max:50,step:1,val:20,fmt:"%"},{id:"prem",lbl:"Premium de Control (%)",min:0,max:80,step:1,val:15,fmt:"%"}],
+    rows:[]}
+};
+
+let cur='meli', state={};
+const $=id=>document.getElementById(id);
+
+// Formateadores profesionales estables utilizando configuraciones internacionales estándares
+const fmtD=v=>'$'+Math.round(v).toLocaleString('en-US');
+const fmtDPrecise=v=>'$'+v.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+const fmtP=v=>(v>=0?'+':'')+v.toFixed(1)+'%';
+
+function pick(id,btn){
+  cur=id;
+  document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  
+  // Mostrar u ocultar controles numéricos si es la empresa personalizada
+  $('custom-inputs-panel').style.display = (id === 'cus') ? 'block' : 'none';
+  
+  state={};
+  DB[id].sliders.forEach(s=>{state[s.id]=s.val;});
+  buildSliders(id);
+  render();
+}
+
+function buildSliders(id){
+  const cfg=DB[id].sliders;
+  let html='';
+  cfg.forEach(s=>{
+    const displayVal = s.fmt==='%' ? Math.round(state[s.id])+'%' : (state[s.id] < 100 ? fmtDPrecise(state[s.id]) : fmtD(state[s.id]));
+    html+=`<div class="sl-row">
+      <div class="sl-top">
+        <span class="sl-lbl">${s.lbl}</span>
+        <span class="sl-val" id="sv-${s.id}">${displayVal}</span>
+      </div>
+      <input type="range" min="${s.min}" max="${s.max}" step="${s.step}" value="${state[s.id]}" oninput="onSlide('${s.id}','${s.fmt}',this.value)">
+    </div>`;
+  });
+  $('sliders').innerHTML=html;
+}
+
+function onSlide(id,fmt,val){
+  state[id]=parseFloat(val);
+  $( 'sv-'+id ).textContent = fmt==='%' ? Math.round(state[id])+'%' : (state[id] < 100 ? fmtDPrecise(state[id]) : fmtD(state[id]));
+  render();
+}
+
+function onCustomParamChange() {
+  render();
+}
+
+function getRows(){
+  if(cur==='cus'){
+    const rmin = parseFloat($('inp-rmin').value) || 80;
+    const rmax = parseFloat($('inp-rmax').value) || 160;
+    const sp = (state.spread||20)/100;
+    
+    // Generación matemática de rangos basada en inputs del usuario
+    return [
+      {l:"Rango DCF Implícito", lo: rmin*(1-sp/2), hi: rmin*(1+sp/2)*1.1},
+      {l:"Múltiplos de Mercado", lo: rmin, hi: rmax},
+      {l:"Rango Estructurado Ajustado", lo: rmin*0.95, hi: rmax*1.05}
+    ];
+  }
+  
+  const sp=(state.spread||15)/100;
+  return DB[cur].rows.map(r=>{
+    const mid=(r.lo+r.hi)/2;
+    return {l:r.l, lo:mid*(1-sp/2), hi:mid*(1+sp/2)};
+  });
+}
+
+function render(){
+  const co=DB[cur];
+  $('ey').textContent=co.ey;
+  $('dn').textContent=co.name;
+  $('dd').textContent=co.desc;
+  $('fn').textContent=co.note;
+  
+  const price=state.price||null;
+  const prem=state.prem!=null?state.prem:0;
+  const offer=price?price*(1+prem/100):null;
+  
+  $('mp').textContent=price ? (price < 100 ? fmtDPrecise(price) : fmtD(price)) : '—';
+  $('mo').textContent=offer ? (offer < 100 ? fmtDPrecise(offer) : fmtD(offer)) : '—';
+  
+  const pmEl=$('mpm');
+  pmEl.innerHTML=`${fmtP(prem)} <span class="tag-premium">Premium</span>`;
+  
+  const rows=getRows();
+  if(!rows.length){
+    $('rows').innerHTML='<div style="font-size:13px;color:var(--text-light);padding:24px 0;text-align:center;font-style:italic">Ajuste las variables para proyectar la gráfica.</div>';
+    $('mr').textContent='—';
+    $('xax').innerHTML='';
+    return;
+  }
+
+  // Encontrar límites del eje de manera dinámica e inteligente
+  const allv=rows.flatMap(r=>[r.lo,r.hi]);
+  if(price) allv.push(price);
+  if(offer) allv.push(offer);
+  
+  const minv=Math.min(...allv)*0.92;
+  const maxv=Math.max(...allv)*1.05;
+  const span=maxv-minv;
+  
+  $('mr').textContent= (Math.min(...rows.map(r=>r.lo)) < 100) ? 
+    `${fmtDPrecise(Math.min(...rows.map(r=>r.lo)))} – ${fmtDPrecise(Math.max(...rows.map(r=>r.hi)))}` :
+    `${fmtD(Math.min(...rows.map(r=>r.lo)))} – ${fmtD(Math.max(...rows.map(r=>r.hi)))}`;
+
+  const pct=v=>(((v-minv)/span)*100).toFixed(4);
+
+  let html='';
+  rows.forEach(r=>{
+    const lp=pct(r.lo);
+    const wp=((r.hi-r.lo)/span*100).toFixed(4);
+    
+    let markers='';
+    if(price) markers+=`<div class="pline" style="left:${pct(price)}%"></div>`;
+    if(offer) markers+=`<div class="oline" style="left:${pct(offer)}%"></div>`;
+    
+    const displayLo = r.lo < 100 ? fmtDPrecise(r.lo) : fmtD(r.lo);
+    const displayHi = r.hi < 100 ? fmtDPrecise(r.hi) : fmtD(r.hi);
+
+    html+=`<div class="row">
+      <div class="rlbl" title="${r.l}">${r.l}</div>
+      <div class="track">
+        <div class="bar" style="left:${lp}%;width:${wp}%"></div>
+        <div class="bv bv-lo" style="left:${lp}%">${displayLo}</div>
+        <div class="bv bv-hi" style="left:${parseFloat(lp)+parseFloat(wp)}%">${displayHi}</div>
+        ${markers}
+      </div>
+    </div>`;
+  });
+  $('rows').innerHTML=html;
+
+  // Renderizar etiquetas del eje X distribuidas proporcionalmente
+  let ax='';
+  for(let i=0;i<=4;i++){
+    const val = minv+span*i/4;
+    ax+=`<span>${val < 100 ? fmtDPrecise(val) : fmtD(val)}</span>`;
+  }
+  $('xax').innerHTML=ax;
+}
+
+// Inicialización del entorno
+pick('meli', document.querySelector('.sb-btn'));
+</script>
+
+</body>
+</html>
